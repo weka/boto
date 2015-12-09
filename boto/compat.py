@@ -56,11 +56,13 @@ from boto.vendored.six.moves.urllib.parse import parse_qs, quote, unquote, \
                                                  urlparse, urlsplit
 from boto.vendored.six.moves.urllib.request import urlopen
 
+
 if six.PY3:
     # StandardError was removed, so use the base exception type instead
     StandardError = Exception
     long_type = int
-    from configparser import ConfigParser
+    from boto.backcompat import ConfigParser
+    # from configparser import ConfigParser
 else:
     StandardError = StandardError
     long_type = long
