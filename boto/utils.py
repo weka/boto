@@ -220,8 +220,7 @@ def retry_url(url, retry_on_404=True, num_retries=10, timeout=None):
             if code == 404 and not retry_on_404:
                 return ''
         except Exception as e:
-            pass
-        boto.log.exception('Caught exception reading instance data')
+            boto.log.exception('Caught exception reading instance data')
         # If not on the last iteration of the loop then sleep.
         if i + 1 != num_retries:
             time.sleep(min(2 ** i,
