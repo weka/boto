@@ -87,7 +87,11 @@ class _LazyDescr(object):
         result = self._resolve()
         setattr(obj, self.name, result) # Invokes __set__.
         # This is a bit ugly, but it avoids running this again.
-        delattr(obj.__class__, self.name)
+        try:
+            delattr(obj.__class__, self.name)
+        except AttributeError:
+            # probably deleted in multiple threads
+            pass
         return result
 
 
