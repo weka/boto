@@ -979,7 +979,9 @@ class AWSAuthConnection(object):
                                                  self.is_secure, connection)
                     if self.request_hook is not None:
                         self.request_hook.handle_request_data(request, response)
-                    if request.method == 'GET':
+                    if (request.method == 'GET' or
+                        any(request.params.get("Action").startswith(prefix) for prefix in
+                            "Describe List Get".split())):
                         response.read()  # raise any ConnectionResetByPeer that might be lurking...
                     return response
                 else:
