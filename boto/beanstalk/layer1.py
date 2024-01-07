@@ -45,7 +45,7 @@ class Layer1(AWSQueryConnection):
             region = RegionInfo(self, self.DefaultRegionName,
                                 self.DefaultRegionEndpoint)
         self.region = region
-        super(Layer1, self).__init__(aws_access_key_id,
+        super().__init__(aws_access_key_id,
                                     aws_secret_access_key,
                                     is_secure, port, proxy, proxy_port,
                                     proxy_user, proxy_pass,
@@ -1195,7 +1195,7 @@ class Layer1(AWSQueryConnection):
         # MyOption.member.1.Two = bar
         # MyOption.member.1.Three = baz
         for i, user_value in enumerate(user_values, 1):
-            current_prefix = '%s.%s' % (prefix, i)
+            current_prefix = f'{prefix}.{i}'
             for key, value in zip(tuple_names, user_value):
-                full_key = '%s.%s' % (current_prefix, key)
+                full_key = f'{current_prefix}.{key}'
                 params[full_key] = value

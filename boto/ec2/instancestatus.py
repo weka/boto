@@ -41,7 +41,7 @@ class Details(dict):
             setattr(self, name, value)
 
 
-class Event(object):
+class Event:
     """
     A status event for an instance.
 
@@ -79,7 +79,7 @@ class Event(object):
             setattr(self, name, value)
 
 
-class Status(object):
+class Status:
     """
     A generic Status object used for system status and instance status.
 
@@ -123,7 +123,7 @@ class EventSet(list):
         setattr(self, name, value)
 
 
-class InstanceStatus(object):
+class InstanceStatus:
     """
     Represents an EC2 Instance status as reported by
     DescribeInstanceStatus request.

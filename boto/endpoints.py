@@ -41,19 +41,19 @@ class _CompatEndpointResolver(_regions.EndpointResolver):
         :param service_rename_map: A mapping of boto2 service name to
             endpoint prefix.
         """
-        super(_CompatEndpointResolver, self).__init__(endpoint_data)
+        super().__init__(endpoint_data)
         if service_rename_map is None:
             service_rename_map = self._DEFAULT_SERVICE_RENAMES
         # Mapping of boto2 service name to endpoint prefix
         self._endpoint_prefix_map = service_rename_map
         # Mapping of endpoint prefix to boto2 service name
-        self._service_name_map = dict(
-            (v, k) for k, v in service_rename_map.items())
+        self._service_name_map = {
+            v: k for k, v in service_rename_map.items()}
 
     def get_available_endpoints(self, service_name, partition_name='aws',
                                 allow_non_regional=False):
         endpoint_prefix = self._endpoint_prefix(service_name)
-        return super(_CompatEndpointResolver, self).get_available_endpoints(
+        return super().get_available_endpoints(
             endpoint_prefix, partition_name, allow_non_regional)
 
     def get_all_available_regions(self, service_name):
@@ -79,7 +79,7 @@ class _CompatEndpointResolver(_regions.EndpointResolver):
 
     def construct_endpoint(self, service_name, region_name=None):
         endpoint_prefix = self._endpoint_prefix(service_name)
-        return super(_CompatEndpointResolver, self).construct_endpoint(
+        return super().construct_endpoint(
             endpoint_prefix, region_name)
 
     def get_available_services(self):
@@ -130,7 +130,7 @@ class _CompatEndpointResolver(_regions.EndpointResolver):
         return self._service_name_map.get(endpoint_prefix, endpoint_prefix)
 
 
-class BotoEndpointResolver(object):
+class BotoEndpointResolver:
     """Resolves endpoint hostnames for AWS services.
 
     This is NOT intended for external use.
@@ -186,7 +186,7 @@ class BotoEndpointResolver(object):
         return self._resolver.get_available_services()
 
 
-class StaticEndpointBuilder(object):
+class StaticEndpointBuilder:
     """Builds a static mapping of endpoints in the legacy format."""
 
     def __init__(self, resolver):

@@ -23,10 +23,10 @@
 def tag(key, value):
     start = '<%s>' % key
     end = '</%s>' % key
-    return '%s%s%s' % (start, value, end)
+    return f'{start}{value}{end}'
 
 
-class WebsiteConfiguration(object):
+class WebsiteConfiguration:
     """
     Website configuration for a bucket.
 
@@ -89,7 +89,7 @@ class WebsiteConfiguration(object):
         return ''.join(parts)
 
 
-class _XMLKeyValue(object):
+class _XMLKeyValue:
     def __init__(self, translator, container=None):
         self.translator = translator
         if container:
@@ -130,11 +130,11 @@ class RedirectLocation(_XMLKeyValue):
     def __init__(self, hostname=None, protocol=None):
         self.hostname = hostname
         self.protocol = protocol
-        super(RedirectLocation, self).__init__(self.TRANSLATOR)
+        super().__init__(self.TRANSLATOR)
 
     def to_xml(self):
         return tag('RedirectAllRequestsTo',
-            super(RedirectLocation, self).to_xml())
+            super().to_xml())
 
 
 class RoutingRules(list):
@@ -162,7 +162,7 @@ class RoutingRules(list):
         pass
 
     def __repr__(self):
-        return "RoutingRules(%s)" % super(RoutingRules, self).__repr__()
+        return "RoutingRules(%s)" % super().__repr__()
 
     def to_xml(self):
         inner_text = []
@@ -171,7 +171,7 @@ class RoutingRules(list):
         return tag('RoutingRules', '\n'.join(inner_text))
 
 
-class RoutingRule(object):
+class RoutingRule:
     """Represents a single routing rule.
 
     There are convenience methods to making creating rules
@@ -244,10 +244,10 @@ class Condition(_XMLKeyValue):
     def __init__(self, key_prefix=None, http_error_code=None):
         self.key_prefix = key_prefix
         self.http_error_code = http_error_code
-        super(Condition, self).__init__(self.TRANSLATOR)
+        super().__init__(self.TRANSLATOR)
 
     def to_xml(self):
-        return tag('Condition', super(Condition, self).to_xml())
+        return tag('Condition', super().to_xml())
 
 
 class Redirect(_XMLKeyValue):
@@ -285,9 +285,9 @@ class Redirect(_XMLKeyValue):
         self.replace_key = replace_key
         self.replace_key_prefix = replace_key_prefix
         self.http_redirect_code = http_redirect_code
-        super(Redirect, self).__init__(self.TRANSLATOR)
+        super().__init__(self.TRANSLATOR)
 
     def to_xml(self):
-        return tag('Redirect', super(Redirect, self).to_xml())
+        return tag('Redirect', super().to_xml())
 
 

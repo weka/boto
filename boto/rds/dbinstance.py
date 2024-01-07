@@ -27,7 +27,7 @@ from boto.rds.vpcsecuritygroupmembership import VPCSecurityGroupMembership
 from boto.resultset import ResultSet
 
 
-class DBInstance(object):
+class DBInstance:
     """
     Represents a RDS DBInstance
 

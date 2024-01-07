@@ -54,7 +54,7 @@ package where all these provider-independent files go.
 """
 
 
-class ByteTranslatingCallbackHandler(object):
+class ByteTranslatingCallbackHandler:
     """
     Proxy class that translates progress callbacks made by
     boto.s3.Key.get_file(), taking into account that we're resuming
@@ -85,7 +85,7 @@ def get_cur_file_size(fp, position_to_eof=False):
     return cur_file_size
 
 
-class ResumableDownloadHandler(object):
+class ResumableDownloadHandler:
     """
     Handler for resumable downloads.
     """
@@ -126,7 +126,7 @@ class ResumableDownloadHandler(object):
     def _load_tracker_file_etag(self):
         f = None
         try:
-            f = open(self.tracker_file_name, 'r')
+            f = open(self.tracker_file_name)
             self.etag_value_for_current_download = f.readline().rstrip('\n')
             # We used to match an MD5-based regex to ensure that the etag was
             # read correctly. Since ETags need not be MD5s, we now do a simple
@@ -134,7 +134,7 @@ class ResumableDownloadHandler(object):
             if len(self.etag_value_for_current_download) < self.MIN_ETAG_LEN:
                 print('Couldn\'t read etag in tracker file (%s). Restarting '
                       'download from scratch.' % self.tracker_file_name)
-        except IOError as e:
+        except OSError as e:
             # Ignore non-existent file (happens first time a download
             # is attempted on an object), but warn user for other errors.
             if e.errno != errno.ENOENT:
@@ -155,7 +155,7 @@ class ResumableDownloadHandler(object):
         try:
             f = open(self.tracker_file_name, 'w')
             f.write('%s\n' % self.etag_value_for_current_download)
-        except IOError as e:
+        except OSError as e:
             raise ResumableDownloadException(
                 'Couldn\'t write tracker file (%s): %s.\nThis can happen'
                 'if you\'re using an incorrectly configured download tool\n'

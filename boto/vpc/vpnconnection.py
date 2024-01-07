@@ -28,7 +28,7 @@ Represents a VPN Connectionn
 
 from boto.ec2.ec2object import TaggedEC2Object
 
-class VpnConnectionOptions(object):
+class VpnConnectionOptions:
     """
     Represents VPN connection options
 
@@ -52,7 +52,7 @@ class VpnConnectionOptions(object):
         else:
             setattr(self, name, value)
 
-class VpnStaticRoute(object):
+class VpnStaticRoute:
     """
     Represents a static route for a VPN connection.
 
@@ -82,7 +82,7 @@ class VpnStaticRoute(object):
         else:
             setattr(self, name, value)
 
-class VpnTunnel(object):
+class VpnTunnel:
     """
     Represents telemetry for a VPN tunnel
 
@@ -152,7 +152,7 @@ class VpnConnection(TaggedEC2Object):
 
     """
     def __init__(self, connection=None):
-        super(VpnConnection, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.state = None
         self.customer_gateway_configuration = None
@@ -167,7 +167,7 @@ class VpnConnection(TaggedEC2Object):
         return 'VpnConnection:%s' % self.id
 
     def startElement(self, name, attrs, connection):
-        retval = super(VpnConnection, self).startElement(name, attrs, connection)
+        retval = super().startElement(name, attrs, connection)
         if retval is not None:
             return retval
         if name == 'vgwTelemetry':

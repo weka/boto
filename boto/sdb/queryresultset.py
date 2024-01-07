@@ -36,7 +36,7 @@ def query_lister(domain, query='', max_items=None, attr_names=None):
         next_token = rs.next_token
         more_results = next_token is not None
 
-class QueryResultSet(object):
+class QueryResultSet:
 
     def __init__(self, domain=None, query='', max_items=None, attr_names=None):
         self.max_items = max_items
@@ -62,7 +62,7 @@ def select_lister(domain, query='', max_items=None):
         next_token = rs.next_token
         more_results = next_token is not None
 
-class SelectResultSet(object):
+class SelectResultSet:
 
     def __init__(self, domain=None, query='', max_items=None,
                  next_token=None, consistent_read=False):

@@ -24,11 +24,11 @@ from boto.s3.key import Key
 class Object(Key):
 
     def __init__(self, bucket, name=None):
-        super(Object, self).__init__(bucket, name=name)
+        super().__init__(bucket, name=name)
         self.distribution = bucket.distribution
 
     def __repr__(self):
-        return '<Object: %s/%s>' % (self.distribution.config.origin, self.name)
+        return f'<Object: {self.distribution.config.origin}/{self.name}>'
 
     def url(self, scheme='http'):
         url = '%s://' % scheme
@@ -43,6 +43,6 @@ class Object(Key):
 class StreamingObject(Object):
 
     def url(self, scheme='rtmp'):
-        return super(StreamingObject, self).url(scheme)
+        return super().url(scheme)
 
 

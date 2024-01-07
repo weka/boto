@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-class LogFile(object):
+class LogFile:
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -46,13 +46,13 @@ class LogFile(object):
             setattr(self, name, value)
 
 
-class LogFileObject(object):
+class LogFileObject:
     def __init__(self, connection=None):
         self.connection = connection
         self.log_filename = None
 
     def __repr__(self):
-        return "LogFileObject: %s/%s" % (self.dbinstance_id, self.log_filename)
+        return f"LogFileObject: {self.dbinstance_id}/{self.log_filename}"
 
     def startElement(self, name, attrs, connection):
         pass

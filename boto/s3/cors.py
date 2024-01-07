@@ -22,7 +22,7 @@
 #
 
 
-class CORSRule(object):
+class CORSRule:
     """
     CORS rule for a bucket.
 

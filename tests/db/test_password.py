@@ -75,14 +75,14 @@ class PasswordPropertyTest(unittest.TestCase):
         obj = MyModel()
         obj.password = 'bar'
         expected = myhashfunc('bar').hexdigest() #hmac.new('mysecret','bar').hexdigest()
-        log.debug("\npassword=%s\nexpected=%s" % (obj.password, expected))
+        log.debug(f"\npassword={obj.password}\nexpected={expected}")
         self.assertTrue(obj.password == 'bar' )
         obj.save()
         id= obj.id
         time.sleep(5)
         obj = MyModel.get_by_id(id)
-        self.assertEquals(obj.password, 'bar')
-        self.assertEquals(str(obj.password), expected)
+        self.assertEqual(obj.password, 'bar')
+        self.assertEqual(str(obj.password), expected)
                           #hmac.new('mysecret','bar').hexdigest())
  
         
@@ -90,11 +90,11 @@ class PasswordPropertyTest(unittest.TestCase):
         cls = self.test_model()
         obj = cls(id='passwordtest')
         obj.password = 'foo'
-        self.assertEquals('foo', obj.password)
+        self.assertEqual('foo', obj.password)
         obj.save()
         time.sleep(5)
         obj = cls.get_by_id('passwordtest')
-        self.assertEquals('foo', obj.password)
+        self.assertEqual('foo', obj.password)
 
     def test_password_constructor_hashfunc(self):
         import hmac
@@ -103,8 +103,8 @@ class PasswordPropertyTest(unittest.TestCase):
         obj = cls()
         obj.password='hello'
         expected = myhashfunc('hello').hexdigest()
-        self.assertEquals(obj.password, 'hello')
-        self.assertEquals(str(obj.password), expected)
+        self.assertEqual(obj.password, 'hello')
+        self.assertEqual(str(obj.password), expected)
         obj.save()
         id = obj.id
         time.sleep(5)

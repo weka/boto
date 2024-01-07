@@ -22,7 +22,7 @@
 #
 
 
-class BlockDeviceType(object):
+class BlockDeviceType:
     """
     Represents parameters for a block device.
     """

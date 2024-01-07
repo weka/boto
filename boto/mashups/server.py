@@ -87,7 +87,7 @@ class Server(Model):
         return s
 
     def __init__(self, id=None, **kw):
-        super(Server, self).__init__(id, **kw)
+        super().__init__(id, **kw)
         self._reservation = None
         self._instance = None
         self._ssh_client = None
@@ -305,7 +305,7 @@ class Server(Model):
         except:
             pass
         command = 'sudo ec2-bundle-vol '
-        command += '-c %s -k %s ' % (remote_cert_file, remote_key_file)
+        command += f'-c {remote_cert_file} -k {remote_key_file} '
         command += '-u %s ' % self._reservation.owner_id
         command += '-p %s ' % prefix
         command += '-s %d ' % size
@@ -351,7 +351,7 @@ class Server(Model):
         self.bundle_image(prefix, key_file, cert_file, size)
         self.upload_bundle(bucket, prefix)
         print('registering image...')
-        self.image_id = self.ec2.register_image('%s/%s.manifest.xml' % (bucket, prefix))
+        self.image_id = self.ec2.register_image(f'{bucket}/{prefix}.manifest.xml')
         return self.image_id
 
     def attach_volume(self, volume, device="/dev/sdp"):

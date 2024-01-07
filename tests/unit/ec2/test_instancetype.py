@@ -11,7 +11,7 @@ class TestEC2ConnectionBase(AWSMockServiceTestCase):
     connection_class = EC2Connection
 
     def setUp(self):
-        super(TestEC2ConnectionBase, self).setUp()
+        super().setUp()
         self.ec2 = self.service_connection
 
 

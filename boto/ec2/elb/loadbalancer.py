@@ -30,7 +30,7 @@ from boto.resultset import ResultSet
 from boto.compat import six
 
 
-class Backend(object):
+class Backend:
     """Backend server description"""
 
     def __init__(self, connection=None):
@@ -39,7 +39,7 @@ class Backend(object):
         self.policies = None
 
     def __repr__(self):
-        return 'Backend(%r:%r)' % (self.instance_port, self.policies)
+        return f'Backend({self.instance_port!r}:{self.policies!r})'
 
     def startElement(self, name, attrs, connection):
         if name == 'PolicyNames':
@@ -52,7 +52,7 @@ class Backend(object):
         return
 
 
-class LoadBalancerZones(object):
+class LoadBalancerZones:
     """
     Used to collect the zones for a Load Balancer when enable_zones
     or disable_zones are called.
@@ -69,7 +69,7 @@ class LoadBalancerZones(object):
         pass
 
 
-class LoadBalancer(object):
+class LoadBalancer:
     """
     Represents an EC2 Load Balancer.
     """
@@ -189,7 +189,7 @@ class LoadBalancer(object):
         :param zones: The name of the zone(s) to add.
 
         """
-        if isinstance(zones, six.string_types):
+        if isinstance(zones, str):
             zones = [zones]
         new_zones = self.connection.enable_availability_zones(self.name, zones)
         self.availability_zones = new_zones
@@ -202,7 +202,7 @@ class LoadBalancer(object):
         :param zones: The name of the zone(s) to add.
 
         """
-        if isinstance(zones, six.string_types):
+        if isinstance(zones, str):
             zones = [zones]
         new_zones = self.connection.disable_availability_zones(
             self.name, zones)
@@ -270,7 +270,7 @@ class LoadBalancer(object):
             to add to this load balancer.
 
         """
-        if isinstance(instances, six.string_types):
+        if isinstance(instances, str):
             instances = [instances]
         new_instances = self.connection.register_instances(self.name,
                                                            instances)
@@ -285,7 +285,7 @@ class LoadBalancer(object):
             to remove from this load balancer.
 
         """
-        if isinstance(instances, six.string_types):
+        if isinstance(instances, str):
             instances = [instances]
         new_instances = self.connection.deregister_instances(self.name,
                                                              instances)
@@ -383,7 +383,7 @@ class LoadBalancer(object):
         :param subnets: The name of the subnet(s) to add.
 
         """
-        if isinstance(subnets, six.string_types):
+        if isinstance(subnets, str):
             subnets = [subnets]
         new_subnets = self.connection.attach_lb_to_subnets(self.name, subnets)
         self.subnets = new_subnets
@@ -396,7 +396,7 @@ class LoadBalancer(object):
         :param subnets: The name of the subnet(s) to detach.
 
         """
-        if isinstance(subnets, six.string_types):
+        if isinstance(subnets, str):
             subnets = [subnets]
         new_subnets = self.connection.detach_lb_from_subnets(
             self.name, subnets)
@@ -412,7 +412,7 @@ class LoadBalancer(object):
         :param security_groups: The name of the security group(s) to add.
 
         """
-        if isinstance(security_groups, six.string_types):
+        if isinstance(security_groups, str):
             security_groups = [security_groups]
         new_sgs = self.connection.apply_security_groups_to_lb(
             self.name, security_groups)

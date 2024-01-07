@@ -1,7 +1,7 @@
 from boto.dynamodb2.types import STRING
 
 
-class BaseSchemaField(object):
+class BaseSchemaField:
     """
     An abstract class for defining schema fields.
 
@@ -89,7 +89,7 @@ class RangeKey(BaseSchemaField):
     attr_type = 'RANGE'
 
 
-class BaseIndexField(object):
+class BaseIndexField:
     """
     An abstract class for defining schema indexes.
 
@@ -204,10 +204,10 @@ class IncludeIndex(BaseIndexField):
 
     def __init__(self, *args, **kwargs):
         self.includes_fields = kwargs.pop('includes', [])
-        super(IncludeIndex, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def schema(self):
-        schema_data = super(IncludeIndex, self).schema()
+        schema_data = super().schema()
         schema_data['Projection']['NonKeyAttributes'] = self.includes_fields
         return schema_data
 
@@ -230,7 +230,7 @@ class GlobalBaseIndexField(BaseIndexField):
         if throughput is not None:
             self.throughput = throughput
 
-        super(GlobalBaseIndexField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def schema(self):
         """
@@ -257,7 +257,7 @@ class GlobalBaseIndexField(BaseIndexField):
             }
 
         """
-        schema_data = super(GlobalBaseIndexField, self).schema()
+        schema_data = super().schema()
         schema_data['ProvisionedThroughput'] = {
             'ReadCapacityUnits': int(self.throughput['read']),
             'WriteCapacityUnits': int(self.throughput['write']),

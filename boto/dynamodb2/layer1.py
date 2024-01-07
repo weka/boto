@@ -172,7 +172,7 @@ class DynamoDBConnection(AWSQueryConnection):
         if 'host' not in kwargs:
             kwargs['host'] = region.endpoint
 
-        super(DynamoDBConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
         self._validate_checksums = boto.config.getbool(
             'DynamoDB', 'validate_checksums', validate_checksums)
@@ -2829,7 +2829,7 @@ class DynamoDBConnection(AWSQueryConnection):
 
     def make_request(self, action, body):
         headers = {
-            'X-Amz-Target': '%s.%s' % (self.TargetPrefix, action),
+            'X-Amz-Target': f'{self.TargetPrefix}.{action}',
             'Host': self.host,
             'Content-Type': 'application/x-amz-json-1.0',
             'Content-Length': str(len(body)),
@@ -2861,7 +2861,7 @@ class DynamoDBConnection(AWSQueryConnection):
             data = json.loads(response_body)
             if 'ProvisionedThroughputExceededException' in data.get('__type'):
                 self.throughput_exceeded_events += 1
-                msg = "%s, retry attempt %s" % (
+                msg = "{}, retry attempt {}".format(
                     'ProvisionedThroughputExceededException',
                     i
                 )

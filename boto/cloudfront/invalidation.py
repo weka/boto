@@ -25,7 +25,7 @@ from boto.compat import urllib
 from boto.resultset import ResultSet
 
 
-class InvalidationBatch(object):
+class InvalidationBatch:
     """A simple invalidation request.
         :see: http://docs.amazonwebservices.com/AmazonCloudFront/2010-08-01/APIReference/index.html?InvalidationBatchDatatype.html
     """
@@ -103,7 +103,7 @@ class InvalidationBatch(object):
         return None
 
 
-class InvalidationListResultSet(object):
+class InvalidationListResultSet:
     """
     A resultset for listing invalidations on a given CloudFront distribution.
     Implements the iterator interface and transparently handles paging results
@@ -132,16 +132,14 @@ class InvalidationListResultSet(object):
         conn = self.connection
         distribution_id = self.distribution_id
         result_set = self
-        for inval in result_set._inval_cache:
-            yield inval
+        yield from result_set._inval_cache
         if not self.auto_paginate:
             return
         while result_set.is_truncated:
             result_set = conn.get_invalidation_requests(distribution_id,
                                                         marker=result_set.next_marker,
                                                         max_items=result_set.max_items)
-            for i in result_set._inval_cache:
-                yield i
+            yield from result_set._inval_cache
 
     def startElement(self, name, attrs, connection):
         for root_elem, handler in self.markers:
@@ -166,7 +164,7 @@ class InvalidationListResultSet(object):
         else:
             return False
 
-class InvalidationSummary(object):
+class InvalidationSummary:
     """
     Represents InvalidationSummary complex type in CloudFront API that lists
     the id and status of a given invalidation request.

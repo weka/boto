@@ -28,7 +28,7 @@ from boto import handler
 import xml.sax
 
 
-class CompleteMultiPartUpload(object):
+class CompleteMultiPartUpload:
     """
     Represents a completed MultiPart Upload.  Contains the
     following useful attributes:
@@ -52,7 +52,7 @@ class CompleteMultiPartUpload(object):
         self.encrypted = None
 
     def __repr__(self):
-        return '<CompleteMultiPartUpload: %s.%s>' % (self.bucket_name,
+        return '<CompleteMultiPartUpload: {}.{}>'.format(self.bucket_name,
                                                      self.key_name)
 
     def startElement(self, name, attrs, connection):
@@ -71,7 +71,7 @@ class CompleteMultiPartUpload(object):
             setattr(self, name, value)
 
 
-class Part(object):
+class Part:
     """
     Represents a single part in a MultiPart upload.
     Attributes include:
@@ -119,13 +119,12 @@ def part_lister(mpupload, part_number_marker=None):
     part = None
     while more_results:
         parts = mpupload.get_all_parts(None, part_number_marker)
-        for part in parts:
-            yield part
+        yield from parts
         part_number_marker = mpupload.next_part_number_marker
         more_results = mpupload.is_truncated
 
 
-class MultiPartUpload(object):
+class MultiPartUpload:
     """
     Represents a MultiPart Upload operation.
     """
@@ -291,7 +290,7 @@ class MultiPartUpload(object):
             raise ValueError('Part numbers must be greater than zero')
         query_args = 'uploadId=%s&partNumber=%d' % (self.id, part_num)
         if start is not None and end is not None:
-            rng = 'bytes=%s-%s' % (start, end)
+            rng = f'bytes={start}-{end}'
             provider = self.bucket.connection.provider
             if headers is None:
                 headers = {}

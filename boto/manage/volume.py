@@ -18,7 +18,6 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
-from __future__ import print_function
 
 from boto.sdb.db.model import Model
 from boto.sdb.db.property import StringProperty, IntegerProperty, ListProperty, ReferenceProperty, CalculatedProperty
@@ -32,7 +31,7 @@ from contextlib import closing
 import datetime
 
 
-class CommandLineGetter(object):
+class CommandLineGetter:
 
     def get_region(self, params):
         if not params.get('region', None):
@@ -277,7 +276,7 @@ class Volume(Model):
                             cmd.run('chmod 777 /tmp')
                             break
             # Mount up our new EBS volume onto mount_point
-            cmd.run("mount %s %s" % (self.device, self.mount_point))
+            cmd.run(f"mount {self.device} {self.mount_point}")
             cmd.run('xfs_growfs %s' % self.mount_point)
 
     def make_ready(self, server):
@@ -393,7 +392,7 @@ class Volume(Model):
         if delete:
             for snap in snaps:
                 if not snap.keep:
-                    boto.log.info('Deleting %s(%s) for %s' % (snap, snap.date, self.name))
+                    boto.log.info(f'Deleting {snap}({snap.date}) for {self.name}')
                     snap.delete()
         return snaps
 
@@ -411,7 +410,7 @@ class Volume(Model):
             self.detach()
             ec2 = self.get_ec2_connection()
             ec2.delete_volume(self.volume_id)
-        super(Volume, self).delete()
+        super().delete()
 
     def archive(self):
         # snapshot volume, trim snaps, delete volume-id

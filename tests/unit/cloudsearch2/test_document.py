@@ -4,7 +4,7 @@ from boto.cloudsearch2.layer1 import CloudSearchConnection
 
 from tests.unit import unittest, AWSMockServiceTestCase
 from httpretty import HTTPretty
-from mock import MagicMock
+from unittest.mock import MagicMock
 
 import json
 
@@ -343,4 +343,4 @@ class CloudSearchDocumentErrorMismatch(CloudSearchDocumentTest):
         except CommitMismatchError as e:
             self.assertTrue(hasattr(e, 'errors'))
             self.assertIsInstance(e.errors, list)
-            self.assertEquals(e.errors[0], self.response['errors'][0].get('message'))
+            self.assertEqual(e.errors[0], self.response['errors'][0].get('message'))

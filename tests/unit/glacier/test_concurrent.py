@@ -55,7 +55,7 @@ class FakeThreadedConcurrentDownloader(ConcurrentDownloader):
 class TestConcurrentUploader(unittest.TestCase):
 
     def setUp(self):
-        super(TestConcurrentUploader, self).setUp()
+        super().setUp()
         self.stat_patch = mock.patch('os.stat')
         self.addCleanup(self.stat_patch.stop)
         self.stat_mock = self.stat_patch.start()

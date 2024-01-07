@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-class Price(object):
+class Price:
 
     def __init__(self, amount=0.0, currency_code='USD'):
         self.amount = amount

@@ -29,7 +29,7 @@ from boto.resultset import ResultSet
 from boto.ec2.group import Group
 
 
-class Attachment(object):
+class Attachment:
     """
     :ivar id: The ID of the attachment.
     :ivar instance_id: The ID of the instance.
@@ -99,7 +99,7 @@ class NetworkInterface(TaggedEC2Object):
     """
 
     def __init__(self, connection=None):
-        super(NetworkInterface, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.subnet_id = None
         self.vpc_id = None
@@ -119,7 +119,7 @@ class NetworkInterface(TaggedEC2Object):
         return 'NetworkInterface:%s' % self.id
 
     def startElement(self, name, attrs, connection):
-        retval = super(NetworkInterface, self).startElement(name, attrs, connection)
+        retval = super().startElement(name, attrs, connection)
         if retval is not None:
             return retval
         if name == 'groupSet':
@@ -237,7 +237,7 @@ class NetworkInterface(TaggedEC2Object):
         )
 
 
-class PrivateIPAddress(object):
+class PrivateIPAddress:
     def __init__(self, connection=None, private_ip_address=None,
                  primary=None):
         self.connection = connection
@@ -254,7 +254,7 @@ class PrivateIPAddress(object):
             self.primary = True if value.lower() == 'true' else False
 
     def __repr__(self):
-        return "PrivateIPAddress(%s, primary=%s)" % (self.private_ip_address,
+        return "PrivateIPAddress({}, primary={})".format(self.private_ip_address,
                                                      self.primary)
 
 
@@ -264,7 +264,7 @@ class NetworkInterfaceCollection(list):
 
     def build_list_params(self, params, prefix=''):
         for i, spec in enumerate(self):
-            full_prefix = '%sNetworkInterface.%s.' % (prefix, i)
+            full_prefix = f'{prefix}NetworkInterface.{i}.'
             if spec.network_interface_id is not None:
                 params[full_prefix + 'NetworkInterfaceId'] = \
                         str(spec.network_interface_id)
@@ -288,12 +288,12 @@ class NetworkInterfaceCollection(list):
                         str(spec.private_ip_address)
             if spec.groups is not None:
                 for j, group_id in enumerate(spec.groups):
-                    query_param_key = '%sSecurityGroupId.%s' % (full_prefix, j)
+                    query_param_key = f'{full_prefix}SecurityGroupId.{j}'
                     params[query_param_key] = str(group_id)
             if spec.private_ip_addresses is not None:
                 for k, ip_addr in enumerate(spec.private_ip_addresses):
                     query_param_key_prefix = (
-                        '%sPrivateIpAddresses.%s' % (full_prefix, k))
+                        f'{full_prefix}PrivateIpAddresses.{k}')
                     params[query_param_key_prefix + '.PrivateIpAddress'] = \
                             str(ip_addr.private_ip_address)
                     if ip_addr.primary is not None:
@@ -331,7 +331,7 @@ class NetworkInterfaceCollection(list):
                     params[key] = 'false'
 
 
-class NetworkInterfaceSpecification(object):
+class NetworkInterfaceSpecification:
     def __init__(self, network_interface_id=None, device_index=None,
                  subnet_id=None, description=None, private_ip_address=None,
                  groups=None, delete_on_termination=None,

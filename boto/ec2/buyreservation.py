@@ -29,7 +29,7 @@ InstanceTypes = ['m1.small', 'm1.large', 'm1.xlarge',
                  't1.micro']
 
 
-class BuyReservation(object):
+class BuyReservation:
 
     def get_region(self, params):
         if not params.get('region', None):
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     unit_price = float(offering.fixed_price)
     total_price = unit_price * params['quantity']
     print('!!! You are about to purchase %d of these offerings for a total of $%.2f !!!' % (params['quantity'], total_price))
-    answer = six.moves.input('Are you sure you want to do this?  If so, enter YES: ')
+    answer = input('Are you sure you want to do this?  If so, enter YES: ')
     if answer.strip().lower() == 'yes':
         offering.purchase(params['quantity'])
     else:

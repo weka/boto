@@ -7,7 +7,7 @@ class STSCredentialsTest(unittest.TestCase):
     sts = True
 
     def setUp(self):
-        super(STSCredentialsTest, self).setUp()
+        super().setUp()
         self.creds = Credentials()
 
     def test_to_dict(self):

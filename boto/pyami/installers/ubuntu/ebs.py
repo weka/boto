@@ -102,7 +102,7 @@ class EBSInstaller(Installer):
     """
 
     def __init__(self, config_file=None):
-        super(EBSInstaller, self).__init__(config_file)
+        super().__init__(config_file)
         self.instance_id = boto.config.get('Instance', 'instance-id')
         self.device = boto.config.get('EBS', 'device', '/dev/sdp')
         self.volume_id = boto.config.get('EBS', 'volume_id')
@@ -120,7 +120,7 @@ class EBSInstaller(Installer):
         # wait for the volume to be available. The volume may still be being created
         # from a snapshot.
         while volume.update() != 'available':
-            boto.log.info('Volume %s not yet available. Current status = %s.' % (volume.id, volume.status))
+            boto.log.info(f'Volume {volume.id} not yet available. Current status = {volume.status}.')
             time.sleep(5)
         instance = ec2.get_only_instances([self.instance_id])[0]
         attempt_attach = True
@@ -132,11 +132,11 @@ class EBSInstaller(Installer):
                 if e.error_code != 'IncorrectState':
                     # if there's an EC2ResonseError with the code set to IncorrectState, delay a bit for ec2
                     # to realize the instance is running, then try again. Otherwise, raise the error:
-                    boto.log.info('Attempt to attach the EBS volume %s to this instance (%s) returned %s. Trying again in a bit.' % (self.volume_id, self.instance_id, e.errors))
+                    boto.log.info(f'Attempt to attach the EBS volume {self.volume_id} to this instance ({self.instance_id}) returned {e.errors}. Trying again in a bit.')
                     time.sleep(2)
                 else:
                     raise e
-        boto.log.info('Attached volume %s to instance %s as device %s' % (self.volume_id, self.instance_id, self.device))
+        boto.log.info(f'Attached volume {self.volume_id} to instance {self.instance_id} as device {self.device}')
         # now wait for the volume device to appear
         while not os.path.exists(self.device):
             boto.log.info('%s still does not exist, waiting 2 seconds' % self.device)
@@ -187,12 +187,12 @@ class EBSInstaller(Installer):
                         break
         self.run('chmod 777 /tmp')
         # Mount up our new EBS volume onto mount_point
-        self.run("mount %s %s" % (self.device, self.mount_point))
+        self.run(f"mount {self.device} {self.mount_point}")
         self.run('xfs_growfs %s' % self.mount_point)
 
     def update_fstab(self):
         f = open("/etc/fstab", "a")
-        f.write('%s\t%s\txfs\tdefaults 0 0\n' % (self.device, self.mount_point))
+        f.write(f'{self.device}\t{self.mount_point}\txfs\tdefaults 0 0\n')
         f.close()
 
     def install(self):

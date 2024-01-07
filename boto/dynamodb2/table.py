@@ -12,7 +12,7 @@ from boto.dynamodb2.types import (NonBooleanDynamizer, Dynamizer, FILTER_OPERATO
 from boto.exception import JSONResponseError
 
 
-class Table(object):
+class Table:
     """
     Interacts & models the behavior of a DynamoDB table.
 
@@ -1005,7 +1005,7 @@ class Table(object):
                 op = using[field_bits[-1]]
             except KeyError:
                 raise exceptions.UnknownFilterTypeError(
-                    "Operator '%s' from '%s' is not recognized." % (
+                    "Operator '{}' from '{}' is not recognized.".format(
                         field_bits[-1],
                         field_and_op
                     )
@@ -1617,7 +1617,7 @@ class Table(object):
         return info['Table'].get('ItemCount', 0)
 
 
-class BatchTable(object):
+class BatchTable:
     """
     Used by ``Table`` as the context manager for batch writes.
 

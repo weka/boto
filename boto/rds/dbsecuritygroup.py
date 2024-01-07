@@ -24,7 +24,7 @@ Represents an DBSecurityGroup
 """
 from boto.ec2.securitygroup import SecurityGroup
 
-class DBSecurityGroup(object):
+class DBSecurityGroup:
     """
     Represents an RDS database security group
 
@@ -135,7 +135,7 @@ class DBSecurityGroup(object):
         return self.connection.revoke_dbsecurity_group(
             self.name, cidr_ip=cidr_ip)
 
-class IPRange(object):
+class IPRange:
     """
     Describes a CIDR address range for use in a DBSecurityGroup
 
@@ -161,7 +161,7 @@ class IPRange(object):
         else:
             setattr(self, name, value)
 
-class EC2SecurityGroup(object):
+class EC2SecurityGroup:
     """
     Describes an EC2 security group for use in a DBSecurityGroup
     """

@@ -35,7 +35,7 @@ from boto.ec2.group import Group
 import base64
 
 
-class InstanceState(object):
+class InstanceState:
     """
     The state of the instance.
 
@@ -77,7 +77,7 @@ class InstanceState(object):
             setattr(self, name, value)
 
 
-class InstancePlacement(object):
+class InstancePlacement:
     """
     The location where the instance launched.
 
@@ -122,7 +122,7 @@ class Reservation(EC2Object):
                      Reservation.
     """
     def __init__(self, connection=None):
-        super(Reservation, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.owner_id = None
         self.groups = []
@@ -210,7 +210,7 @@ class Instance(TaggedEC2Object):
     """
 
     def __init__(self, connection=None):
-        super(Instance, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.dns_name = None
         self.public_dns_name = None
@@ -287,7 +287,7 @@ class Instance(TaggedEC2Object):
         return self._placement.tenancy
 
     def startElement(self, name, attrs, connection):
-        retval = super(Instance, self).startElement(name, attrs, connection)
+        retval = super().startElement(name, attrs, connection)
         if retval is not None:
             return retval
         if name == 'monitoring':
@@ -605,7 +605,7 @@ class Instance(TaggedEC2Object):
         )
 
 
-class ConsoleOutput(object):
+class ConsoleOutput:
     def __init__(self, parent=None):
         self.parent = parent
         self.instance_id = None

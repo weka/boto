@@ -30,7 +30,7 @@ class ReservedInstancesOffering(EC2Object):
                  usage_price=None, description=None, instance_tenancy=None,
                  currency_code=None, offering_type=None,
                  recurring_charges=None, pricing_details=None):
-        super(ReservedInstancesOffering, self).__init__(connection)
+        super().__init__(connection)
         self.id = id
         self.instance_type = instance_type
         self.availability_zone = availability_zone
@@ -97,7 +97,7 @@ class ReservedInstancesOffering(EC2Object):
         )
 
 
-class RecurringCharge(object):
+class RecurringCharge:
     def __init__(self, connection=None, frequency=None, amount=None):
         self.frequency = frequency
         self.amount = amount
@@ -109,7 +109,7 @@ class RecurringCharge(object):
         setattr(self, name, value)
 
 
-class PricingDetail(object):
+class PricingDetail:
     def __init__(self, connection=None, price=None, count=None):
         self.price = price
         self.count = count
@@ -127,7 +127,7 @@ class ReservedInstance(ReservedInstancesOffering):
                  availability_zone=None, duration=None, fixed_price=None,
                  usage_price=None, description=None,
                  instance_count=None, state=None):
-        super(ReservedInstance, self).__init__(connection, id, instance_type,
+        super().__init__(connection, id, instance_type,
                                                availability_zone, duration,
                                                fixed_price, usage_price,
                                                description)
@@ -151,7 +151,7 @@ class ReservedInstance(ReservedInstancesOffering):
         elif name == 'end':
             self.end = value
         else:
-            super(ReservedInstance, self).endElement(name, value, connection)
+            super().endElement(name, value, connection)
 
 
 class ReservedInstanceListing(EC2Object):
@@ -193,7 +193,7 @@ class ReservedInstanceListing(EC2Object):
             setattr(self, name, value)
 
 
-class InstanceCount(object):
+class InstanceCount:
     def __init__(self, connection=None, state=None, instance_count=None):
         self.state = state
         self.instance_count = instance_count
@@ -210,7 +210,7 @@ class InstanceCount(object):
             setattr(self, name, value)
 
 
-class PriceSchedule(object):
+class PriceSchedule:
     def __init__(self, connection=None, term=None, price=None,
                  currency_code=None, active=None):
         self.connection = connection
@@ -235,7 +235,7 @@ class PriceSchedule(object):
             setattr(self, name, value)
 
 
-class ReservedInstancesConfiguration(object):
+class ReservedInstancesConfiguration:
     def __init__(self, connection=None, availability_zone=None, platform=None,
                  instance_count=None, instance_type=None):
         self.connection = connection
@@ -260,7 +260,7 @@ class ReservedInstancesConfiguration(object):
             setattr(self, name, value)
 
 
-class ModifyReservedInstancesResult(object):
+class ModifyReservedInstancesResult:
     def __init__(self, connection=None, modification_id=None):
         self.connection = connection
         self.modification_id = modification_id
@@ -275,7 +275,7 @@ class ModifyReservedInstancesResult(object):
             setattr(self, name, value)
 
 
-class ModificationResult(object):
+class ModificationResult:
     def __init__(self, connection=None, modification_id=None,
                  availability_zone=None, platform=None, instance_count=None,
                  instance_type=None):
@@ -304,7 +304,7 @@ class ModificationResult(object):
             setattr(self, name, value)
 
 
-class ReservedInstancesModification(object):
+class ReservedInstancesModification:
     def __init__(self, connection=None, modification_id=None,
                  reserved_instances=None, modification_results=None,
                  create_date=None, update_date=None, effective_date=None,

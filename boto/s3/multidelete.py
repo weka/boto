@@ -22,7 +22,7 @@
 from boto import handler
 import xml.sax
 
-class Deleted(object):
+class Deleted:
     """
     A successfully deleted object in a multi-object delete request.
 
@@ -45,7 +45,7 @@ class Deleted(object):
         
     def __repr__(self):
         if self.version_id:
-            return '<Deleted: %s.%s>' % (self.key, self.version_id)
+            return f'<Deleted: {self.key}.{self.version_id}>'
         else:
             return '<Deleted: %s>' % self.key
         
@@ -65,7 +65,7 @@ class Deleted(object):
         else:
             setattr(self, name, value)
             
-class Error(object):
+class Error:
     """
     An unsuccessful deleted object in a multi-object delete request.
 
@@ -86,10 +86,10 @@ class Error(object):
         
     def __repr__(self):
         if self.version_id:
-            return '<Error: %s.%s(%s)>' % (self.key, self.version_id,
+            return '<Error: {}.{}({})>'.format(self.key, self.version_id,
                                            self.code)
         else:
-            return '<Error: %s(%s)>' % (self.key, self.code)
+            return f'<Error: {self.key}({self.code})>'
         
     def startElement(self, name, attrs, connection):
         return None
@@ -106,7 +106,7 @@ class Error(object):
         else:
             setattr(self, name, value)
             
-class MultiDeleteResult(object):
+class MultiDeleteResult:
     """
     The status returned from a MultiObject Delete request.
 

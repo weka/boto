@@ -32,7 +32,7 @@ class TestSecurityToken(AWSMockServiceTestCase):
     def create_service_connection(self, **kwargs):
         kwargs['security_token'] = 'token'
 
-        return super(TestSecurityToken, self).create_service_connection(**kwargs)
+        return super().create_service_connection(**kwargs)
 
     def test_security_token(self):
         self.assertEqual('token',
@@ -42,7 +42,7 @@ class TestSTSConnection(AWSMockServiceTestCase):
     connection_class = STSConnection
 
     def setUp(self):
-        super(TestSTSConnection, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -105,7 +105,7 @@ class TestSTSWebIdentityConnection(AWSMockServiceTestCase):
     connection_class = STSConnection
 
     def setUp(self):
-        super(TestSTSWebIdentityConnection, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -189,7 +189,7 @@ class TestSTSSAMLConnection(AWSMockServiceTestCase):
     connection_class = STSConnection
 
     def setUp(self):
-        super(TestSTSSAMLConnection, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""

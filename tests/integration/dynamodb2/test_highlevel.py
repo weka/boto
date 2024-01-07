@@ -347,7 +347,7 @@ class DynamoDBv2Test(unittest.TestCase):
             'first_name': 'dead',
             'last_name': 'mau5',
             'friend_count': 2,
-            'friends': set(['skrill', 'penny']),
+            'friends': {'skrill', 'penny'},
         })
         self.assertTrue(mau5_created)
 
@@ -355,7 +355,7 @@ class DynamoDBv2Test(unittest.TestCase):
             'username': 'penny',
             'first_name': 'Penny',
             'friend_count': 0,
-            'friends': set([]),
+            'friends': set(),
         })
         self.assertTrue(penny_created)
 
@@ -386,7 +386,7 @@ class DynamoDBv2Test(unittest.TestCase):
             for i in range(500):
                 batch.put_item(data={
                     'user_id': str(i),
-                    'name': 'Droid #{0}'.format(i),
+                    'name': f'Droid #{i}',
                 })
 
             # Before ``__exit__`` runs, we should have a bunch of unprocessed
@@ -511,7 +511,7 @@ class DynamoDBv2Test(unittest.TestCase):
             os.path.dirname(__file__),
             'forum_test_data.json'
         )
-        with open(test_data_path, 'r') as test_data:
+        with open(test_data_path) as test_data:
             data = json.load(test_data)
 
             with posts.batch_write() as batch:
@@ -552,7 +552,7 @@ class DynamoDBv2Test(unittest.TestCase):
             os.path.dirname(__file__),
             'forum_test_data.json'
         )
-        with open(test_data_path, 'r') as test_data:
+        with open(test_data_path) as test_data:
             data = json.load(test_data)
 
             with posts.batch_write() as batch:

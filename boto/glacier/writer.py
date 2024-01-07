@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2012 Thomas Parslow http://almostobsolete.net/
 # Copyright (c) 2012 Robie Basak <robie@justgohome.co.uk>
 # Tree hash implementation from Aaron Brady bradya@gmail.com
@@ -34,7 +33,7 @@ from boto.glacier.utils import compute_hashes_from_fileobj
 _ONE_MEGABYTE = 1024 * 1024
 
 
-class _Partitioner(object):
+class _Partitioner:
     """Convert variable-size writes into part-sized writes
 
     Call write(data) with variable sized data as needed to write all data. Call
@@ -79,7 +78,7 @@ class _Partitioner(object):
             self._send_part()
 
 
-class _Uploader(object):
+class _Uploader:
     """Upload to a Glacier upload_id.
 
     Call upload_part for each part (in any order) and then close to complete
@@ -202,7 +201,7 @@ def resume_file_upload(vault, upload_id, part_size, fobj, part_hash_map,
     return uploader.archive_id
 
 
-class Writer(object):
+class Writer:
     """
     Presents a file-like object for writing to a Amazon Glacier
     Archive. The data is written using the multi-part upload API.

@@ -346,8 +346,8 @@ class TestEMRResponses(unittest.TestCase):
     def _assert_fields(self, response, **fields):
         for field, expected in fields.items():
             actual = getattr(response, field)
-            self.assertEquals(expected, actual,
-                              "Field %s: %r != %r" % (field, expected, actual))
+            self.assertEqual(expected, actual,
+                              f"Field {field}: {expected!r} != {actual!r}")
 
     def test_JobFlows_example(self):
         [jobflow] = self._parse_xml(JOB_FLOW_EXAMPLE,
@@ -383,6 +383,6 @@ class TestEMRResponses(unittest.TestCase):
                             masterinstancetype='m1.large',
                             ec2keyname='myubersecurekey',
                             keepjobflowalivewhennosteps='false')
-        self.assertEquals(6, len(jobflow.steps))
-        self.assertEquals(2, len(jobflow.instancegroups))
+        self.assertEqual(6, len(jobflow.steps))
+        self.assertEqual(2, len(jobflow.instancegroups))
 

@@ -3,7 +3,7 @@ from datetime import datetime
 from boto.resultset import ResultSet
 
 
-class Stack(object):
+class Stack:
     def __init__(self, connection=None):
         self.connection = connection
         self.creation_time = None
@@ -145,7 +145,7 @@ class Stack(object):
             stack_policy_url=stack_policy_url)
 
 
-class StackSummary(object):
+class StackSummary:
     def __init__(self, connection=None):
         self.connection = connection
         self.stack_id = None
@@ -183,7 +183,7 @@ class StackSummary(object):
             setattr(self, name, value)
 
 
-class Parameter(object):
+class Parameter:
     def __init__(self, connection=None):
         self.connection = None
         self.key = None
@@ -201,10 +201,10 @@ class Parameter(object):
             setattr(self, name, value)
 
     def __repr__(self):
-        return "Parameter:\"%s\"=\"%s\"" % (self.key, self.value)
+        return f"Parameter:\"{self.key}\"=\"{self.value}\""
 
 
-class Output(object):
+class Output:
     def __init__(self, connection=None):
         self.connection = connection
         self.description = None
@@ -225,10 +225,10 @@ class Output(object):
             setattr(self, name, value)
 
     def __repr__(self):
-        return "Output:\"%s\"=\"%s\"" % (self.key, self.value)
+        return f"Output:\"{self.key}\"=\"{self.value}\""
 
 
-class Capability(object):
+class Capability:
     def __init__(self, connection=None):
         self.connection = None
         self.value = None
@@ -268,7 +268,7 @@ class Tag(dict):
             self._current_value = None
 
 
-class NotificationARN(object):
+class NotificationARN:
     def __init__(self, connection=None):
         self.connection = None
         self.value = None
@@ -283,7 +283,7 @@ class NotificationARN(object):
         return "NotificationARN:\"%s\"" % (self.value)
 
 
-class StackResource(object):
+class StackResource:
     def __init__(self, connection=None):
         self.connection = connection
         self.description = None
@@ -325,11 +325,11 @@ class StackResource(object):
             setattr(self, name, value)
 
     def __repr__(self):
-        return "StackResource:%s (%s)" % (self.logical_resource_id,
+        return "StackResource:{} ({})".format(self.logical_resource_id,
                 self.resource_type)
 
 
-class StackResourceSummary(object):
+class StackResourceSummary:
     def __init__(self, connection=None):
         self.connection = connection
         self.last_updated_time = None
@@ -368,11 +368,11 @@ class StackResourceSummary(object):
             setattr(self, name, value)
 
     def __repr__(self):
-        return "StackResourceSummary:%s (%s)" % (self.logical_resource_id,
+        return "StackResourceSummary:{} ({})".format(self.logical_resource_id,
                 self.resource_type)
 
 
-class StackEvent(object):
+class StackEvent:
     valid_states = ("CREATE_IN_PROGRESS", "CREATE_FAILED", "CREATE_COMPLETE",
             "DELETE_IN_PROGRESS", "DELETE_FAILED", "DELETE_COMPLETE")
     def __init__(self, connection=None):
@@ -419,5 +419,5 @@ class StackEvent(object):
             setattr(self, name, value)
 
     def __repr__(self):
-        return "StackEvent %s %s %s" % (self.resource_type,
+        return "StackEvent {} {} {}".format(self.resource_type,
                 self.logical_resource_id, self.resource_status)

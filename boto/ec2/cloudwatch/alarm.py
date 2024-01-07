@@ -45,7 +45,7 @@ class MetricAlarms(list):
         pass
 
 
-class MetricAlarm(object):
+class MetricAlarm:
 
     OK = 'OK'
     ALARM = 'ALARM'
@@ -57,7 +57,7 @@ class MetricAlarm(object):
         '<':  'LessThanThreshold',
         '<=': 'LessThanOrEqualToThreshold',
     }
-    _rev_cmp_map = dict((v, k) for (k, v) in six.iteritems(_cmp_map))
+    _rev_cmp_map = {v: k for (k, v) in _cmp_map.items()}
 
     def __init__(self, connection=None, name=None, metric=None,
                  namespace=None, statistic=None, comparison=None,
@@ -165,7 +165,7 @@ class MetricAlarm(object):
         self.ok_actions = ok_actions
 
     def __repr__(self):
-        return 'MetricAlarm:%s[%s(%s) %s %s]' % (self.name, self.metric,
+        return 'MetricAlarm:{}[{}({}) {} {}]'.format(self.name, self.metric,
                                                  self.statistic,
                                                  self.comparison,
                                                  self.threshold)
@@ -296,12 +296,12 @@ class MetricAlarm(object):
         self.connection.delete_alarms([self.name])
 
 
-class AlarmHistoryItem(object):
+class AlarmHistoryItem:
     def __init__(self, connection=None):
         self.connection = connection
 
     def __repr__(self):
-        return 'AlarmHistory:%s[%s at %s]' % (self.name, self.summary, self.timestamp)
+        return f'AlarmHistory:{self.name}[{self.summary} at {self.timestamp}]'
 
     def startElement(self, name, attrs, connection):
         pass

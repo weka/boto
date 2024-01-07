@@ -28,7 +28,7 @@ def get_oai_value(origin_access_identity):
     else:
         return origin_access_identity
                 
-class S3Origin(object):
+class S3Origin:
     """
     Origin information to associate with the distribution.
     If your distribution will use an Amazon S3 origin,
@@ -78,7 +78,7 @@ class S3Origin(object):
         s += '  </S3Origin>\n'
         return s
     
-class CustomOrigin(object):
+class CustomOrigin:
     """
     Origin information to associate with the distribution.
     If your distribution will use a non-Amazon S3 origin,

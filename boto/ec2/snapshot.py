@@ -46,7 +46,7 @@ class Snapshot(TaggedEC2Object):
     AttrName = 'createVolumePermission'
 
     def __init__(self, connection=None):
-        super(Snapshot, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.volume_id = None
         self.status = None
@@ -175,7 +175,7 @@ class Snapshot(TaggedEC2Object):
         )
 
 
-class SnapshotAttribute(object):
+class SnapshotAttribute:
     def __init__(self, parent=None):
         self.snapshot_id = None
         self.attrs = {}

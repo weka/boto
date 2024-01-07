@@ -38,7 +38,7 @@ class ResponseGroup(xml.sax.ContentHandler):
         self._xml = StringIO()
 
     def __repr__(self):
-        return '<%s: %s>' % (self.__class__.__name__, self.__dict__)
+        return f'<{self.__class__.__name__}: {self.__dict__}>'
 
     #
     # Attribute Functions
@@ -50,7 +50,7 @@ class ResponseGroup(xml.sax.ContentHandler):
         self.__dict__[name] = value
 
     def to_xml(self):
-        return "<%s>%s</%s>" % (self._nodename, self._xml.getvalue(), self._nodename)
+        return f"<{self._nodename}>{self._xml.getvalue()}</{self._nodename}>"
 
     #
     # XML Parser functions
@@ -67,7 +67,7 @@ class ResponseGroup(xml.sax.ContentHandler):
         return None
 
     def endElement(self, name, value, connection):
-        self._xml.write("%s</%s>" % (cgi.escape(value).replace("&amp;amp;", "&amp;"), name))
+        self._xml.write("{}</{}>".format(cgi.escape(value).replace("&amp;amp;", "&amp;"), name))
         if len(self._nodepath) == 0:
             return
         obj = None

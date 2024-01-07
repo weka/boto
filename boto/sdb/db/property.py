@@ -30,7 +30,7 @@ from boto.sdb.db.blob import Blob
 from boto.compat import six, long_type
 
 
-class Property(object):
+class Property:
 
     data_type = str
     type_name = ''
@@ -77,10 +77,10 @@ class Property(object):
         self.slot_name = '_' + self.name
 
     def default_validator(self, value):
-        if isinstance(value, six.string_types) or value == self.default_value():
+        if isinstance(value, str) or value == self.default_value():
             return
         if not isinstance(value, self.data_type):
-            raise TypeError('Validation Error, %s.%s expecting %s, got %s' % (self.model_class.__name__, self.name, self.data_type, type(value)))
+            raise TypeError(f'Validation Error, {self.model_class.__name__}.{self.name} expecting {self.data_type}, got {type(value)}')
 
     def default_value(self):
         return self.default
@@ -89,7 +89,7 @@ class Property(object):
         if self.required and value is None:
             raise ValueError('%s is a required property' % self.name)
         if self.choices and value and value not in self.choices:
-            raise ValueError('%s not a valid choice for %s.%s' % (value, self.model_class.__name__, self.name))
+            raise ValueError(f'{value} not a valid choice for {self.model_class.__name__}.{self.name}')
         if self.validator:
             self.validator(value)
         else:
@@ -114,7 +114,7 @@ class Property(object):
 def validate_string(value):
     if value is None:
         return
-    elif isinstance(value, six.string_types):
+    elif isinstance(value, str):
         if len(value) > 1024:
             raise ValueError('Length of value greater than maxlength')
     else:
@@ -128,7 +128,7 @@ class StringProperty(Property):
     def __init__(self, verbose_name=None, name=None, default='',
                  required=False, validator=validate_string,
                  choices=None, unique=False):
-        super(StringProperty, self).__init__(verbose_name, name, default, required,
+        super().__init__(verbose_name, name, default, required,
                           validator, choices, unique)
 
 
@@ -139,13 +139,13 @@ class TextProperty(Property):
     def __init__(self, verbose_name=None, name=None, default='',
                  required=False, validator=None, choices=None,
                  unique=False, max_length=None):
-        super(TextProperty, self).__init__(verbose_name, name, default, required,
+        super().__init__(verbose_name, name, default, required,
                           validator, choices, unique)
         self.max_length = max_length
 
     def validate(self, value):
-        value = super(TextProperty, self).validate(value)
-        if not isinstance(value, six.string_types):
+        value = super().validate(value)
+        if not isinstance(value, str):
             raise TypeError('Expecting Text, got %s' % type(value))
         if self.max_length and len(value) > self.max_length:
             raise ValueError('Length of value greater than maxlength %s' % self.max_length)
@@ -208,7 +208,7 @@ class PasswordProperty(StringProperty):
 
            The remaining parameters are passed through to StringProperty.__init__"""
 
-        super(PasswordProperty, self).__init__(verbose_name, name, default, required,
+        super().__init__(verbose_name, name, default, required,
                                 validator, choices, unique)
         self.hashfunc = hashfunc
 
@@ -217,7 +217,7 @@ class PasswordProperty(StringProperty):
         return p
 
     def get_value_for_datastore(self, model_instance):
-        value = super(PasswordProperty, self).get_value_for_datastore(model_instance)
+        value = super().get_value_for_datastore(model_instance)
         if value and len(value):
             return str(value)
         else:
@@ -228,18 +228,18 @@ class PasswordProperty(StringProperty):
             p = self.data_type(hashfunc=self.hashfunc)
             p.set(value)
             value = p
-        super(PasswordProperty, self).__set__(obj, value)
+        super().__set__(obj, value)
 
     def __get__(self, obj, objtype):
-        return self.data_type(super(PasswordProperty, self).__get__(obj, objtype), hashfunc=self.hashfunc)
+        return self.data_type(super().__get__(obj, objtype), hashfunc=self.hashfunc)
 
     def validate(self, value):
-        value = super(PasswordProperty, self).validate(value)
+        value = super().validate(value)
         if isinstance(value, self.data_type):
             if len(value) > 1024:
                 raise ValueError('Length of value greater than maxlength')
         else:
-            raise TypeError('Expecting %s, got %s' % (type(self.data_type), type(value)))
+            raise TypeError(f'Expecting {type(self.data_type)}, got {type(value)}')
 
 
 class BlobProperty(Property):
@@ -255,22 +255,22 @@ class BlobProperty(Property):
                     id = oldb.id
                 b = Blob(value=value, id=id)
                 value = b
-        super(BlobProperty, self).__set__(obj, value)
+        super().__set__(obj, value)
 
 
 class S3KeyProperty(Property):
 
     data_type = boto.s3.key.Key
     type_name = 'S3Key'
-    validate_regex = "^s3:\/\/([^\/]*)\/(.*)$"
+    validate_regex = r"^s3:\/\/([^\/]*)\/(.*)$"
 
     def __init__(self, verbose_name=None, name=None, default=None,
                  required=False, validator=None, choices=None, unique=False):
-        super(S3KeyProperty, self).__init__(verbose_name, name, default, required,
+        super().__init__(verbose_name, name, default, required,
                           validator, choices, unique)
 
     def validate(self, value):
-        value = super(S3KeyProperty, self).validate(value)
+        value = super().validate(value)
         if value == self.default_value() or value == str(self.default_value()):
             return self.default_value()
         if isinstance(value, self.data_type):
@@ -278,10 +278,10 @@ class S3KeyProperty(Property):
         match = re.match(self.validate_regex, value)
         if match:
             return
-        raise TypeError('Validation Error, expecting %s, got %s' % (self.data_type, type(value)))
+        raise TypeError(f'Validation Error, expecting {self.data_type}, got {type(value)}')
 
     def __get__(self, obj, objtype):
-        value = super(S3KeyProperty, self).__get__(obj, objtype)
+        value = super().__get__(obj, objtype)
         if value:
             if isinstance(value, self.data_type):
                 return value
@@ -298,9 +298,9 @@ class S3KeyProperty(Property):
             return value
 
     def get_value_for_datastore(self, model_instance):
-        value = super(S3KeyProperty, self).get_value_for_datastore(model_instance)
+        value = super().get_value_for_datastore(model_instance)
         if value:
-            return "s3://%s/%s" % (value.bucket.name, value.name)
+            return f"s3://{value.bucket.name}/{value.name}"
         else:
             return None
 
@@ -312,13 +312,13 @@ class IntegerProperty(Property):
 
     def __init__(self, verbose_name=None, name=None, default=0, required=False,
                  validator=None, choices=None, unique=False, max=2147483647, min=-2147483648):
-        super(IntegerProperty, self).__init__(verbose_name, name, default, required, validator, choices, unique)
+        super().__init__(verbose_name, name, default, required, validator, choices, unique)
         self.max = max
         self.min = min
 
     def validate(self, value):
         value = int(value)
-        value = super(IntegerProperty, self).validate(value)
+        value = super().validate(value)
         if value > self.max:
             raise ValueError('Maximum value is %d' % self.max)
         if value < self.min:
@@ -331,7 +331,7 @@ class IntegerProperty(Property):
     def __set__(self, obj, value):
         if value == "" or value is None:
             value = 0
-        return super(IntegerProperty, self).__set__(obj, value)
+        return super().__set__(obj, value)
 
 
 class LongProperty(Property):
@@ -341,11 +341,11 @@ class LongProperty(Property):
 
     def __init__(self, verbose_name=None, name=None, default=0, required=False,
                  validator=None, choices=None, unique=False):
-        super(LongProperty, self).__init__(verbose_name, name, default, required, validator, choices, unique)
+        super().__init__(verbose_name, name, default, required, validator, choices, unique)
 
     def validate(self, value):
         value = long_type(value)
-        value = super(LongProperty, self).validate(value)
+        value = super().validate(value)
         min = -9223372036854775808
         max = 9223372036854775807
         if value > max:
@@ -365,7 +365,7 @@ class BooleanProperty(Property):
 
     def __init__(self, verbose_name=None, name=None, default=False, required=False,
                  validator=None, choices=None, unique=False):
-        super(BooleanProperty, self).__init__(verbose_name, name, default, required, validator, choices, unique)
+        super().__init__(verbose_name, name, default, required, validator, choices, unique)
 
     def empty(self, value):
         return value is None
@@ -378,11 +378,11 @@ class FloatProperty(Property):
 
     def __init__(self, verbose_name=None, name=None, default=0.0, required=False,
                  validator=None, choices=None, unique=False):
-        super(FloatProperty, self).__init__(verbose_name, name, default, required, validator, choices, unique)
+        super().__init__(verbose_name, name, default, required, validator, choices, unique)
 
     def validate(self, value):
         value = float(value)
-        value = super(FloatProperty, self).validate(value)
+        value = super().validate(value)
         return value
 
     def empty(self, value):
@@ -399,26 +399,26 @@ class DateTimeProperty(Property):
 
     def __init__(self, verbose_name=None, auto_now=False, auto_now_add=False, name=None,
                  default=None, required=False, validator=None, choices=None, unique=False):
-        super(DateTimeProperty, self).__init__(verbose_name, name, default, required, validator, choices, unique)
+        super().__init__(verbose_name, name, default, required, validator, choices, unique)
         self.auto_now = auto_now
         self.auto_now_add = auto_now_add
 
     def default_value(self):
         if self.auto_now or self.auto_now_add:
             return self.now()
-        return super(DateTimeProperty, self).default_value()
+        return super().default_value()
 
     def validate(self, value):
         if value is None:
             return
         if isinstance(value, datetime.date):
             return value
-        return super(DateTimeProperty, self).validate(value)
+        return super().validate(value)
 
     def get_value_for_datastore(self, model_instance):
         if self.auto_now:
             setattr(model_instance, self.name, self.now())
-        return super(DateTimeProperty, self).get_value_for_datastore(model_instance)
+        return super().get_value_for_datastore(model_instance)
 
     def now(self):
         return datetime.datetime.utcnow()
@@ -431,26 +431,26 @@ class DateProperty(Property):
 
     def __init__(self, verbose_name=None, auto_now=False, auto_now_add=False, name=None,
                  default=None, required=False, validator=None, choices=None, unique=False):
-        super(DateProperty, self).__init__(verbose_name, name, default, required, validator, choices, unique)
+        super().__init__(verbose_name, name, default, required, validator, choices, unique)
         self.auto_now = auto_now
         self.auto_now_add = auto_now_add
 
     def default_value(self):
         if self.auto_now or self.auto_now_add:
             return self.now()
-        return super(DateProperty, self).default_value()
+        return super().default_value()
 
     def validate(self, value):
-        value = super(DateProperty, self).validate(value)
+        value = super().validate(value)
         if value is None:
             return
         if not isinstance(value, self.data_type):
-            raise TypeError('Validation Error, expecting %s, got %s' % (self.data_type, type(value)))
+            raise TypeError(f'Validation Error, expecting {self.data_type}, got {type(value)}')
 
     def get_value_for_datastore(self, model_instance):
         if self.auto_now:
             setattr(model_instance, self.name, self.now())
-        val = super(DateProperty, self).get_value_for_datastore(model_instance)
+        val = super().get_value_for_datastore(model_instance)
         if isinstance(val, datetime.datetime):
             val = val.date()
         return val
@@ -465,14 +465,14 @@ class TimeProperty(Property):
 
     def __init__(self, verbose_name=None, name=None,
                  default=None, required=False, validator=None, choices=None, unique=False):
-        super(TimeProperty, self).__init__(verbose_name, name, default, required, validator, choices, unique)
+        super().__init__(verbose_name, name, default, required, validator, choices, unique)
 
     def validate(self, value):
-        value = super(TimeProperty, self).validate(value)
+        value = super().validate(value)
         if value is None:
             return
         if not isinstance(value, self.data_type):
-            raise TypeError('Validation Error, expecting %s, got %s' % (self.data_type, type(value)))
+            raise TypeError(f'Validation Error, expecting {self.data_type}, got {type(value)}')
 
 
 class ReferenceProperty(Property):
@@ -482,7 +482,7 @@ class ReferenceProperty(Property):
 
     def __init__(self, reference_class=None, collection_name=None,
                  verbose_name=None, name=None, default=None, required=False, validator=None, choices=None, unique=False):
-        super(ReferenceProperty, self).__init__(verbose_name, name, default, required, validator, choices, unique)
+        super().__init__(verbose_name, name, default, required, validator, choices, unique)
         self.reference_class = reference_class
         self.collection_name = collection_name
 
@@ -494,7 +494,7 @@ class ReferenceProperty(Property):
             # If the value is still the UUID for the referenced object, we need to create
             # the object now that is the attribute has actually been accessed.  This lazy
             # instantiation saves unnecessary roundtrips to SimpleDB
-            if isinstance(value, six.string_types):
+            if isinstance(value, str):
                 value = self.reference_class(value)
                 setattr(obj, self.name, value)
             return value
@@ -504,12 +504,12 @@ class ReferenceProperty(Property):
         This causes bad things to happen"""
         if value is not None and (obj.id == value or (hasattr(value, "id") and obj.id == value.id)):
             raise ValueError("Can not associate an object with itself!")
-        return super(ReferenceProperty, self).__set__(obj, value)
+        return super().__set__(obj, value)
 
     def __property_config__(self, model_class, property_name):
-        super(ReferenceProperty, self).__property_config__(model_class, property_name)
+        super().__property_config__(model_class, property_name)
         if self.collection_name is None:
-            self.collection_name = '%s_%s_set' % (model_class.__name__.lower(), self.name)
+            self.collection_name = f'{model_class.__name__.lower()}_{self.name}_set'
         if hasattr(self.reference_class, self.collection_name):
             raise ValueError('duplicate property: %s' % self.collection_name)
         setattr(self.reference_class, self.collection_name,
@@ -527,7 +527,7 @@ class ReferenceProperty(Property):
             cls_lineage = self.reference_class.get_lineage()
             if obj_lineage.startswith(cls_lineage):
                 return
-            raise TypeError('%s not instance of %s' % (obj_lineage, cls_lineage))
+            raise TypeError(f'{obj_lineage} not instance of {cls_lineage}')
         except:
             raise ValueError('%s is not a Model' % value)
 
@@ -538,7 +538,7 @@ class ReferenceProperty(Property):
             raise ValueError('%s is a required property' % self.name)
         if value == self.default_value():
             return
-        if not isinstance(value, six.string_types):
+        if not isinstance(value, str):
             self.check_instance(value)
 
 
@@ -577,7 +577,7 @@ class CalculatedProperty(Property):
     def __init__(self, verbose_name=None, name=None, default=None,
                  required=False, validator=None, choices=None,
                  calculated_type=int, unique=False, use_method=False):
-        super(CalculatedProperty, self).__init__(verbose_name, name, default, required,
+        super().__init__(verbose_name, name, default, required,
                           validator, choices, unique)
         self.calculated_type = calculated_type
         self.use_method = use_method
@@ -618,7 +618,7 @@ class ListProperty(Property):
         if default is None:
             default = []
         self.item_type = item_type
-        super(ListProperty, self).__init__(verbose_name, name, default=default, required=True, **kwds)
+        super().__init__(verbose_name, name, default=default, required=True, **kwds)
 
     def validate(self, value):
         if self.validator:
@@ -627,16 +627,16 @@ class ListProperty(Property):
             if not isinstance(value, list):
                 value = [value]
 
-        if self.item_type in six.integer_types:
-            item_type = six.integer_types
-        elif self.item_type in six.string_types:
-            item_type = six.string_types
+        if self.item_type in (int,):
+            item_type = (int,)
+        elif self.item_type in (str,):
+            item_type = (str,)
         else:
             item_type = self.item_type
 
         for item in value:
             if not isinstance(item, item_type):
-                if item_type == six.integer_types:
+                if item_type == (int,):
                     raise ValueError('Items in the %s list must all be integers.' % self.name)
                 else:
                     raise ValueError('Items in the %s list must all be %s instances' %
@@ -647,21 +647,21 @@ class ListProperty(Property):
         return value is None
 
     def default_value(self):
-        return list(super(ListProperty, self).default_value())
+        return list(super().default_value())
 
     def __set__(self, obj, value):
         """Override the set method to allow them to set the property to an instance of the item_type instead of requiring a list to be passed in"""
-        if self.item_type in six.integer_types:
-            item_type = six.integer_types
-        elif self.item_type in six.string_types:
-            item_type = six.string_types
+        if self.item_type in (int,):
+            item_type = (int,)
+        elif self.item_type in (str,):
+            item_type = (str,)
         else:
             item_type = self.item_type
         if isinstance(value, item_type):
             value = [value]
         elif value is None:  # Override to allow them to set this to "None" to remove everything
             value = []
-        return super(ListProperty, self).__set__(obj, value)
+        return super().__set__(obj, value)
 
 
 class MapProperty(Property):
@@ -673,24 +673,24 @@ class MapProperty(Property):
         if default is None:
             default = {}
         self.item_type = item_type
-        super(MapProperty, self).__init__(verbose_name, name, default=default, required=True, **kwds)
+        super().__init__(verbose_name, name, default=default, required=True, **kwds)
 
     def validate(self, value):
-        value = super(MapProperty, self).validate(value)
+        value = super().validate(value)
         if value is not None:
             if not isinstance(value, dict):
                 raise ValueError('Value must of type dict')
 
-        if self.item_type in six.integer_types:
-            item_type = six.integer_types
-        elif self.item_type in six.string_types:
-            item_type = six.string_types
+        if self.item_type in (int,):
+            item_type = (int,)
+        elif self.item_type in (str,):
+            item_type = (str,)
         else:
             item_type = self.item_type
 
         for key in value:
             if not isinstance(value[key], item_type):
-                if item_type == six.integer_types:
+                if item_type == (int,):
                     raise ValueError('Values in the %s Map must all be integers.' % self.name)
                 else:
                     raise ValueError('Values in the %s Map must all be %s instances' %

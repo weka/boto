@@ -21,7 +21,7 @@
 # IN THE SOFTWARE.
 #
 
-class StatusInfo(object):
+class StatusInfo:
     """
     Describes a status message.
     """

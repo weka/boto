@@ -66,7 +66,7 @@ class CloudSearchDomainConnection(AWSAuthConnection):
                 'specific domain\'s endpoint in order to successfully make '
                 'requests to that CloudSearch Domain.'
             )
-        super(CloudSearchDomainConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
     
     def _required_auth_capability(self):
@@ -76,7 +76,7 @@ class CloudSearchDomainConnection(AWSAuthConnection):
                filter_query=None, highlight=None, partial=None,
                query_options=None, query_parser=None, ret=None, size=None,
                sort=None, start=None):
-        """
+        r"""
         Retrieves a list of documents that match the specified search
         criteria. How you specify the search criteria depends on which
         query parser you use. Amazon CloudSearch supports four query

@@ -78,7 +78,7 @@ class Route53Connection(AWSAuthConnection):
                  host=DefaultHost, debug=0, security_token=None,
                  validate_certs=True, https_connection_factory=None,
                  profile_name=None):
-        super(Route53Connection, self).__init__(
+        super().__init__(
             host,
             aws_access_key_id, aws_secret_access_key,
             True, port, proxy, proxy_port, debug=debug,
@@ -93,12 +93,12 @@ class Route53Connection(AWSAuthConnection):
     def make_request(self, action, path, headers=None, data='', params=None):
         if params:
             pairs = []
-            for key, val in six.iteritems(params):
+            for key, val in params.items():
                 if val is None:
                     continue
                 pairs.append(key + '=' + urllib.parse.quote(str(val)))
             path += '?' + '&'.join(pairs)
-        return super(Route53Connection, self).make_request(
+        return super().make_request(
             action, path, headers, data,
             retry_handler=self._retry_handler)
 
@@ -144,7 +144,7 @@ class Route53Connection(AWSAuthConnection):
         :param hosted_zone_id: The unique identifier for the Hosted Zone
 
         """
-        uri = '/%s/hostedzone/%s' % (self.Version, hosted_zone_id)
+        uri = f'/{self.Version}/hostedzone/{hosted_zone_id}'
         response = self.make_request('GET', uri)
         body = response.read()
         boto.log.debug(body)
@@ -255,7 +255,7 @@ class Route53Connection(AWSAuthConnection):
         :param hosted_zone_id: The hosted zone's id
 
         """
-        uri = '/%s/hostedzone/%s' % (self.Version, hosted_zone_id)
+        uri = f'/{self.Version}/hostedzone/{hosted_zone_id}'
         response = self.make_request('DELETE', uri)
         body = response.read()
         boto.log.debug(body)
@@ -327,7 +327,7 @@ class Route53Connection(AWSAuthConnection):
         if marker is not None:
             params['marker'] = marker
 
-        uri = '/%s/healthcheck' % (self.Version, )
+        uri = f'/{self.Version}/healthcheck'
         response = self.make_request('GET', uri, params=params)
         body = response.read()
         boto.log.debug(body)
@@ -366,7 +366,7 @@ class Route53Connection(AWSAuthConnection):
         :param health_check_id: ID of the health check to delete
 
         """
-        uri = '/%s/healthcheck/%s' % (self.Version, health_check_id)
+        uri = f'/{self.Version}/healthcheck/{health_check_id}'
         response = self.make_request('DELETE', uri)
         body = response.read()
         boto.log.debug(body)
@@ -435,7 +435,7 @@ class Route53Connection(AWSAuthConnection):
         """
         params = {'type': type, 'name': name,
                   'identifier': identifier, 'maxitems': maxitems}
-        uri = '/%s/hostedzone/%s/rrset' % (self.Version, hosted_zone_id)
+        uri = f'/{self.Version}/hostedzone/{hosted_zone_id}/rrset'
         response = self.make_request('GET', uri, params=params)
         body = response.read()
         boto.log.debug(body)
@@ -463,7 +463,7 @@ class Route53Connection(AWSAuthConnection):
             XML schema defined by the Route53 service.
 
         """
-        uri = '/%s/hostedzone/%s/rrset' % (self.Version, hosted_zone_id)
+        uri = f'/{self.Version}/hostedzone/{hosted_zone_id}/rrset'
         response = self.make_request('POST', uri,
                                      {'Content-Type': 'text/xml'},
                                      xml_body)
@@ -490,7 +490,7 @@ class Route53Connection(AWSAuthConnection):
             This ID is returned in the response to the change_rrsets method.
 
         """
-        uri = '/%s/change/%s' % (self.Version, change_id)
+        uri = f'/{self.Version}/change/{change_id}'
         response = self.make_request('GET', uri)
         body = response.read()
         boto.log.debug(body)
@@ -601,7 +601,7 @@ class Route53Connection(AWSAuthConnection):
                         'ServiceUnavailable',
                         'RequestExpired'):
                     return status
-                msg = "%s, retry attempt %s" % (
+                msg = "{}, retry attempt {}".format(
                     err.error_code,
                     i
                 )

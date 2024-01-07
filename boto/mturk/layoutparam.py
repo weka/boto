@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-class LayoutParameters(object):
+class LayoutParameters:
 
     def __init__(self, layoutParameters=None):
         if layoutParameters is None:
@@ -35,10 +35,10 @@ class LayoutParameters(object):
         for n, layoutParameter in enumerate(self.layoutParameters):
             kv = layoutParameter.get_as_params()
             for key in kv:
-                params['HITLayoutParameter.%s.%s' % ((n+1), key) ] = kv[key]
+                params[f'HITLayoutParameter.{(n+1)}.{key}' ] = kv[key]
         return params
 
-class LayoutParameter(object):
+class LayoutParameter:
     """
     Representation of a single HIT layout parameter
     """

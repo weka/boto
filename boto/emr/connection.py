@@ -63,7 +63,7 @@ class EmrConnection(AWSQueryConnection):
             region = RegionInfo(self, self.DefaultRegionName,
                                 self.DefaultRegionEndpoint)
         self.region = region
-        super(EmrConnection, self).__init__(aws_access_key_id,
+        super().__init__(aws_access_key_id,
                                     aws_secret_access_key,
                                     is_secure, port, proxy, proxy_port,
                                     proxy_user, proxy_pass,
@@ -292,7 +292,7 @@ class EmrConnection(AWSQueryConnection):
                      value for that tag should be the empty string
                      (e.g. '') or None.
         """
-        assert isinstance(resource_id, six.string_types)
+        assert isinstance(resource_id, str)
         params = {
             'ResourceId': resource_id,
         }
@@ -540,9 +540,9 @@ class EmrConnection(AWSQueryConnection):
         else:
             # Instance group args (for spot instances or a heterogenous cluster)
             list_args = self._build_instance_group_list_args(instance_groups)
-            instance_params = dict(
-                ('Instances.%s' % k, v) for k, v in six.iteritems(list_args)
-                )
+            instance_params = {
+                'Instances.%s' % k: v for k, v in list_args.items()
+                }
             params.update(instance_params)
 
         # Debugging step from EMR API docs
@@ -570,7 +570,7 @@ class EmrConnection(AWSQueryConnection):
             params['AdditionalInfo'] = additional_info
 
         if api_params:
-            for key, value in six.iteritems(api_params):
+            for key, value in api_params.items():
                 if value is None:
                     params.pop(key, None)
                 else:
@@ -666,8 +666,8 @@ class EmrConnection(AWSQueryConnection):
 
         params = {}
         for i, bootstrap_action in enumerate(bootstrap_actions):
-            for key, value in six.iteritems(bootstrap_action):
-                params['BootstrapActions.member.%s.%s' % (i + 1, key)] = value
+            for key, value in bootstrap_action.items():
+                params[f'BootstrapActions.member.{i + 1}.{key}'] = value
         return params
 
     def _build_step_list(self, steps):
@@ -676,8 +676,8 @@ class EmrConnection(AWSQueryConnection):
 
         params = {}
         for i, step in enumerate(steps):
-            for key, value in six.iteritems(step):
-                params['Steps.member.%s.%s' % (i+1, key)] = value
+            for key, value in step.items():
+                params[f'Steps.member.{i+1}.{key}'] = value
         return params
 
     def _build_string_list(self, field, items):
@@ -686,14 +686,14 @@ class EmrConnection(AWSQueryConnection):
 
         params = {}
         for i, item in enumerate(items):
-            params['%s.member.%s' % (field, i + 1)] = item
+            params[f'{field}.member.{i + 1}'] = item
         return params
 
     def _build_tag_list(self, tags):
         assert isinstance(tags, dict)
 
         params = {}
-        for i, key_value in enumerate(sorted(six.iteritems(tags)), start=1):
+        for i, key_value in enumerate(sorted(tags.items()), start=1):
             key, value = key_value
             current_prefix = 'Tags.member.%s' % i
             params['%s.Key' % current_prefix] = key
@@ -760,6 +760,6 @@ class EmrConnection(AWSQueryConnection):
         params = {}
         for i, instance_group in enumerate(instance_groups):
             ig_dict = self._build_instance_group_args(instance_group)
-            for key, value in six.iteritems(ig_dict):
+            for key, value in ig_dict.items():
                 params['InstanceGroups.member.%d.%s' % (i+1, key)] = value
         return params

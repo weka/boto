@@ -21,7 +21,7 @@
 
 from boto.s3.user import User
 
-class DeleteMarker(object):
+class DeleteMarker:
     def __init__(self, bucket=None, name=None):
         self.bucket = bucket
         self.name = name

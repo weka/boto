@@ -21,7 +21,7 @@
 
 import xml.sax.saxutils
 
-class Question(object):
+class Question:
     template = "<Question>%(items)s</Question>"
 
     def __init__(self, identifier, content, answer_spec,
@@ -48,7 +48,7 @@ class Question(object):
 try:
     from lxml import etree
 
-    class ValidatingXML(object):
+    class ValidatingXML:
 
         def validate(self):
             import urllib2
@@ -58,7 +58,7 @@ try:
             doc = etree.fromstring(self.get_as_xml())
             schema.assertValid(doc)
 except ImportError:
-    class ValidatingXML(object):
+    class ValidatingXML:
 
         def validate(self):
             pass
@@ -82,7 +82,7 @@ class ExternalQuestion(ValidatingXML):
         return self.template % vars(self)
 
 
-class XMLTemplate(object):
+class XMLTemplate:
     def get_as_xml(self):
         return self.template % vars(self)
 
@@ -116,7 +116,7 @@ class List(list):
         return '<List>%s</List>' % items
 
 
-class Application(object):
+class Application:
     template = "<Application><%(class_)s>%(content)s</%(class_)s></Application>"
     parameter_template = "<Name>%(name)s</Name><Value>%(value)s</Value>"
 
@@ -159,24 +159,24 @@ class JavaApplet(Application):
     def __init__(self, path, filename, *args, **kwargs):
         self.path = path
         self.filename = filename
-        super(JavaApplet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_inner_content(self, content):
         content = OrderedContent()
         content.append_field('AppletPath', self.path)
         content.append_field('AppletFilename', self.filename)
-        super(JavaApplet, self).get_inner_content(content)
+        super().get_inner_content(content)
 
 
 class Flash(Application):
     def __init__(self, url, *args, **kwargs):
         self.url = url
-        super(Flash, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_inner_content(self, content):
         content = OrderedContent()
         content.append_field('FlashMovieURL', self.url)
-        super(Flash, self).get_inner_content(content)
+        super().get_inner_content(content)
 
 
 class FormattedContent(XMLTemplate):
@@ -203,7 +203,7 @@ class Overview(OrderedContent):
         return {label: self.get_as_xml()}
 
     def get_as_xml(self):
-        content = super(Overview, self).get_as_xml()
+        content = super().get_as_xml()
         return self.template % vars()
 
 
@@ -261,11 +261,11 @@ class QuestionContent(OrderedContent):
     template = '<QuestionContent>%(content)s</QuestionContent>'
 
     def get_as_xml(self):
-        content = super(QuestionContent, self).get_as_xml()
+        content = super().get_as_xml()
         return self.template % vars()
 
 
-class AnswerSpecification(object):
+class AnswerSpecification:
     template = '<AnswerSpecification>%(spec)s</AnswerSpecification>'
 
     def __init__(self, spec):
@@ -280,11 +280,11 @@ class Constraints(OrderedContent):
     template = '<Constraints>%(content)s</Constraints>'
 
     def get_as_xml(self):
-        content = super(Constraints, self).get_as_xml()
+        content = super().get_as_xml()
         return self.template % vars()
 
 
-class Constraint(object):
+class Constraint:
     def get_attributes(self):
         pairs = zip(self.attribute_names, self.attribute_values)
         attrs = ' '.join(
@@ -325,14 +325,14 @@ class RegExConstraint(Constraint):
     def get_attributes(self):
         pairs = zip(self.attribute_names, self.attribute_values)
         attrs = ' '.join(
-            '%s="%s"' % (name, value)
+            f'{name}="{value}"'
             for (name, value) in pairs
             if value is not None
             )
         return attrs
 
 
-class NumberOfLinesSuggestion(object):
+class NumberOfLinesSuggestion:
     template = '<NumberOfLinesSuggestion>%(num_lines)s</NumberOfLinesSuggestion>'
 
     def __init__(self, num_lines=1):
@@ -343,7 +343,7 @@ class NumberOfLinesSuggestion(object):
         return self.template % vars()
 
 
-class FreeTextAnswer(object):
+class FreeTextAnswer:
     template = '<FreeTextAnswer>%(items)s</FreeTextAnswer>'
 
     def __init__(self, default=None, constraints=None, num_lines=None):
@@ -364,7 +364,7 @@ class FreeTextAnswer(object):
         return self.template % vars()
 
 
-class FileUploadAnswer(object):
+class FileUploadAnswer:
     template = """<FileUploadAnswer><MaxFileSizeInBytes>%(max_bytes)d</MaxFileSizeInBytes><MinFileSizeInBytes>%(min_bytes)d</MinFileSizeInBytes></FileUploadAnswer>"""
 
     def __init__(self, min_bytes, max_bytes):
@@ -376,7 +376,7 @@ class FileUploadAnswer(object):
         return self.template % vars(self)
 
 
-class SelectionAnswer(object):
+class SelectionAnswer:
     """
     A class to generate SelectionAnswer XML data structures.
     Does not yet implement Binary selection options.
@@ -396,7 +396,7 @@ class SelectionAnswer(object):
             if style in SelectionAnswer.ACCEPTED_STYLES:
                 self.style_suggestion = style
             else:
-                raise ValueError("style '%s' not recognized; should be one of %s" % (style, ', '.join(SelectionAnswer.ACCEPTED_STYLES)))
+                raise ValueError("style '{}' not recognized; should be one of {}".format(style, ', '.join(SelectionAnswer.ACCEPTED_STYLES)))
         else:
             self.style_suggestion = None
 

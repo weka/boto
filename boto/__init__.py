@@ -44,7 +44,7 @@ Version = __version__  # for backware compatibility
 # http://bugs.python.org/issue7980
 datetime.datetime.strptime('', '')
 
-UserAgent = 'Boto/%s Python/%s %s/%s' % (
+UserAgent = 'Boto/{} Python/{} {}/{}'.format(
     __version__,
     platform.python_version(),
     platform.system(),
@@ -1136,7 +1136,7 @@ def storage_uri(uri_str, default_scheme='file', debug=0, validate=True,
     * gs://bucket
     * s3://bucket
     * filename (which could be a Unix path like /a/b/c or a Windows path like
-      C:\a\b\c)
+      C:\a\b\\c)
 
     The last example uses the default scheme ('file', unless overridden).
     """
@@ -1210,7 +1210,7 @@ def storage_uri_for_key(key):
         raise InvalidUriError('Requested key (%s) is not a subclass of '
                               'boto.s3.key.Key' % str(type(key)))
     prov_name = key.bucket.connection.provider.get_provider_name()
-    uri_str = '%s://%s/%s' % (prov_name, key.bucket.name, key.name)
+    uri_str = f'{prov_name}://{key.bucket.name}/{key.name}'
     return storage_uri(uri_str)
 
 boto.plugin.load_plugins(config)

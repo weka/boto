@@ -57,14 +57,14 @@ class ResourceRecordSets(ResultSet):
         self.next_record_name = None
         self.next_record_type = None
         self.next_record_identifier = None
-        super(ResourceRecordSets, self).__init__([('ResourceRecordSet', Record)])
+        super().__init__([('ResourceRecordSet', Record)])
 
     def __repr__(self):
         if self.changes:
             record_list = ','.join([c.__repr__() for c in self.changes])
         else:
             record_list = ','.join([record.__repr__() for record in self])
-        return '<ResourceRecordSets:%s [%s]' % (self.hosted_zone_id,
+        return '<ResourceRecordSets:{} [{}]'.format(self.hosted_zone_id,
                                                 record_list)
 
     def add_change(self, action, name, type, ttl=600,
@@ -177,15 +177,14 @@ class ResourceRecordSets(ResultSet):
         elif name == 'NextRecordIdentifier':
             self.next_record_identifier = value
         else:
-            return super(ResourceRecordSets, self).endElement(name, value, connection)
+            return super().endElement(name, value, connection)
 
     def __iter__(self):
         """Override the next function to support paging"""
-        results = super(ResourceRecordSets, self).__iter__()
+        results = super().__iter__()
         truncated = self.is_truncated
         while results:
-            for obj in results:
-                yield obj
+            yield from results
             if self.is_truncated:
                 self.is_truncated = False
                 results = self.connection.get_all_rrsets(self.hosted_zone_id, name=self.next_record_name,
@@ -196,7 +195,7 @@ class ResourceRecordSets(ResultSet):
                 self.is_truncated = truncated
 
 
-class Record(object):
+class Record:
     """An individual ResourceRecordSet"""
 
     HealthCheckBody = """<HealthCheckId>%s</HealthCheckId>"""
@@ -262,7 +261,7 @@ class Record(object):
         self.failover = failover
 
     def __repr__(self):
-        return '<Record:%s:%s:%s>' % (self.name, self.type, self.to_print())
+        return f'<Record:{self.name}:{self.type}:{self.to_print()}>'
 
     def add_value(self, value):
         """Add a resource record value"""
@@ -336,11 +335,11 @@ class Record(object):
             rr = ",".join(self.resource_records)
 
         if self.identifier is not None and self.weight is not None:
-            rr += ' (WRR id=%s, w=%s)' % (self.identifier, self.weight)
+            rr += f' (WRR id={self.identifier}, w={self.weight})'
         elif self.identifier is not None and self.region is not None:
-            rr += ' (LBR id=%s, region=%s)' % (self.identifier, self.region)
+            rr += f' (LBR id={self.identifier}, region={self.region})'
         elif self.identifier is not None and self.failover is not None:
-            rr += ' (FAILOVER id=%s, failover=%s)' % (self.identifier, self.failover)
+            rr += f' (FAILOVER id={self.identifier}, failover={self.failover})'
 
         return rr
 

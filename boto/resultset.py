@@ -134,7 +134,7 @@ class ResultSet(list):
             setattr(self, name, value)
 
 
-class BooleanResult(object):
+class BooleanResult:
 
     def __init__(self, marker_elem=None):
         self.status = True

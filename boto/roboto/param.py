@@ -22,7 +22,7 @@
 
 import os
 
-class Converter(object):
+class Converter:
 
     @classmethod
     def convert_string(cls, param, value):
@@ -142,6 +142,6 @@ class Param(Converter):
         :param value: The value to convert.  This should always
                       be a string.
         """
-        return super(Param, self).convert(self,value)
+        return super().convert(self,value)
 
 

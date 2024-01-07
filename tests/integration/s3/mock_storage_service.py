@@ -41,7 +41,7 @@ from boto.compat import six
 NOT_IMPL = None
 
 
-class MockAcl(object):
+class MockAcl:
 
     def __init__(self, parent=NOT_IMPL):
         pass
@@ -56,7 +56,7 @@ class MockAcl(object):
         return '<mock_ACL_XML/>'
 
 
-class MockKey(object):
+class MockKey:
 
     def __init__(self, bucket=None, name=None):
         self.bucket = bucket
@@ -73,7 +73,7 @@ class MockKey(object):
 
     def __repr__(self):
         if self.bucket:
-            return '<MockKey: %s,%s>' % (self.bucket.name, self.name)
+            return f'<MockKey: {self.bucket.name},{self.name}>'
         else:
             return '<MockKey: %s>' % self.name
 
@@ -222,7 +222,7 @@ class MockKey(object):
         self.size = tup[2]
         return tup[0:2]
 
-class MockBucket(object):
+class MockBucket:
 
     def __init__(self, connection=None, name=None, key_class=NOT_IMPL):
         self.name = name
@@ -293,7 +293,7 @@ class MockBucket(object):
         del self.keys[key_name]
 
     def get_all_keys(self, headers=NOT_IMPL):
-        return six.itervalues(self.keys)
+        return self.keys.values()
 
     def get_key(self, key_name, headers=NOT_IMPL, version_id=NOT_IMPL):
         # Emulate behavior of boto when get_key called with non-existent key.
@@ -309,7 +309,7 @@ class MockBucket(object):
         # deletions while iterating (e.g., during test cleanup).
         result = []
         key_name_set = set()
-        for k in six.itervalues(self.keys):
+        for k in self.keys.values():
             if k.name.startswith(prefix):
                 k_name_past_prefix = k.name[len(prefix):]
                 if delimiter:
@@ -349,7 +349,7 @@ class MockBucket(object):
         self.subresources[subresource] = value
 
 
-class MockProvider(object):
+class MockProvider:
 
     def __init__(self, provider):
         self.provider = provider
@@ -358,7 +358,7 @@ class MockProvider(object):
         return self.provider
 
 
-class MockConnection(object):
+class MockConnection:
 
     def __init__(self, aws_access_key_id=NOT_IMPL,
                  aws_secret_access_key=NOT_IMPL, is_secure=NOT_IMPL,
@@ -396,14 +396,14 @@ class MockConnection(object):
         return self.buckets[bucket_name]
 
     def get_all_buckets(self, headers=NOT_IMPL):
-        return six.itervalues(self.buckets)
+        return self.buckets.values()
 
 
 # We only mock a single provider/connection.
 mock_connection = MockConnection()
 
 
-class MockBucketStorageUri(object):
+class MockBucketStorageUri:
 
     delim = '/'
 
@@ -415,10 +415,10 @@ class MockBucketStorageUri(object):
         self.object_name = object_name
         self.suppress_consec_slashes = suppress_consec_slashes
         if self.bucket_name and self.object_name:
-            self.uri = ('%s://%s/%s' % (self.scheme, self.bucket_name,
+            self.uri = ('{}://{}/{}'.format(self.scheme, self.bucket_name,
                                         self.object_name))
         elif self.bucket_name:
-            self.uri = ('%s://%s/' % (self.scheme, self.bucket_name))
+            self.uri = (f'{self.scheme}://{self.bucket_name}/')
         else:
             self.uri = ('%s://' % self.scheme)
 
@@ -428,7 +428,7 @@ class MockBucketStorageUri(object):
                                     or bool(self.version_id))
         self.is_latest = is_latest
         if bucket_name and object_name:
-            self.versionless_uri = '%s://%s/%s' % (scheme, bucket_name,
+            self.versionless_uri = '{}://{}/{}'.format(scheme, bucket_name,
                                                    object_name)
 
     def __repr__(self):

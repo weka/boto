@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 from tests.compat import OrderedDict
 from tests.unit import unittest
 from tests.unit import AWSMockServiceTestCase
@@ -83,7 +82,7 @@ class TestCreateVpnGateway(AWSMockServiceTestCase):
                                   'SignatureVersion', 'Timestamp',
                                   'Version'])
         self.assertIsInstance(api_response, VpnGateway)
-        self.assertEquals(api_response.id, 'vgw-8db04f81')
+        self.assertEqual(api_response.id, 'vgw-8db04f81')
 
 
 class TestDeleteVpnGateway(AWSMockServiceTestCase):
@@ -136,8 +135,8 @@ class TestAttachVpnGateway(AWSMockServiceTestCase):
                                   'SignatureVersion', 'Timestamp',
                                   'Version'])
         self.assertIsInstance(api_response, Attachment)
-        self.assertEquals(api_response.vpc_id, 'vpc-1a2b3c4d')
-        self.assertEquals(api_response.state, 'attaching')
+        self.assertEqual(api_response.vpc_id, 'vpc-1a2b3c4d')
+        self.assertEqual(api_response.state, 'attaching')
 
 
 class TestDetachVpnGateway(AWSMockServiceTestCase):

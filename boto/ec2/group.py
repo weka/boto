@@ -21,7 +21,7 @@
 # IN THE SOFTWARE.
 
 
-class Group(object):
+class Group:
     def __init__(self, parent=None):
         self.id = None
         self.name = None

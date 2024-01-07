@@ -10,7 +10,7 @@ class TestCloudFrontConnection(AWSMockServiceTestCase):
     connection_class = CloudFrontConnection
 
     def setUp(self):
-        super(TestCloudFrontConnection, self).setUp()
+        super().setUp()
 
     def test_get_all_distributions(self):
         body = b"""

@@ -55,7 +55,7 @@ class BigMessage(RawMessage):
 
     def __init__(self, queue=None, body=None, s3_url=None):
         self.s3_url = s3_url
-        super(BigMessage, self).__init__(queue, body)
+        super().__init__(queue, body)
 
     def _get_bucket_key(self, s3_url):
         bucket_name = key_name = None
@@ -91,7 +91,7 @@ class BigMessage(RawMessage):
         s3_bucket = s3_conn.get_bucket(bucket_name)
         key = s3_bucket.new_key(key_name)
         key.set_contents_from_file(value)
-        self.s3_url = 's3://%s/%s' % (bucket_name, key_name)
+        self.s3_url = f's3://{bucket_name}/{key_name}'
         return self.s3_url
 
     def _get_s3_object(self, s3_url):
@@ -115,5 +115,5 @@ class BigMessage(RawMessage):
         if self.s3_url:
             key = self._get_s3_object(self.s3_url)
             key.delete()
-        super(BigMessage, self).delete()
+        super().delete()
 

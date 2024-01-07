@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 #
-from mock import Mock
+from unittest.mock import Mock
 from tests.unit import unittest
 
 import boto.ec2containerservice

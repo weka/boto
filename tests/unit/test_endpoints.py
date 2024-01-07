@@ -10,7 +10,7 @@
 # distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
 # ANY KIND, either express or implied. See the License for the specific
 # language governing permissions and limitations under the License.
-import mock
+from unittest import mock
 import os
 import json
 
@@ -29,7 +29,7 @@ class BaseEndpointResolverTest(unittest.TestCase):
                 {
                     'partition': 'aws',
                     'dnsSuffix': 'amazonaws.com',
-                    'regionRegex': '^(us|eu)\-\w+$',
+                    'regionRegex': r'^(us|eu)\-\w+$',
                     'defaults': {
                         'hostname': '{service}.{region}.{dnsSuffix}'
                     },
@@ -92,7 +92,7 @@ class BaseEndpointResolverTest(unittest.TestCase):
                 {
                     'partition': 'foo',
                     'dnsSuffix': 'foo.com',
-                    'regionRegex': '^(foo)\-\w+$',
+                    'regionRegex': r'^(foo)\-\w+$',
                     'defaults': {
                         'hostname': '{service}.{region}.{dnsSuffix}',
                         'protocols': ['http'],
@@ -287,7 +287,7 @@ def test_backwards_compatibility():
         yield case.run
 
 
-class EndpointTestCase(object):
+class EndpointTestCase:
     def __init__(self, service, old_endpoints, new_endpoints):
         self.service = service
         self.old_endpoints = old_endpoints
@@ -322,7 +322,7 @@ def test_no_lost_endpoints():
             yield case.run
 
 
-class EndpointPreservedTestCase(object):
+class EndpointPreservedTestCase:
     def __init__(self, service_name, region_name, old_endpoint, new_endpoint):
         self.service_name = service_name
         self.region_name = region_name
@@ -330,7 +330,7 @@ class EndpointPreservedTestCase(object):
         self.new_endpoint = new_endpoint
 
     def run(self):
-        message = "Endpoint for %s in %s does not match snapshot: %s != %s" % (
+        message = "Endpoint for {} in {} does not match snapshot: {} != {}".format(
             self.service_name, self.region_name, self.new_endpoint,
             self.old_endpoint
         )

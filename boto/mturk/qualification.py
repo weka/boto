@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-class Qualifications(object):
+class Qualifications:
 
     def __init__(self, requirements=None):
         if requirements is None:
@@ -35,11 +35,11 @@ class Qualifications(object):
         for n, req in enumerate(self.requirements):
             reqparams = req.get_as_params()
             for rp in reqparams:
-                params['QualificationRequirement.%s.%s' % ((n+1), rp) ] = reqparams[rp]
+                params[f'QualificationRequirement.{(n+1)}.{rp}' ] = reqparams[rp]
         return params
 
 
-class Requirement(object):
+class Requirement:
     """
     Representation of a single requirement
     """
@@ -70,7 +70,7 @@ class PercentAssignmentsSubmittedRequirement(Requirement):
     """
 
     def __init__(self, comparator, integer_value, required_to_preview=False):
-        super(PercentAssignmentsSubmittedRequirement, self).__init__(qualification_type_id="00000000000000000000", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
+        super().__init__(qualification_type_id="00000000000000000000", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
 
 class PercentAssignmentsAbandonedRequirement(Requirement):
     """
@@ -78,7 +78,7 @@ class PercentAssignmentsAbandonedRequirement(Requirement):
     """
 
     def __init__(self, comparator, integer_value, required_to_preview=False):
-        super(PercentAssignmentsAbandonedRequirement, self).__init__(qualification_type_id="00000000000000000070", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
+        super().__init__(qualification_type_id="00000000000000000070", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
 
 class PercentAssignmentsReturnedRequirement(Requirement):
     """
@@ -86,7 +86,7 @@ class PercentAssignmentsReturnedRequirement(Requirement):
     """
 
     def __init__(self, comparator, integer_value, required_to_preview=False):
-        super(PercentAssignmentsReturnedRequirement, self).__init__(qualification_type_id="000000000000000000E0", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
+        super().__init__(qualification_type_id="000000000000000000E0", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
 
 class PercentAssignmentsApprovedRequirement(Requirement):
     """
@@ -94,7 +94,7 @@ class PercentAssignmentsApprovedRequirement(Requirement):
     """
 
     def __init__(self, comparator, integer_value, required_to_preview=False):
-        super(PercentAssignmentsApprovedRequirement, self).__init__(qualification_type_id="000000000000000000L0", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
+        super().__init__(qualification_type_id="000000000000000000L0", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
 
 class PercentAssignmentsRejectedRequirement(Requirement):
     """
@@ -102,7 +102,7 @@ class PercentAssignmentsRejectedRequirement(Requirement):
     """
 
     def __init__(self, comparator, integer_value, required_to_preview=False):
-        super(PercentAssignmentsRejectedRequirement, self).__init__(qualification_type_id="000000000000000000S0", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
+        super().__init__(qualification_type_id="000000000000000000S0", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
 
 class NumberHitsApprovedRequirement(Requirement):
     """
@@ -115,7 +115,7 @@ class NumberHitsApprovedRequirement(Requirement):
     """
 
     def __init__(self, comparator, integer_value, required_to_preview=False):
-        super(NumberHitsApprovedRequirement, self).__init__(qualification_type_id="00000000000000000040", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
+        super().__init__(qualification_type_id="00000000000000000040", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
 
 class LocaleRequirement(Requirement):
     """
@@ -123,7 +123,7 @@ class LocaleRequirement(Requirement):
     """
 
     def __init__(self, comparator, locale, required_to_preview=False):
-        super(LocaleRequirement, self).__init__(qualification_type_id="00000000000000000071", comparator=comparator, integer_value=None, required_to_preview=required_to_preview)
+        super().__init__(qualification_type_id="00000000000000000071", comparator=comparator, integer_value=None, required_to_preview=required_to_preview)
         self.locale = locale
 
     def get_as_params(self):
@@ -154,4 +154,4 @@ class AdultRequirement(Requirement):
     """
 
     def __init__(self, comparator, integer_value, required_to_preview=False):
-        super(AdultRequirement, self).__init__(qualification_type_id="00000000000000000060", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)
+        super().__init__(qualification_type_id="00000000000000000060", comparator=comparator, integer_value=integer_value, required_to_preview=required_to_preview)

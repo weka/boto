@@ -47,7 +47,7 @@ POST /2013-04-01/healthcheck HTTP/1.1
 """
 
 
-class HealthCheck(object):
+class HealthCheck:
 
     """An individual health check"""
 

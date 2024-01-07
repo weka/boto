@@ -412,7 +412,7 @@ class TestAWSQueryConnectionSimple(TestAWSQueryConnection):
 
         def fake_connection(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT,
                       source_address=None):
-            raise socket.timeout('fake error')
+            raise TimeoutError('fake error')
 
         socket.create_connection = fake_connection
 
@@ -522,7 +522,7 @@ class TestAWSQueryStatus(TestAWSQueryConnection):
 
 class TestHTTPRequest(unittest.TestCase):
     def test_user_agent_not_url_encoded(self):
-        headers = {'Some-Header': u'should be encoded \u2713',
+        headers = {'Some-Header': 'should be encoded \u2713',
                    'User-Agent': UserAgent}
         request = HTTPRequest('PUT', 'https', 'amazon.com', 443, None,
                               None, {}, headers, 'Body')

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from tests.unit import AWSMockServiceTestCase
 
 from boto.mturk.connection import MTurkConnection
@@ -21,7 +19,7 @@ class TestMTurkPostingWithQualificationsDoesnotexist(AWSMockServiceTestCase):
     connection_class = MTurkConnection
 
     def setUp(self):
-        super(TestMTurkPostingWithQualificationsDoesnotexist, self).setUp()
+        super().setUp()
 
     def test_qualification_doesnotexist(self):
         self.set_http_response(
@@ -70,4 +68,4 @@ class TestMTurkPostingWithQualificationsDoesnotexist(AWSMockServiceTestCase):
                                   'Reward.1.CurrencyCode',
                                   'Keywords',
                                   'Operation'])
-        self.assertEquals(create_hit_rs.status, True)
+        self.assertEqual(create_hit_rs.status, True)

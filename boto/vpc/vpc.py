@@ -40,7 +40,7 @@ class VPC(TaggedEC2Object):
         :ivar instance_tenancy: The allowed tenancy of instances launched into the VPC.
         :ivar classic_link_enabled: Indicates whether ClassicLink is enabled.
         """
-        super(VPC, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.dhcp_options_id = None
         self.state = None
@@ -86,7 +86,7 @@ class VPC(TaggedEC2Object):
             updated_vpc = vpc_list[0]
             self._update(updated_vpc)
         elif validate:
-            raise ValueError('%s is not a valid VPC ID' % (self.id,))
+            raise ValueError(f'{self.id} is not a valid VPC ID')
 
     def update(self, validate=False, dry_run=False):
         self._get_status_then_update_vpc(

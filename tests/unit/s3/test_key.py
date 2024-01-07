@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # Copyright (c) 2012 Amazon.com, Inc. or its affiliates.  All Rights Reserved
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -35,14 +34,14 @@ class TestS3Key(AWSMockServiceTestCase):
     connection_class = S3Connection
 
     def setUp(self):
-        super(TestS3Key, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return "default body"
 
     def test_unicode_name(self):
         k = Key()
-        k.name = u'Österreich'
+        k.name = 'Österreich'
         print(repr(k))
 
     def test_when_no_restore_header_present(self):

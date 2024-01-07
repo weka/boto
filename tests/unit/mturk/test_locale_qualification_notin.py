@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from tests.unit import AWSMockServiceTestCase
 
 from boto.mturk.connection import MTurkConnection
@@ -19,7 +17,7 @@ class TestMTurkPostingWithQualificationsNotin(AWSMockServiceTestCase):
     connection_class = MTurkConnection
 
     def setUp(self):
-        super(TestMTurkPostingWithQualificationsNotin, self).setUp()
+        super().setUp()
 
     def test_locale_qualification_notin(self):
         self.set_http_response(
@@ -70,7 +68,7 @@ class TestMTurkPostingWithQualificationsNotin(AWSMockServiceTestCase):
                                   'Reward.1.CurrencyCode',
                                   'Keywords',
                                   'Operation'])
-        self.assertEquals(create_hit_rs.status, True)
+        self.assertEqual(create_hit_rs.status, True)
 
     def test_locale_qualification_in_notin(self):
         self.set_http_response(
@@ -130,4 +128,4 @@ class TestMTurkPostingWithQualificationsNotin(AWSMockServiceTestCase):
                                   'Reward.1.CurrencyCode',
                                   'Keywords',
                                   'Operation'])
-        self.assertEquals(create_hit_rs.status, True)
+        self.assertEqual(create_hit_rs.status, True)

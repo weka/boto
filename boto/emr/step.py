@@ -23,7 +23,7 @@
 from boto.compat import six
 
 
-class Step(object):
+class Step:
     """
     Jobflow Step base class
     """
@@ -75,7 +75,7 @@ class JarStep(Step):
         self._main_class = main_class
         self.action_on_failure = action_on_failure
 
-        if isinstance(step_args, six.string_types):
+        if isinstance(step_args, str):
             step_args = [step_args]
 
         self.step_args = step_args
@@ -145,7 +145,7 @@ class StreamingStep(Step):
         self.output = output
         self._jar = jar
 
-        if isinstance(step_args, six.string_types):
+        if isinstance(step_args, str):
             step_args = [step_args]
 
         self.step_args = step_args
@@ -194,7 +194,7 @@ class StreamingStep(Step):
         return args
 
     def __repr__(self):
-        return '%s.%s(name=%r, mapper=%r, reducer=%r, action_on_failure=%r, cache_files=%r, cache_archives=%r, step_args=%r, input=%r, output=%r, jar=%r)' % (
+        return '{}.{}(name={!r}, mapper={!r}, reducer={!r}, action_on_failure={!r}, cache_files={!r}, cache_archives={!r}, step_args={!r}, input={!r}, output={!r}, jar={!r})'.format(
             self.__class__.__module__, self.__class__.__name__,
             self.name, self.mapper, self.reducer, self.action_on_failure,
             self.cache_files, self.cache_archives, self.step_args,
@@ -206,7 +206,7 @@ class ScriptRunnerStep(JarStep):
     ScriptRunnerJar = 's3n://us-east-1.elasticmapreduce/libs/script-runner/script-runner.jar'
 
     def __init__(self, name, **kw):
-        super(ScriptRunnerStep, self).__init__(name, self.ScriptRunnerJar, **kw)
+        super().__init__(name, self.ScriptRunnerJar, **kw)
 
 
 class PigBase(ScriptRunnerStep):
@@ -227,7 +227,7 @@ class InstallPigStep(PigBase):
         step_args.extend(self.BaseArgs)
         step_args.extend(['--install-pig'])
         step_args.extend(['--pig-versions', pig_versions])
-        super(InstallPigStep, self).__init__(self.InstallPigName, step_args=step_args)
+        super().__init__(self.InstallPigName, step_args=step_args)
 
 
 class PigStep(PigBase):
@@ -241,7 +241,7 @@ class PigStep(PigBase):
         step_args.extend(['--pig-versions', pig_versions])
         step_args.extend(['--run-pig-script', '--args', '-f', pig_file])
         step_args.extend(pig_args)
-        super(PigStep, self).__init__(name, step_args=step_args)
+        super().__init__(name, step_args=step_args)
 
 
 class HiveBase(ScriptRunnerStep):
@@ -263,7 +263,7 @@ class InstallHiveStep(HiveBase):
         step_args.extend(['--hive-versions', hive_versions])
         if hive_site is not None:
             step_args.extend(['--hive-site=%s' % hive_site])
-        super(InstallHiveStep, self).__init__(self.InstallHiveName,
+        super().__init__(self.InstallHiveName,
                                   step_args=step_args)
 
 
@@ -280,4 +280,4 @@ class HiveStep(HiveBase):
         step_args.extend(['--run-hive-script', '--args', '-f', hive_file])
         if hive_args is not None:
             step_args.extend(hive_args)
-        super(HiveStep, self).__init__(name, step_args=step_args)
+        super().__init__(name, step_args=step_args)

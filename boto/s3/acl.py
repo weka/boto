@@ -28,7 +28,7 @@ CannedACLStrings = ['private', 'public-read',
                     'log-delivery-write']
 
 
-class Policy(object):
+class Policy:
 
     def __init__(self, parent=None):
         self.parent = parent
@@ -39,7 +39,7 @@ class Policy(object):
         grants = []
         for g in self.acl.grants:
             if g.id == self.owner.id:
-                grants.append("%s (owner) = %s" % (g.display_name, g.permission))
+                grants.append(f"{g.display_name} (owner) = {g.permission}")
             else:
                 if g.type == 'CanonicalUser':
                     u = g.display_name
@@ -47,7 +47,7 @@ class Policy(object):
                     u = g.uri
                 else:
                     u = g.email_address
-                grants.append("%s = %s" % (u, g.permission))
+                grants.append(f"{u} = {g.permission}")
         return "<Policy: %s>" % ", ".join(grants)
 
     def startElement(self, name, attrs, connection):
@@ -73,7 +73,7 @@ class Policy(object):
 
     def to_xml(self):
         if self.namespace is not None:
-            s = '<AccessControlPolicy xmlns="{0}">'.format(self.namespace)
+            s = f'<AccessControlPolicy xmlns="{self.namespace}">'
         else:
             s = '<AccessControlPolicy>'
         s += self.owner.to_xml()
@@ -82,7 +82,7 @@ class Policy(object):
         return s
 
 
-class ACL(object):
+class ACL:
 
     def __init__(self, policy=None):
         self.policy = policy
@@ -121,7 +121,7 @@ class ACL(object):
         return s
 
 
-class Grant(object):
+class Grant:
 
     NameSpace = 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
 
@@ -157,7 +157,7 @@ class Grant(object):
 
     def to_xml(self):
         s = '<Grant>'
-        s += '<Grantee %s xsi:type="%s">' % (self.NameSpace, self.type)
+        s += f'<Grantee {self.NameSpace} xsi:type="{self.type}">'
         if self.type == 'CanonicalUser':
             s += '<ID>%s</ID>' % self.id
             s += '<DisplayName>%s</DisplayName>' % self.display_name

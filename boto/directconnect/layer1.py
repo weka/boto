@@ -74,7 +74,7 @@ class DirectConnectConnection(AWSQueryConnection):
         if 'host' not in kwargs:
             kwargs['host'] = region.endpoint
 
-        super(DirectConnectConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
 
     def _required_auth_capability(self):
@@ -604,7 +604,7 @@ class DirectConnectConnection(AWSQueryConnection):
 
     def make_request(self, action, body):
         headers = {
-            'X-Amz-Target': '%s.%s' % (self.TargetPrefix, action),
+            'X-Amz-Target': f'{self.TargetPrefix}.{action}',
             'Host': self.region.endpoint,
             'Content-Type': 'application/x-amz-json-1.1',
             'Content-Length': str(len(body)),

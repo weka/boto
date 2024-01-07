@@ -30,7 +30,7 @@ from boto.route53.record import ResourceRecordSets
 from boto.route53.status import Status
 
 
-class Zone(object):
+class Zone:
     """
     A Route53 Zone.
 
@@ -259,9 +259,9 @@ class Zone(object):
                                               r.identifier == identifier[0])]
 
         if ((not all) and (len(results) > desired)):
-            message = "Search: name %s type %s" % (name, type)
+            message = f"Search: name {name} type {type}"
             message += "\nFound: "
-            message += ", ".join(["%s %s %s" % (r.name, r.type, r.to_print())
+            message += ", ".join([f"{r.name} {r.type} {r.to_print()}"
                                   for r in results])
             raise TooManyRecordsException(message)
         elif len(results) > 1:

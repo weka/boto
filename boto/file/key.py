@@ -27,7 +27,7 @@ import sys
 
 from boto.compat import StringIO
 
-class Key(object):
+class Key:
 
     KEY_STREAM_READABLE = 0x01
     KEY_STREAM_WRITABLE = 0x02

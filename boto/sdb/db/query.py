@@ -20,7 +20,7 @@ from boto.compat import six
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-class Query(object):
+class Query:
     __local_iter__ = None
     def __init__(self, model_class, limit=None, next_token=None, manager=None):
         self.model_class = model_class

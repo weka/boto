@@ -28,7 +28,7 @@ from boto.ec2.ec2object import TaggedEC2Object
 from boto.ec2.launchspecification import LaunchSpecification
 
 
-class SpotInstanceStateFault(object):
+class SpotInstanceStateFault:
     """
     The fault codes for the Spot Instance request, if any.
 
@@ -41,7 +41,7 @@ class SpotInstanceStateFault(object):
         self.message = message
 
     def __repr__(self):
-        return '(%s, %s)' % (self.code, self.message)
+        return f'({self.code}, {self.message})'
 
     def startElement(self, name, attrs, connection):
         return None
@@ -54,7 +54,7 @@ class SpotInstanceStateFault(object):
         setattr(self, name, value)
 
 
-class SpotInstanceStatus(object):
+class SpotInstanceStatus:
     """
     Contains the status of a Spot Instance Request.
 
@@ -120,7 +120,7 @@ class SpotInstanceRequest(TaggedEC2Object):
     """
 
     def __init__(self, connection=None):
-        super(SpotInstanceRequest, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.price = None
         self.type = None
@@ -141,7 +141,7 @@ class SpotInstanceRequest(TaggedEC2Object):
         return 'SpotInstanceRequest:%s' % self.id
 
     def startElement(self, name, attrs, connection):
-        retval = super(SpotInstanceRequest, self).startElement(name, attrs,
+        retval = super().startElement(name, attrs,
             connection)
         if retval is not None:
             return retval

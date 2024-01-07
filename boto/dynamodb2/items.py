@@ -1,12 +1,12 @@
 from copy import deepcopy
 
 
-class NEWVALUE(object):
+class NEWVALUE:
     # A marker for new data added.
     pass
 
 
-class Item(object):
+class Item:
     """
     An object representing the item data within a DynamoDB table.
 

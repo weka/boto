@@ -79,7 +79,7 @@ class AWSMockServiceTestCase(unittest.TestCase):
 
 class MockServiceWithConfigTestCase(AWSMockServiceTestCase):
     def setUp(self):
-        super(MockServiceWithConfigTestCase, self).setUp()
+        super().setUp()
         self.environ = {}
         self.config = {}
         self.config_patch = mock.patch('boto.provider.config.get',

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2016 Mitch Garnaat http://garnaat.org/
 # All rights reserved.
 #
@@ -22,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from mock import patch, Mock
+from unittest.mock import patch, Mock
 import unittest
 
 from boto.s3.bucket import ResultSet

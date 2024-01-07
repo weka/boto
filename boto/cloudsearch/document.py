@@ -53,7 +53,7 @@ class ContentTooLongError(Exception):
     """
     pass
 
-class DocumentServiceConnection(object):
+class DocumentServiceConnection:
     """
     A CloudSearch document service.
 
@@ -201,7 +201,7 @@ class DocumentServiceConnection(object):
         return CommitResponse(r, self, sdf)
 
 
-class CommitResponse(object):
+class CommitResponse:
     """Wrapper for response to Cloudsearch document batch commit.
 
     :type response: :class:`requests.models.Response`
@@ -226,8 +226,8 @@ class CommitResponse(object):
         try:
             self.content = json.loads(_body)
         except:
-            boto.log.error('Error indexing documents.\nResponse Content:\n{0}\n\n'
-                'SDF:\n{1}'.format(_body, self.sdf))
+            boto.log.error('Error indexing documents.\nResponse Content:\n{}\n\n'
+                'SDF:\n{}'.format(_body, self.sdf))
             raise boto.exception.BotoServerError(self.response.status_code, '',
                 body=_body)
 
@@ -267,5 +267,5 @@ class CommitResponse(object):
 
         if response_num != commit_num:
             raise CommitMismatchError(
-                'Incorrect number of {0}s returned. Commit: {1} Response: {2}'\
+                'Incorrect number of {}s returned. Commit: {} Response: {}'\
                 .format(type_, commit_num, response_num))

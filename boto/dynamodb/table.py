@@ -28,7 +28,7 @@ from boto.dynamodb import exceptions as dynamodb_exceptions
 import time
 
 
-class TableBatchGenerator(object):
+class TableBatchGenerator:
     """
     A low-level generator used to page through results from
     batch_get_item operations.
@@ -47,16 +47,16 @@ class TableBatchGenerator(object):
         self.consistent_read = consistent_read
 
     def _queue_unprocessed(self, res):
-        if u'UnprocessedKeys' not in res:
+        if 'UnprocessedKeys' not in res:
             return
-        if self.table.name not in res[u'UnprocessedKeys']:
+        if self.table.name not in res['UnprocessedKeys']:
             return
 
-        keys = res[u'UnprocessedKeys'][self.table.name][u'Keys']
+        keys = res['UnprocessedKeys'][self.table.name]['Keys']
 
         for key in keys:
-            h = key[u'HashKeyElement']
-            r = key[u'RangeKeyElement'] if u'RangeKeyElement' in key else None
+            h = key['HashKeyElement']
+            r = key['RangeKeyElement'] if 'RangeKeyElement' in key else None
             self.keys.append((h, r))
 
     def __iter__(self):
@@ -68,18 +68,17 @@ class TableBatchGenerator(object):
             res = batch.submit()
 
             # parse the results
-            if self.table.name not in res[u'Responses']:
+            if self.table.name not in res['Responses']:
                 continue
-            self.consumed_units += res[u'Responses'][self.table.name][u'ConsumedCapacityUnits']
-            for elem in res[u'Responses'][self.table.name][u'Items']:
-                yield elem
+            self.consumed_units += res['Responses'][self.table.name]['ConsumedCapacityUnits']
+            yield from res['Responses'][self.table.name]['Items']
 
             # re-queue un processed keys
             self.keys = self.keys[100:]
             self._queue_unprocessed(res)
 
 
-class Table(object):
+class Table:
     """
     An Amazon DynamoDB table.
 

@@ -40,14 +40,14 @@ class Bootstrap(ScriptBase):
     def __init__(self):
         self.working_dir = '/mnt/pyami'
         self.write_metadata()
-        super(Bootstrap, self).__init__()
+        super().__init__()
 
     def write_metadata(self):
         fp = open(os.path.expanduser(BotoConfigPath), 'w')
         fp.write('[Instance]\n')
         inst_data = get_instance_metadata()
         for key in inst_data:
-            fp.write('%s = %s\n' % (key, inst_data[key]))
+            fp.write(f'{key} = {inst_data[key]}\n')
         user_data = get_instance_userdata()
         fp.write('\n%s\n' % user_data)
         fp.write('[Pyami]\n')
@@ -73,7 +73,7 @@ class Bootstrap(ScriptBase):
             else:
                 version = '-rHEAD'
             location = boto.config.get('Boto', 'boto_location', '/usr/local/boto')
-            self.run('svn update %s %s' % (version, location))
+            self.run(f'svn update {version} {location}')
         elif update.startswith('git'):
             location = boto.config.get('Boto', 'boto_location', '/usr/share/python-support/python-boto/boto')
             num_remaining_attempts = 10

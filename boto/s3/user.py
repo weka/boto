@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-class User(object):
+class User:
     def __init__(self, parent=None, id='', display_name=''):
         if parent:
             parent.owner = self
@@ -40,7 +40,7 @@ class User(object):
 
     def to_xml(self, element_name='Owner'):
         if self.type:
-            s = '<%s xsi:type="%s">' % (element_name, self.type)
+            s = f'<{element_name} xsi:type="{self.type}">'
         else:
             s = '<%s>' % element_name
         s += '<ID>%s</ID>' % self.id

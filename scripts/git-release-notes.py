@@ -52,9 +52,9 @@ for commit, message in commit_list:
     issues = set()
     for issue in ISSUE.findall(message):
         if issue not in issues:
-            append.append(':issue:`{issue}`'.format(issue=issue))
+            append.append(f':issue:`{issue}`')
             issues.add(issue)
-    append.append(':sha:`{commit}`'.format(commit=commit))
+    append.append(f':sha:`{commit}`')
     append = ' (' + ', '.join(append) + ')'
 
     original = message

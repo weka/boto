@@ -101,7 +101,7 @@ class Trac(Installer):
                     cnf.write("\t\tSetHandler mod_python\n")
                     cnf.write("\t\tPythonInterpreter main_interpreter\n")
                     cnf.write("\t\tPythonHandler trac.web.modpython_frontend\n")
-                    cnf.write("\t\tPythonOption TracEnv %s/%s\n" % (data_dir, env))
+                    cnf.write(f"\t\tPythonOption TracEnv {data_dir}/{env}\n")
                     cnf.write("\t\tPythonOption TracUriRoot /trac/%s\n" % env)
                     cnf.write("\t</Location>\n")
 
@@ -110,7 +110,7 @@ class Trac(Installer):
                 if(env[0] != "."):
                     cnf.write("\t<Location /svn/%s>\n" % env)
                     cnf.write("\t\tDAV svn\n")
-                    cnf.write("\t\tSVNPath %s/%s\n" % (svn_dir, env))
+                    cnf.write(f"\t\tSVNPath {svn_dir}/{env}\n")
                     cnf.write("\t</Location>\n")
 
             cnf.write("\tErrorLog /var/log/apache2/error.log\n")

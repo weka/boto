@@ -4,7 +4,7 @@ from boto.utils import ShellCommand, get_ts
 import boto
 import boto.utils
 
-class ScriptBase(object):
+class ScriptBase:
 
     def __init__(self, config_file=None):
         self.instance_id = boto.config.get('Instance', 'instance-id', 'default')
@@ -30,7 +30,7 @@ class ScriptBase(object):
     def run(self, command, notify=True, exit_on_error=False, cwd=None):
         self.last_command = ShellCommand(command, cwd=cwd)
         if self.last_command.status != 0:
-            boto.log.error('Error running command: "%s". Output: "%s"' % (command, self.last_command.output))
+            boto.log.error(f'Error running command: "{command}". Output: "{self.last_command.output}"')
             if notify:
                 self.notify('Error encountered',
                             'Error running the following command:\n\t%s\n\nCommand output:\n\t%s' % \

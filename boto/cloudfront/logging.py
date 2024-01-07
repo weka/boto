@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-class LoggingInfo(object):
+class LoggingInfo:
 
     def __init__(self, bucket='', prefix=''):
         self.bucket = bucket

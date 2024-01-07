@@ -1,4 +1,3 @@
-from __future__ import print_function
 import os
 import urlparse
 import boto
@@ -11,7 +10,7 @@ class NoCredentialsError(boto.exception.BotoClientError):
 
     def __init__(self):
         s = 'Unable to find credentials'
-        super(NoCredentialsError, self).__init__(s)
+        super().__init__(s)
 
 class AWSQueryService(boto.connection.AWSQueryConnection):
 
@@ -42,7 +41,7 @@ class AWSQueryService(boto.connection.AWSQueryConnection):
         if 'port' not in self.args:
             self.args['port'] = self.Port
         try:
-            super(AWSQueryService, self).__init__(**self.args)
+            super().__init__(**self.args)
             self.aws_response = None
         except boto.exception.NoAuthHandlerFound:
             raise NoCredentialsError()

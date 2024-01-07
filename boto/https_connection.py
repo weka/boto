@@ -77,8 +77,8 @@ def ValidateCertificateHostname(cert, hostname):
         "validating server certificate: hostname=%s, certificate hosts=%s",
         hostname, hosts)
     for host in hosts:
-        host_re = host.replace('.', '\.').replace('*', '[^.]*')
-        if re.search('^%s$' % (host_re,), hostname, re.I):
+        host_re = host.replace('.', r'\.').replace('*', '[^.]*')
+        if re.search(f'^{host_re}$', hostname, re.I):
             return True
     return False
 

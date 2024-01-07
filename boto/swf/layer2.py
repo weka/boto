@@ -17,7 +17,7 @@ def set_default_credentials(aws_access_key_id, aws_secret_access_key):
         'aws_secret_access_key': aws_secret_access_key,
     })
 
-class SWFBase(object):
+class SWFBase:
 
     name = None
     domain = None
@@ -42,7 +42,7 @@ class SWFBase(object):
         rep_str = str(self.name)
         if hasattr(self, 'version'):
             rep_str += '-' + str(getattr(self, 'version'))
-        return '<%s %r at 0x%x>' % (self.__class__.__name__, rep_str, id(self))
+        return f'<{self.__class__.__name__} {rep_str!r} at 0x{id(self):x}>'
 
 class Domain(SWFBase):
 

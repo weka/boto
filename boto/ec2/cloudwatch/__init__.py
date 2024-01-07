@@ -90,7 +90,7 @@ class CloudWatchConnection(AWSQueryConnection):
         if self.region.name == 'eu-west-1':
             validate_certs = False
 
-        super(CloudWatchConnection, self).__init__(aws_access_key_id,
+        super().__init__(aws_access_key_id,
                                                    aws_secret_access_key,
                                                    is_secure, port, proxy, proxy_port,
                                                    proxy_user, proxy_pass,
@@ -109,7 +109,7 @@ class CloudWatchConnection(AWSQueryConnection):
         for dim_name in dimension:
             dim_value = dimension[dim_name]
             if dim_value:
-                if isinstance(dim_value, six.string_types):
+                if isinstance(dim_value, str):
                     dim_value = [dim_value]
                 for value in dim_value:
                     params['%s.%d.Name' % (prefix, i + 1)] = dim_name
@@ -120,12 +120,12 @@ class CloudWatchConnection(AWSQueryConnection):
                 i += 1
 
     def build_list_params(self, params, items, label):
-        if isinstance(items, six.string_types):
+        if isinstance(items, str):
             items = [items]
         for index, item in enumerate(items):
             i = index + 1
             if isinstance(item, dict):
-                for k, v in six.iteritems(item):
+                for k, v in item.items():
                     params[label % (i, 'Name')] = k
                     if v is not None:
                         params[label % (i, 'Value')] = v
@@ -170,7 +170,7 @@ class CloudWatchConnection(AWSQueryConnection):
             else:
                 raise Exception('Must specify a value or statistics to put.')
 
-            for key, val in six.iteritems(metric_data):
+            for key, val in metric_data.items():
                 params['MetricData.member.%d.%s' % (index + 1, key)] = val
 
     def get_metric_statistics(self, period, start_time, end_time, metric_name,

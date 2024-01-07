@@ -47,7 +47,7 @@ class TestKinesis(AWSMockServiceTestCase):
         This test ensures that only binary is used for blob type parameters.
         """ 
         self.set_http_response(status_code=200)
-        data = u'\u00e9'
+        data = '\u00e9'
         with self.assertRaises(TypeError):
             self.service_connection.encrypt(key_id='foo', plaintext=data)
 

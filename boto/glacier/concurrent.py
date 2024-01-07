@@ -39,7 +39,7 @@ _END_SENTINEL = object()
 log = logging.getLogger('boto.glacier.concurrent')
 
 
-class ConcurrentTransferer(object):
+class ConcurrentTransferer:
     def __init__(self, part_size=DEFAULT_PART_SIZE, num_threads=10):
         self._part_size = part_size
         self._num_threads = num_threads
@@ -103,7 +103,7 @@ class ConcurrentUploader(ConcurrentTransferer):
             concurrently uploaded.
 
         """
-        super(ConcurrentUploader, self).__init__(part_size, num_threads)
+        super().__init__(part_size, num_threads)
         self._api = api
         self._vault_name = vault_name
 
@@ -186,7 +186,7 @@ class ConcurrentUploader(ConcurrentTransferer):
 
 class TransferThread(threading.Thread):
     def __init__(self, worker_queue, result_queue):
-        super(TransferThread, self).__init__()
+        super().__init__()
         self._worker_queue = worker_queue
         self._result_queue = result_queue
         # This value can be set externally by other objects
@@ -218,7 +218,7 @@ class UploadWorkerThread(TransferThread):
                  worker_queue, result_queue, num_retries=5,
                  time_between_retries=5,
                  retry_exceptions=Exception):
-        super(UploadWorkerThread, self).__init__(worker_queue, result_queue)
+        super().__init__(worker_queue, result_queue)
         self._api = api
         self._vault_name = vault_name
         self._filename = filename
@@ -286,7 +286,7 @@ class ConcurrentDownloader(ConcurrentTransferer):
             a power of two.
 
         """
-        super(ConcurrentDownloader, self).__init__(part_size, num_threads)
+        super().__init__(part_size, num_threads)
         self._job = job
 
     def download(self, filename):
@@ -378,7 +378,7 @@ class DownloadWorkerThread(TransferThread):
             part's data.
 
         """
-        super(DownloadWorkerThread, self).__init__(worker_queue, result_queue)
+        super().__init__(worker_queue, result_queue)
         self._job = job
         self._num_retries = num_retries
         self._time_between_retries = time_between_retries

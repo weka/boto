@@ -85,7 +85,7 @@ class TestSigV4Handler(unittest.TestCase):
         auth = HmacAuthV4Handler('sns.us-east-1.amazonaws.com',
                                  mock.Mock(), self.provider)
         params = {
-            'Message': u'We \u2665 utf-8'.encode('utf-8'),
+            'Message': 'We \u2665 utf-8'.encode(),
         }
         request = HTTPRequest(
             'POST', 'https', 'sns.us-east-1.amazonaws.com', 443,
@@ -454,19 +454,19 @@ class TestS3HmacAuthV4Handler(unittest.TestCase):
             protocol='https',
             host='awesome-bucket.s3-us-west-2.amazonaws.com',
             port=443,
-            path=u'/?max-keys=1&prefix=El%20Ni%C3%B1o',
-            auth_path=u'/awesome-bucket/?max-keys=1&prefix=El%20Ni%C3%B1o',
+            path='/?max-keys=1&prefix=El%20Ni%C3%B1o',
+            auth_path='/awesome-bucket/?max-keys=1&prefix=El%20Ni%C3%B1o',
             params={},
             headers={},
             body=''
         )
 
         mod_req = self.auth.mangle_path_and_params(request)
-        self.assertEqual(mod_req.path, u'/?max-keys=1&prefix=El%20Ni%C3%B1o')
-        self.assertEqual(mod_req.auth_path, u'/awesome-bucket/')
+        self.assertEqual(mod_req.path, '/?max-keys=1&prefix=El%20Ni%C3%B1o')
+        self.assertEqual(mod_req.auth_path, '/awesome-bucket/')
         self.assertEqual(mod_req.params, {
-            u'max-keys': u'1',
-            u'prefix': u'El Ni\xf1o',
+            'max-keys': '1',
+            'prefix': 'El Ni\xf1o',
         })
 
     def test_canonical_request(self):
@@ -519,7 +519,7 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"""
         )
 
 
-class FakeS3Connection(object):
+class FakeS3Connection:
     def __init__(self, *args, **kwargs):
         self.host = kwargs.pop('host', None)
         self.anon = kwargs.pop('anon', None)
@@ -534,7 +534,7 @@ class FakeS3Connection(object):
         pass
 
 
-class FakeEC2Connection(object):
+class FakeEC2Connection:
     def __init__(self, *args, **kwargs):
         self.region = kwargs.pop('region', None)
 
@@ -627,7 +627,7 @@ def _yield_all_region_tests(region, expected_signature_version='hmac-v4-s3',
     yield case.run
 
 
-class S3SignatureVersionTestCase(object):
+class S3SignatureVersionTestCase:
     def __init__(self, host, expected_signture_version, anon=None):
         self.host = host
         self.connection = FakeS3Connection(host=host, anon=anon)
@@ -636,7 +636,7 @@ class S3SignatureVersionTestCase(object):
     def run(self):
         auth = self.connection._required_auth_capability()
         message = (
-            "Expected signature version ['%s'] for host %s but found %s." % (
+            "Expected signature version ['{}'] for host {} but found {}.".format(
                 self.expected_signature_version, self.host, auth
             )
         )
@@ -667,7 +667,7 @@ class TestSigV4OptIn(MockServiceWithConfigTestCase):
     connection_class = FakeEC2Connection
 
     def setUp(self):
-        super(TestSigV4OptIn, self).setUp()
+        super().setUp()
         self.standard_region = RegionInfo(
             name='us-west-2',
             endpoint='ec2.us-west-2.amazonaws.com'

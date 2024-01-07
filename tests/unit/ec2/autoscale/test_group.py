@@ -41,7 +41,7 @@ class TestAutoScaleGroup(AWSMockServiceTestCase):
     connection_class = AutoScaleConnection
 
     def setUp(self):
-        super(TestAutoScaleGroup, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -135,7 +135,7 @@ class TestScheduledGroup(AWSMockServiceTestCase):
     connection_class = AutoScaleConnection
 
     def setUp(self):
-        super(TestScheduledGroup, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -407,7 +407,7 @@ class TestCreateAutoScalePolicy(AWSMockServiceTestCase):
     connection_class = AutoScaleConnection
 
     def setUp(self):
-        super(TestCreateAutoScalePolicy, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -482,7 +482,7 @@ class TestPutNotificationConfiguration(AWSMockServiceTestCase):
     connection_class = AutoScaleConnection
 
     def setUp(self):
-        super(TestPutNotificationConfiguration, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -512,7 +512,7 @@ class TestDeleteNotificationConfiguration(AWSMockServiceTestCase):
     connection_class = AutoScaleConnection
 
     def setUp(self):
-        super(TestDeleteNotificationConfiguration, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -608,7 +608,7 @@ class TestAttachInstances(AWSMockServiceTestCase):
     connection_class = AutoScaleConnection
 
     def setUp(self):
-        super(TestAttachInstances, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -638,7 +638,7 @@ class TestDetachInstances(AWSMockServiceTestCase):
     connection_class = AutoScaleConnection
 
     def setUp(self):
-        super(TestDetachInstances, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -701,7 +701,7 @@ class TestGetAccountLimits(AWSMockServiceTestCase):
     connection_class = AutoScaleConnection
 
     def setUp(self):
-        super(TestGetAccountLimits, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -728,7 +728,7 @@ class TestGetAdjustmentTypes(AWSMockServiceTestCase):
     connection_class = AutoScaleConnection
 
     def setUp(self):
-        super(TestGetAdjustmentTypes, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""

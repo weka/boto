@@ -22,13 +22,13 @@
 from boto.resultset import ResultSet
 
 
-class AppCookieStickinessPolicy(object):
+class AppCookieStickinessPolicy:
     def __init__(self, connection=None):
         self.cookie_name = None
         self.policy_name = None
 
     def __repr__(self):
-        return 'AppCookieStickiness(%s, %s)' % (self.policy_name,
+        return 'AppCookieStickiness({}, {})'.format(self.policy_name,
                                                 self.cookie_name)
 
     def startElement(self, name, attrs, connection):
@@ -41,13 +41,13 @@ class AppCookieStickinessPolicy(object):
             self.policy_name = value
 
 
-class LBCookieStickinessPolicy(object):
+class LBCookieStickinessPolicy:
     def __init__(self, connection=None):
         self.policy_name = None
         self.cookie_expiration_period = None
 
     def __repr__(self):
-        return 'LBCookieStickiness(%s, %s)' % (self.policy_name,
+        return 'LBCookieStickiness({}, {})'.format(self.policy_name,
                                                self.cookie_expiration_period)
 
     def startElement(self, name, attrs, connection):
@@ -60,7 +60,7 @@ class LBCookieStickinessPolicy(object):
             self.policy_name = value
 
 
-class OtherPolicy(object):
+class OtherPolicy:
     def __init__(self, connection=None):
         self.policy_name = None
 
@@ -74,7 +74,7 @@ class OtherPolicy(object):
         self.policy_name = value
 
 
-class Policies(object):
+class Policies:
     """
     ELB Policies
     """
@@ -88,7 +88,7 @@ class Policies(object):
         app = 'AppCookieStickiness%s' % self.app_cookie_stickiness_policies
         lb = 'LBCookieStickiness%s' % self.lb_cookie_stickiness_policies
         other = 'Other%s' % self.other_policies
-        return 'Policies(%s,%s,%s)' % (app, lb, other)
+        return f'Policies({app},{lb},{other})'
 
     def startElement(self, name, attrs, connection):
         if name == 'AppCookieStickinessPolicies':

@@ -35,7 +35,7 @@ class CloudSearchLayer1Test(unittest.TestCase):
     cloudsearch = True
 
     def setUp(self):
-        super(CloudSearchLayer1Test, self).setUp()
+        super().setUp()
         self.layer1 = Layer1()
         self.domain_name = 'test-%d' % int(time.time())
 
@@ -49,7 +49,7 @@ class CloudSearchLayer2Test(unittest.TestCase):
     cloudsearch = True
 
     def setUp(self):
-        super(CloudSearchLayer2Test, self).setUp()
+        super().setUp()
         self.layer2 = Layer2()
         self.domain_name = 'test-%d' % int(time.time())
 

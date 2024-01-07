@@ -51,7 +51,7 @@ save the state needed to allow retrying later, in a separate process
 """
 
 
-class ResumableUploadHandler(object):
+class ResumableUploadHandler:
 
     BUFFER_SIZE = 8192
     RETRYABLE_EXCEPTIONS = (httplib.HTTPException, IOError, socket.error,
@@ -91,10 +91,10 @@ class ResumableUploadHandler(object):
     def _load_tracker_uri_from_file(self):
         f = None
         try:
-            f = open(self.tracker_file_name, 'r')
+            f = open(self.tracker_file_name)
             uri = f.readline().strip()
             self._set_tracker_uri(uri)
-        except IOError as e:
+        except OSError as e:
             # Ignore non-existent file (happens first time an upload
             # is attempted on a file), but warn user for other errors.
             if e.errno != errno.ENOENT:
@@ -123,7 +123,7 @@ class ResumableUploadHandler(object):
             with os.fdopen(os.open(self.tracker_file_name,
                                    os.O_WRONLY | os.O_CREAT, 0o600), 'w') as f:
               f.write(self.tracker_uri)
-        except IOError as e:
+        except OSError as e:
             raise ResumableUploadException(
                 'Couldn\'t write URI tracker file (%s): %s.\nThis can happen'
                 'if you\'re using an incorrectly configured upload tool\n'
@@ -145,7 +145,7 @@ class ResumableUploadHandler(object):
             raise InvalidUriError('Invalid tracker URI (%s)' % uri)
         self.tracker_uri = uri
         self.tracker_uri_host = parse_result.netloc
-        self.tracker_uri_path = '%s?%s' % (
+        self.tracker_uri_path = '{}?{}'.format(
             parse_result.path, parse_result.query)
         self.server_has_bytes = 0
 
@@ -177,7 +177,7 @@ class ResumableUploadHandler(object):
                 os.unlink(self.tracker_file_name)
 
     def _build_content_range_header(self, range_spec='*', length_spec='*'):
-        return 'bytes %s/%s' % (range_spec, length_spec)
+        return f'bytes {range_spec}/{length_spec}'
 
     def _query_server_state(self, conn, file_length):
         """
@@ -235,7 +235,7 @@ class ResumableUploadHandler(object):
         range_spec = resp.getheader('range')
         if range_spec:
             # Parse 'bytes=<from>-<to>' range_spec.
-            m = re.search('bytes=(\d+)-(\d+)', range_spec)
+            m = re.search(r'bytes=(\d+)-(\d+)', range_spec)
             if m:
                 server_start = long(m.group(1))
                 server_end = long(m.group(2))
@@ -487,7 +487,7 @@ class ResumableUploadHandler(object):
             return self._upload_file_bytes(conn, http_conn, fp, file_length,
                                            total_bytes_uploaded, cb, num_cb,
                                            headers)
-        except (ResumableUploadException, socket.error):
+        except (ResumableUploadException, OSError):
             resp = self._query_server_state(conn, file_length)
             if resp.status == 400:
                 raise ResumableUploadException('Got 400 response from server '
@@ -629,8 +629,8 @@ class ResumableUploadHandler(object):
         # Compute the MD5 checksum on the fly.
         if hash_algs is None:
             hash_algs = {'md5': md5}
-        self.digesters = dict(
-            (alg, hash_algs[alg]()) for alg in hash_algs or {})
+        self.digesters = {
+            alg: hash_algs[alg]() for alg in hash_algs or {}}
 
         # Use num-retries from constructor if one was provided; else check
         # for a value specified in the boto config file; else default to 5.
@@ -640,9 +640,9 @@ class ResumableUploadHandler(object):
 
         while True:  # Retry as long as we're making progress.
             server_had_bytes_before_attempt = self.server_has_bytes
-            self.digesters_before_attempt = dict(
-                (alg, self.digesters[alg].copy())
-                for alg in self.digesters)
+            self.digesters_before_attempt = {
+                alg: self.digesters[alg].copy()
+                for alg in self.digesters}
             try:
                 # Save generation and metageneration in class state so caller
                 # can find these values, for use in preconditions of future

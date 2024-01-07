@@ -27,7 +27,7 @@ import boto
 import sys, os
 from boto.compat import StringIO
 
-class BS(object):
+class BS:
 
     Usage = "usage: %prog [options] config_file command"
 
@@ -65,7 +65,7 @@ class BS(object):
     def print_command_help(self):
         print('\nCommands:')
         for key in self.Commands.keys():
-            print('  %s\t\t%s' % (key, self.Commands[key]))
+            print(f'  {key}\t\t{self.Commands[key]}')
 
     def do_reset(self):
         iq = self.sd.get_obj('input_queue')
@@ -128,7 +128,7 @@ class BS(object):
     def do_status(self):
         iq = self.sd.get_obj('input_queue')
         if iq:
-            print('The input_queue (%s) contains approximately %s messages' % (iq.id, iq.count()))
+            print(f'The input_queue ({iq.id}) contains approximately {iq.count()} messages')
         ob = self.sd.get_obj('output_bucket')
         ib = self.sd.get_obj('input_bucket')
         if ob:

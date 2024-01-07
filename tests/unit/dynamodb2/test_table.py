@@ -341,7 +341,7 @@ class ItemTestCase(unittest.TestCase):
         assertCountEqual = unittest.TestCase.assertItemsEqual
 
     def setUp(self):
-        super(ItemTestCase, self).setUp()
+        super().setUp()
         self.table = Table('whatever', connection=FakeDynamoDBConnection())
         self.johndoe = self.create_item({
             'username': 'johndoe',
@@ -439,7 +439,7 @@ class ItemTestCase(unittest.TestCase):
         self.johndoe.mark_clean()
         self.assertFalse(self.johndoe.needs_save())
         # Add a friends collection.
-        self.johndoe['friends'] = set(['jane', 'alice'])
+        self.johndoe['friends'] = {'jane', 'alice'}
         self.assertTrue(self.johndoe.needs_save())
         # Now mark it clean, then change the collection.
         # This does NOT call ``__setitem__``, so the item used to be
@@ -596,7 +596,7 @@ class ItemTestCase(unittest.TestCase):
             'date_joined': {'N': '12345'}
         })
 
-        self.johndoe['friends'] = set(['jane', 'alice'])
+        self.johndoe['friends'] = {'jane', 'alice'}
         data = self.johndoe.prepare_full()
         self.assertEqual(data['username'], {'S': 'johndoe'})
         self.assertEqual(data['first_name'], {'S': 'John'})
@@ -635,11 +635,11 @@ class ItemTestCase(unittest.TestCase):
                 'Value': {'S': 'Doe'},
             },
         })
-        self.assertEqual(fields, set([
+        self.assertEqual(fields, {
             'first_name',
             'last_name',
             'date_joined'
-        ]))
+        })
 
     def test_prepare_partial_empty_set(self):
         self.johndoe.mark_clean()
@@ -666,11 +666,11 @@ class ItemTestCase(unittest.TestCase):
                 'Value': {'S': 'Doe'},
             },
         })
-        self.assertEqual(fields, set([
+        self.assertEqual(fields, {
             'first_name',
             'last_name',
             'date_joined'
-        ]))
+        })
 
     def test_save_no_changes(self):
         # Unchanged, no save.
@@ -825,7 +825,7 @@ class ItemTestCase(unittest.TestCase):
 
 class ItemFromItemTestCase(ItemTestCase):
     def setUp(self):
-        super(ItemFromItemTestCase, self).setUp()
+        super().setUp()
         self.johndoe = self.create_item(self.johndoe)
 
 
@@ -842,7 +842,7 @@ def fake_results(name, greeting='hello', exclusive_start_key=None, limit=None):
 
     for i in range(start_key, start_key + 5):
         if i < end_cap:
-            results.append("%s %s #%s" % (greeting, name, i))
+            results.append(f"{greeting} {name} #{i}")
 
     # Don't return more than limit results
     if limit < len(results):
@@ -860,7 +860,7 @@ def fake_results(name, greeting='hello', exclusive_start_key=None, limit=None):
 
 class ResultSetTestCase(unittest.TestCase):
     def setUp(self):
-        super(ResultSetTestCase, self).setUp()
+        super().setUp()
         self.results = ResultSet()
         self.result_function = mock.MagicMock(side_effect=fake_results)
         self.results.to_call(self.result_function, 'john', greeting='Hello', limit=20)
@@ -1098,7 +1098,7 @@ def fake_batch_results(keys):
 
 class BatchGetResultSetTestCase(unittest.TestCase):
     def setUp(self):
-        super(BatchGetResultSetTestCase, self).setUp()
+        super().setUp()
         self.results = BatchGetResultSet(keys=[
             'alice',
             'bob',
@@ -1148,7 +1148,7 @@ class BatchGetResultSetTestCase(unittest.TestCase):
 
 class TableTestCase(unittest.TestCase):
     def setUp(self):
-        super(TableTestCase, self).setUp()
+        super().setUp()
         self.users = Table('users', connection=FakeDynamoDBConnection())
         self.default_connection = DynamoDBConnection(
             aws_access_key_id='access_key',

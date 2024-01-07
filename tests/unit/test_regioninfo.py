@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
 #
 import os
-import mock
+from unittest import mock
 
 import boto
 from boto.pyami.config import Config
@@ -30,7 +30,7 @@ from boto.regioninfo import load_regions, get_regions, connect
 from tests.unit import unittest
 
 
-class TestRegionInfo(object):
+class TestRegionInfo:
     def __init__(self, connection=None, name=None, endpoint=None,
                  connection_cls=None):
         self.connection = connection
@@ -42,7 +42,7 @@ class TestRegionInfo(object):
         return self.connection_cls(region=self)
 
 
-class FakeConn(object):
+class FakeConn:
     def __init__(self, region, **kwargs):
         self.region = region
         self.kwargs = kwargs
@@ -50,7 +50,7 @@ class FakeConn(object):
 
 class TestEndpointLoading(unittest.TestCase):
     def setUp(self):
-        super(TestEndpointLoading, self).setUp()
+        super().setUp()
 
     def test_load_endpoint_json(self):
         endpoints = load_endpoint_json(boto.ENDPOINTS_PATH)

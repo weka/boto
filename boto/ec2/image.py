@@ -48,7 +48,7 @@ class Image(TaggedEC2Object):
     """
 
     def __init__(self, connection=None):
-        super(Image, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.location = None
         self.state = None
@@ -77,7 +77,7 @@ class Image(TaggedEC2Object):
         return 'Image:%s' % self.id
 
     def startElement(self, name, attrs, connection):
-        retval = super(Image, self).startElement(name, attrs, connection)
+        retval = super().startElement(name, attrs, connection)
         if retval is not None:
             return retval
         if name == 'blockDeviceMapping':
@@ -107,7 +107,7 @@ class Image(TaggedEC2Object):
                 self.is_public = True
             else:
                 raise Exception(
-                    'Unexpected value of isPublic %s for image %s' % (
+                    'Unexpected value of isPublic {} for image {}'.format(
                         value,
                         self.id
                     )
@@ -390,7 +390,7 @@ class Image(TaggedEC2Object):
         return img_attrs.ramdisk
 
 
-class ImageAttribute(object):
+class ImageAttribute:
     def __init__(self, parent=None):
         self.name = None
         self.kernel = None
@@ -432,7 +432,7 @@ class ImageAttribute(object):
             setattr(self, name, value)
 
 
-class CopyImage(object):
+class CopyImage:
     def __init__(self, parent=None):
         self._parent = parent
         self.image_id = None

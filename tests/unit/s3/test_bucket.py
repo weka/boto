@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from mock import patch
+from unittest.mock import patch
 import xml.dom.minidom
 
 from tests.unit import unittest
@@ -18,7 +17,7 @@ class TestS3Bucket(AWSMockServiceTestCase):
     connection_class = S3Connection
 
     def setUp(self):
-        super(TestS3Bucket, self).setUp()
+        super().setUp()
 
     def test_bucket_create_bucket(self):
         self.set_http_response(status_code=200)
@@ -101,7 +100,7 @@ class TestS3Bucket(AWSMockServiceTestCase):
             # Ensure Unicode chars get encoded.
             'bar': '☃',
             # Ensure unicode strings with non-ascii characters get encoded
-            'baz': u'χ',
+            'baz': 'χ',
             # Underscores are bad, m'kay?
             'some_other': 'thing',
             # Change the variant of ``max-keys``.

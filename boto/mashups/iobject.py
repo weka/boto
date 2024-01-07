@@ -27,7 +27,7 @@ def int_val_fn(v):
     except:
         return False
     
-class IObject(object):
+class IObject:
     
     def choose_from_list(self, item_list, search_str='',
                          prompt='Enter Selection'):
@@ -91,7 +91,7 @@ class IObject(object):
         okay = False
         val = ''
         while not okay:
-            val = raw_input('%s: %s' % (prompt, val))
+            val = raw_input(f'{prompt}: {val}')
             val = os.path.expanduser(val)
             if os.path.isfile(val):
                 okay = True

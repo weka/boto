@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
 
 
-class AccountAttribute(object):
+class AccountAttribute:
     def __init__(self, connection=None):
         self.connection = connection
         self.attribute_name = None
@@ -45,7 +45,7 @@ class AttributeValues(list):
             self.append(value)
 
 
-class VPCAttribute(object):
+class VPCAttribute:
     def __init__(self, connection=None):
         self.connection = connection
         self.vpc_id = None

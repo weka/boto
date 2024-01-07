@@ -2,7 +2,7 @@ from boto import handler
 import xml.sax
 
 
-class Tag(object):
+class Tag:
     def __init__(self, key=None, value=None):
         self.key = key
         self.value = value
@@ -17,7 +17,7 @@ class Tag(object):
             self.value = value
 
     def to_xml(self):
-        return '<Tag><Key>%s</Key><Value>%s</Value></Tag>' % (
+        return '<Tag><Key>{}</Key><Value>{}</Value></Tag>'.format(
             self.key, self.value)
 
     def __eq__(self, other):

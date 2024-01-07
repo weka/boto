@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Paramiko; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
-from __future__ import print_function
 
 import socket
 import sys
@@ -55,7 +54,7 @@ def posix_shell(chan):
                         break
                     sys.stdout.write(x)
                     sys.stdout.flush()
-                except socket.timeout:
+                except TimeoutError:
                     pass
             if sys.stdin in r:
                 x = sys.stdin.read(1)

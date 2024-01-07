@@ -20,13 +20,13 @@
 # IN THE SOFTWARE.
 
 
-class SecurityGroup(object):
+class SecurityGroup:
     def __init__(self, connection=None):
         self.name = None
         self.owner_alias = None
 
     def __repr__(self):
-        return 'SecurityGroup(%s, %s)' % (self.name, self.owner_alias)
+        return f'SecurityGroup({self.name}, {self.owner_alias})'
 
     def startElement(self, name, attrs, connection):
         pass

@@ -55,7 +55,7 @@ class TestCloudTrail(unittest.TestCase):
 
         # Setup a new bucket
         s3 = boto.connect_s3()
-        bucket_name = 'cloudtrail-integ-{0}'.format(time())
+        bucket_name = f'cloudtrail-integ-{time()}'
         policy = DEFAULT_S3_POLICY.replace('<BucketName>', bucket_name)\
                                   .replace('<CustomerAccountID>', account_id)\
                                   .replace('<Prefix>/', '')

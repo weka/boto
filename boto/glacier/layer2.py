@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2012 Thomas Parslow http://almostobsolete.net/
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -25,7 +24,7 @@ from boto.glacier.layer1 import Layer1
 from boto.glacier.vault import Vault
 
 
-class Layer2(object):
+class Layer2:
     """
     Provides a more pythonic and friendly interface to Glacier based on Layer1
     """

@@ -40,7 +40,7 @@ def bucket_lister(bucket, prefix='', delimiter='', marker='', headers=None,
             marker = unquote_str(marker)
         more_results= rs.is_truncated
 
-class BucketListResultSet(object):
+class BucketListResultSet:
     """
     A resultset for listing keys within a bucket.  Uses the bucket_lister
     generator function and implements the iterator interface.  This
@@ -77,15 +77,14 @@ def versioned_bucket_lister(bucket, prefix='', delimiter='',
                                      version_id_marker=version_id_marker,
                                      delimiter=delimiter, headers=headers,
                                      max_keys=999, encoding_type=encoding_type)
-        for k in rs:
-            yield k
+        yield from rs
         key_marker = rs.next_key_marker
         if key_marker and encoding_type == "url":
             key_marker = unquote_str(key_marker)
         version_id_marker = rs.next_version_id_marker
         more_results= rs.is_truncated
 
-class VersionedBucketListResultSet(object):
+class VersionedBucketListResultSet:
     """
     A resultset for listing versions within a bucket.  Uses the bucket_lister
     generator function and implements the iterator interface.  This
@@ -125,15 +124,14 @@ def multipart_upload_lister(bucket, key_marker='',
                                               upload_id_marker=upload_id_marker,
                                               headers=headers,
                                               encoding_type=encoding_type)
-        for k in rs:
-            yield k
+        yield from rs
         key_marker = rs.next_key_marker
         if key_marker and encoding_type == "url":
             key_marker = unquote_str(key_marker)
         upload_id_marker = rs.next_upload_id_marker
         more_results= rs.is_truncated
 
-class MultiPartUploadListResultSet(object):
+class MultiPartUploadListResultSet:
     """
     A resultset for listing multipart uploads within a bucket.
     Uses the multipart_upload_lister generator function and

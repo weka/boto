@@ -129,7 +129,7 @@ class RDSConnection(AWSQueryConnection):
         if 'host' not in kwargs:
             kwargs['host'] = region.endpoint
 
-        super(RDSConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
 
     def _required_auth_capability(self):

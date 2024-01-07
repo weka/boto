@@ -53,7 +53,7 @@ from boto.compat import BytesIO, six, StringIO, urllib
 # as per http://goo.gl/BDuud (02/19/2011)
 
 
-class S3WebsiteEndpointTranslate(object):
+class S3WebsiteEndpointTranslate:
 
     trans_region = defaultdict(lambda: 's3-website-us-east-1')
     trans_region['eu-west-1'] = 's3-website-eu-west-1'
@@ -73,7 +73,7 @@ class S3WebsiteEndpointTranslate(object):
 S3Permissions = ['READ', 'WRITE', 'READ_ACP', 'WRITE_ACP', 'FULL_CONTROL']
 
 
-class Bucket(object):
+class Bucket:
 
     LoggingGroup = 'http://acs.amazonaws.com/groups/s3/LogDelivery'
 
@@ -187,8 +187,8 @@ class Bucket(object):
         if version_id:
             query_args_l.append('versionId=%s' % version_id)
         if response_headers:
-            for rk, rv in six.iteritems(response_headers):
-                query_args_l.append('%s=%s' % (rk, urllib.parse.quote(rv)))
+            for rk, rv in response_headers.items():
+                query_args_l.append(f'{rk}={urllib.parse.quote(rv)}')
 
         key, resp = self._get_key_internal(key_name, headers, query_args_l)
         return key
@@ -377,12 +377,12 @@ class Bucket(object):
             key = key.replace('_', '-')
             if key == 'maxkeys':
                 key = 'max-keys'
-            if not isinstance(value, six.string_types + (six.binary_type,)):
-                value = six.text_type(value)
-            if not isinstance(value, six.binary_type):
+            if not isinstance(value, (str,) + (bytes,)):
+                value = str(value)
+            if not isinstance(value, bytes):
                 value = value.encode('utf-8')
             if value:
-                pairs.append(u'%s=%s' % (
+                pairs.append('{}={}'.format(
                     urllib.parse.quote(key),
                     urllib.parse.quote(value)
                 ))
@@ -666,17 +666,17 @@ class Bucket(object):
 
         def delete_keys2(hdrs):
             hdrs = hdrs or {}
-            data = u"""<?xml version="1.0" encoding="UTF-8"?>"""
-            data += u"<Delete>"
+            data = """<?xml version="1.0" encoding="UTF-8"?>"""
+            data += "<Delete>"
             if quiet:
-                data += u"<Quiet>true</Quiet>"
+                data += "<Quiet>true</Quiet>"
             count = 0
             while count < 1000:
                 try:
                     key = next(ikeys)
                 except StopIteration:
                     break
-                if isinstance(key, six.string_types):
+                if isinstance(key, str):
                     key_name = key
                     version_id = None
                 elif isinstance(key, tuple) and len(key) == 2:
@@ -696,11 +696,11 @@ class Bucket(object):
                     result.errors.append(error)
                     continue
                 count += 1
-                data += u"<Object><Key>%s</Key>" % xml.sax.saxutils.escape(key_name)
+                data += "<Object><Key>%s</Key>" % xml.sax.saxutils.escape(key_name)
                 if version_id:
-                    data += u"<VersionId>%s</VersionId>" % version_id
-                data += u"</Object>"
-            data += u"</Delete>"
+                    data += "<VersionId>%s</VersionId>" % version_id
+                data += "</Object>"
+            data += "</Delete>"
             if count <= 0:
                 return False  # no more
             data = data.encode('utf-8')
@@ -856,7 +856,7 @@ class Bucket(object):
             acl = src_bucket.get_xml_acl(src_key_name)
         if encrypt_key:
             headers[provider.server_side_encryption_header] = 'AES256'
-        src = '%s/%s' % (src_bucket_name, urllib.parse.quote(src_key_name))
+        src = f'{src_bucket_name}/{urllib.parse.quote(src_key_name)}'
         if src_version_id:
             src += '?versionId=%s' % src_version_id
         headers[provider.copy_source_header] = str(src)
@@ -1322,7 +1322,7 @@ class Bucket(object):
         response = self.connection.make_request('GET', self.name,
                 query_args='versioning', headers=headers)
         body = response.read()
-        if not isinstance(body, six.string_types):
+        if not isinstance(body, str):
             body = body.decode('utf-8')
         boto.log.debug(body)
         if response.status == 200:

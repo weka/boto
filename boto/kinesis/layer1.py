@@ -62,7 +62,7 @@ class KinesisConnection(AWSQueryConnection):
                                 self.DefaultRegionEndpoint)
         if 'host' not in kwargs:
             kwargs['host'] = region.endpoint
-        super(KinesisConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
 
     def _required_auth_capability(self):
@@ -657,7 +657,7 @@ class KinesisConnection(AWSQueryConnection):
         if sequence_number_for_ordering is not None:
             params['SequenceNumberForOrdering'] = sequence_number_for_ordering
         if b64_encode:
-            if not isinstance(params['Data'], six.binary_type):
+            if not isinstance(params['Data'], bytes):
                 params['Data'] = params['Data'].encode('utf-8')
             params['Data'] = base64.b64encode(params['Data']).decode('utf-8')
         return self.make_request(action='PutRecord',
@@ -744,7 +744,7 @@ class KinesisConnection(AWSQueryConnection):
         if b64_encode:
             for i in range(len(params['Records'])):
                 data = params['Records'][i]['Data']
-                if not isinstance(data, six.binary_type):
+                if not isinstance(data, bytes):
                     data = data.encode('utf-8')
                 params['Records'][i]['Data'] = base64.b64encode(
                     data).decode('utf-8')
@@ -854,7 +854,7 @@ class KinesisConnection(AWSQueryConnection):
 
     def make_request(self, action, body):
         headers = {
-            'X-Amz-Target': '%s.%s' % (self.TargetPrefix, action),
+            'X-Amz-Target': f'{self.TargetPrefix}.{action}',
             'Host': self.region.endpoint,
             'Content-Type': 'application/x-amz-json-1.1',
             'Content-Length': str(len(body)),

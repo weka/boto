@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2006-2011 Mitch Garnaat http://garnaat.org/
 # Copyright (c) 2010, Eucalyptus Systems, Inc.
 # Copyright (c) 2011, Nexenta Systems, Inc.
@@ -74,17 +73,17 @@ LIFECYCLE_CONDITIONS_FOR_DELETE_RULE = {
 LIFECYCLE_CONDITIONS_FOR_SET_STORAGE_CLASS_RULE = {'Age': '366'}
 
 # Regexp for matching project-private default object ACL.
-PROJECT_PRIVATE_RE = ('\s*<AccessControlList>\s*<Entries>\s*<Entry>'
-  '\s*<Scope type="GroupById">\s*<ID>[-a-zA-Z0-9]+</ID>'
-  '\s*(<Name>[^<]+</Name>)?\s*</Scope>'
-  '\s*<Permission>FULL_CONTROL</Permission>\s*</Entry>\s*<Entry>'
-  '\s*<Scope type="GroupById">\s*<ID>[-a-zA-Z0-9]+</ID>'
-  '\s*(<Name>[^<]+</Name>)?\s*</Scope>'
-  '\s*<Permission>FULL_CONTROL</Permission>\s*</Entry>\s*<Entry>'
-  '\s*<Scope type="GroupById">\s*<ID>[-a-zA-Z0-9]+</ID>'
-  '\s*(<Name>[^<]+</Name>)?\s*</Scope>'
-  '\s*<Permission>READ</Permission>\s*</Entry>\s*</Entries>'
-  '\s*</AccessControlList>\s*')
+PROJECT_PRIVATE_RE = (r'\s*<AccessControlList>\s*<Entries>\s*<Entry>'
+  r'\s*<Scope type="GroupById">\s*<ID>[-a-zA-Z0-9]+</ID>'
+  r'\s*(<Name>[^<]+</Name>)?\s*</Scope>'
+  r'\s*<Permission>FULL_CONTROL</Permission>\s*</Entry>\s*<Entry>'
+  r'\s*<Scope type="GroupById">\s*<ID>[-a-zA-Z0-9]+</ID>'
+  r'\s*(<Name>[^<]+</Name>)?\s*</Scope>'
+  r'\s*<Permission>FULL_CONTROL</Permission>\s*</Entry>\s*<Entry>'
+  r'\s*<Scope type="GroupById">\s*<ID>[-a-zA-Z0-9]+</ID>'
+  r'\s*(<Name>[^<]+</Name>)?\s*</Scope>'
+  r'\s*<Permission>READ</Permission>\s*</Entry>\s*</Entries>'
+  r'\s*</AccessControlList>\s*')
 
 
 class GSBasicTest(GSTestCase):
@@ -205,7 +204,7 @@ class GSBasicTest(GSTestCase):
         k.set_metadata(mdkey2, mdval2)
 
         # Test unicode character.
-        mdval3 = u'föö'
+        mdval3 = 'föö'
         mdkey3 = 'meta3'
         k.set_metadata(mdkey3, mdval3)
         k.set_contents_from_string(s1)

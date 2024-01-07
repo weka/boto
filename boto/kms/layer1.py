@@ -122,7 +122,7 @@ class KMSConnection(AWSQueryConnection):
         if 'host' not in kwargs or kwargs['host'] is None:
             kwargs['host'] = region.endpoint
 
-        super(KMSConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
 
     def _required_auth_capability(self):
@@ -274,10 +274,10 @@ class KMSConnection(AWSQueryConnection):
             can be used to provide long term permissions to perform decryption.
 
         """
-        if not isinstance(ciphertext_blob, six.binary_type):
+        if not isinstance(ciphertext_blob, bytes):
             raise TypeError(
                 "Value of argument ``ciphertext_blob`` "
-                "must be of type %s." % six.binary_type)
+                "must be of type %s." % bytes)
         ciphertext_blob = base64.b64encode(ciphertext_blob)
         params = {'CiphertextBlob': ciphertext_blob.decode('utf-8'), }
         if encryption_context is not None:
@@ -398,10 +398,10 @@ class KMSConnection(AWSQueryConnection):
             can be used to provide long term permissions to perform encryption.
 
         """
-        if not isinstance(plaintext, six.binary_type):
+        if not isinstance(plaintext, bytes):
             raise TypeError(
                 "Value of argument ``plaintext`` "
-                "must be of type %s." % six.binary_type)
+                "must be of type %s." % bytes)
         plaintext = base64.b64encode(plaintext)
         params = {'KeyId': key_id, 'Plaintext': plaintext.decode('utf-8'), }
         if encryption_context is not None:
@@ -728,10 +728,10 @@ class KMSConnection(AWSQueryConnection):
             permissions for the encryption and decryption process.
 
         """
-        if not isinstance(ciphertext_blob, six.binary_type):
+        if not isinstance(ciphertext_blob, bytes):
             raise TypeError(
                 "Value of argument ``ciphertext_blob`` "
-                "must be of type %s." % six.binary_type)
+                "must be of type %s." % bytes)
         ciphertext_blob = base64.b64encode(ciphertext_blob)
         params = {
             'CiphertextBlob': ciphertext_blob,
@@ -797,7 +797,7 @@ class KMSConnection(AWSQueryConnection):
 
     def make_request(self, action, body):
         headers = {
-            'X-Amz-Target': '%s.%s' % (self.TargetPrefix, action),
+            'X-Amz-Target': f'{self.TargetPrefix}.{action}',
             'Host': self.region.endpoint,
             'Content-Type': 'application/x-amz-json-1.1',
             'Content-Length': str(len(body)),

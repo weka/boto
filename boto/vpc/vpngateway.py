@@ -25,7 +25,7 @@ Represents a Vpn Gateway
 
 from boto.ec2.ec2object import TaggedEC2Object
 
-class Attachment(object):
+class Attachment:
 
     def __init__(self, connection=None):
         self.vpc_id = None
@@ -45,7 +45,7 @@ class Attachment(object):
 class VpnGateway(TaggedEC2Object):
 
     def __init__(self, connection=None):
-        super(VpnGateway, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.type = None
         self.state = None
@@ -56,7 +56,7 @@ class VpnGateway(TaggedEC2Object):
         return 'VpnGateway:%s' % self.id
 
     def startElement(self, name, attrs, connection):
-        retval = super(VpnGateway, self).startElement(name, attrs, connection)
+        retval = super().startElement(name, attrs, connection)
         if retval is not None:
             return retval
         if name == 'item':

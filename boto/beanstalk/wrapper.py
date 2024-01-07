@@ -18,7 +18,7 @@ def beanstalk_wrapper(func, name):
     return _wrapped_low_level_api
 
 
-class Layer1Wrapper(object):
+class Layer1Wrapper:
     def __init__(self, *args, **kwargs):
         self.api = Layer1(*args, **kwargs)
 
@@ -26,4 +26,4 @@ class Layer1Wrapper(object):
         try:
             return beanstalk_wrapper(getattr(self.api, name), name)
         except AttributeError:
-            raise AttributeError("%s has no attribute %r" % (self, name))
+            raise AttributeError(f"{self} has no attribute {name!r}")

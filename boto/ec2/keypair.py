@@ -31,7 +31,7 @@ from boto.exception import BotoClientError
 class KeyPair(EC2Object):
 
     def __init__(self, connection=None):
-        super(KeyPair, self).__init__(connection)
+        super().__init__(connection)
         self.name = None
         self.fingerprint = None
         self.material = None

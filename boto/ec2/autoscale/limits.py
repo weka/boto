@@ -20,14 +20,14 @@
 # IN THE SOFTWARE.
 
 
-class AccountLimits(object):
+class AccountLimits:
     def __init__(self, connection=None):
         self.connection = connection
         self.max_autoscaling_groups = None
         self.max_launch_configurations = None
 
     def __repr__(self):
-        return 'AccountLimits: [%s, %s]' % (self.max_autoscaling_groups,
+        return 'AccountLimits: [{}, {}]'.format(self.max_autoscaling_groups,
                                             self.max_launch_configurations)
 
     def startElement(self, name, attrs, connection):

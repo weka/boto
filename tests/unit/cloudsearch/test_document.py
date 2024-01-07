@@ -2,7 +2,7 @@
 
 from tests.unit import unittest
 from httpretty import HTTPretty
-from mock import MagicMock
+from unittest.mock import MagicMock
 
 import json
 

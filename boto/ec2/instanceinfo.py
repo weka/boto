@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
 
 
-class InstanceInfo(object):
+class InstanceInfo:
     """
     Represents an EC2 Instance status response from CloudWatch
     """

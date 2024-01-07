@@ -21,7 +21,7 @@
 # IN THE SOFTWARE.
 
 
-class Tag(object):
+class Tag:
     """
     A name/value tag on an AutoScalingGroup resource.
 
@@ -45,7 +45,7 @@ class Tag(object):
         self.resource_type = resource_type
 
     def __repr__(self):
-        return 'Tag(%s=%s)' % (self.key, self.value)
+        return f'Tag({self.key}={self.value})'
 
     def startElement(self, name, attrs, connection):
         pass

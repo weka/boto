@@ -29,7 +29,7 @@ from boto.resultset import ResultSet
 class RouteTable(TaggedEC2Object):
 
     def __init__(self, connection=None):
-        super(RouteTable, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.vpc_id = None
         self.routes = []
@@ -39,7 +39,7 @@ class RouteTable(TaggedEC2Object):
         return 'RouteTable:%s' % self.id
 
     def startElement(self, name, attrs, connection):
-        result = super(RouteTable, self).startElement(name, attrs, connection)
+        result = super().startElement(name, attrs, connection)
 
         if result is not None:
             # Parent found an interested element, just return it
@@ -62,7 +62,7 @@ class RouteTable(TaggedEC2Object):
         else:
             setattr(self, name, value)
 
-class Route(object):
+class Route:
     def __init__(self, connection=None):
         self.destination_cidr_block = None
         self.gateway_id = None
@@ -94,7 +94,7 @@ class Route(object):
         elif name == 'origin':
             self.origin = value
 
-class RouteAssociation(object):
+class RouteAssociation:
     def __init__(self, connection=None):
         self.id = None
         self.route_table_id = None

@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-class Signer(object):
+class Signer:
     def __init__(self):
         self.id = None
         self.key_pair_ids = []

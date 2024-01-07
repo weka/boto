@@ -68,7 +68,7 @@ class CloudSearchConnection(AWSQueryConnection):
         sign_request = kwargs.pop('sign_request', False)
         self.sign_request = sign_request
 
-        super(CloudSearchConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
 
     def _required_auth_capability(self):
@@ -763,9 +763,9 @@ class CloudSearchConnection(AWSQueryConnection):
                 for k2, v2 in v.items():
                     self.build_complex_param(params, label + '.' + k, v)
             elif isinstance(v, bool):
-                params['%s.%s' % (label, k)] = v and 'true' or 'false'
+                params[f'{label}.{k}'] = v and 'true' or 'false'
             else:
-                params['%s.%s' % (label, k)] = v
+                params[f'{label}.{k}'] = v
 
     def _make_request(self, action, verb, path, params):
         params['ContentType'] = 'JSON'

@@ -23,7 +23,7 @@
 from datetime import datetime
 
 
-class ScheduledUpdateGroupAction(object):
+class ScheduledUpdateGroupAction:
     def __init__(self, connection=None):
         self.connection = connection
         self.name = None

@@ -162,7 +162,7 @@ def tree_hash_from_str(str_as_bytes):
     return bytes_to_hex(tree_hash(chunk_hashes(str_as_bytes)))
 
 
-class ResettingFileSender(object):
+class ResettingFileSender:
     def __init__(self, archive):
         self._archive = archive
         self._starting_offset = archive.tell()

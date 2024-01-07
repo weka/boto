@@ -22,7 +22,7 @@
 from boto.exception import SDBResponseError
 from boto.compat import six
 
-class SequenceGenerator(object):
+class SequenceGenerator:
     """Generic Sequence Generator object, this takes a single
     string as the "sequence" and uses that to figure out
     what the next value in a string is. For example
@@ -53,7 +53,7 @@ class SequenceGenerator(object):
         self.sequence_length = len(sequence_string[0])
         self.rollover = rollover
         self.last_item = sequence_string[-1]
-        self.__name__ = "%s('%s')" % (self.__class__.__name__, sequence_string)
+        self.__name__ = f"{self.__class__.__name__}('{sequence_string}')"
 
     def __call__(self, val, last=None):
         """Get the next value in the sequence"""
@@ -64,9 +64,9 @@ class SequenceGenerator(object):
             return self.sequence_string[0]
         last_value = val[-self.sequence_length:]
         if (not self.rollover) and (last_value == self.last_item):
-            val = "%s%s" % (self(val[:-self.sequence_length]), self._inc(last_value))
+            val = f"{self(val[:-self.sequence_length])}{self._inc(last_value)}"
         else:
-            val = "%s%s" % (val[:-self.sequence_length], self._inc(last_value))
+            val = f"{val[:-self.sequence_length]}{self._inc(last_value)}"
         return val
 
     def _inc(self, val):
@@ -100,7 +100,7 @@ def fib(cv=1, lv=0):
 increment_string = SequenceGenerator("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 
-class Sequence(object):
+class Sequence:
     """A simple Sequence using the new SDB "Consistent" features
     Based largly off of the "Counter" example from mitch garnaat:
     http://bitbucket.org/mitch/stupidbototricks/src/tip/counter.py"""
@@ -144,7 +144,7 @@ class Sequence(object):
         self.item_type = type(fnc(None))
         self.timestamp = None
         # Allow us to pass in a full name to a function
-        if isinstance(fnc, six.string_types):
+        if isinstance(fnc, str):
             from boto.utils import find_class
             fnc = find_class(fnc)
         self.fnc = fnc
@@ -189,7 +189,7 @@ class Sequence(object):
     val = property(get, set)
 
     def __repr__(self):
-        return "%s('%s', '%s', '%s.%s', '%s')" % (
+        return "{}('{}', '{}', '{}.{}', '{}')".format(
             self.__class__.__name__,
             self.id,
             self.domain_name,

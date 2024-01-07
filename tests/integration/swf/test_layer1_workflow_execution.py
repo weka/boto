@@ -67,7 +67,7 @@ class SwfL1WorkflowExecutionTest(SimpleWorkflowLayer1TestBase):
                 details=event['activityTaskFailedEventAttributes']['details'])
         else:
             decisions.fail_workflow_execution(
-                reason='unhandled decision task type; %r' % (event['eventType'],))
+                reason='unhandled decision task type; {!r}'.format(event['eventType']))
 
         # Send the decision response.
         r = self.conn.respond_decision_task_completed(dtask['taskToken'],
@@ -112,7 +112,7 @@ class SwfL1WorkflowExecutionTest(SimpleWorkflowLayer1TestBase):
 
     def test_workflow_execution(self):
         # Start a workflow execution whose activity task will succeed.
-        workflow_id = 'wfid-%.2f' % (time.time(),)
+        workflow_id = f'wfid-{time.time():.2f}'
         r = self.conn.start_workflow_execution(self._domain,
                                                workflow_id,
                                                self._workflow_type_name,
@@ -143,7 +143,7 @@ class SwfL1WorkflowExecutionTest(SimpleWorkflowLayer1TestBase):
 
     def test_failed_workflow_execution(self):
         # Start a workflow execution whose activity task will fail.
-        workflow_id = 'wfid-%.2f' % (time.time(),)
+        workflow_id = f'wfid-{time.time():.2f}'
         r = self.conn.start_workflow_execution(self._domain,
                                                workflow_id,
                                                self._workflow_type_name,

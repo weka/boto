@@ -42,7 +42,7 @@ LEGAL_CONDITIONS = [AGE, CREATED_BEFORE, NUM_NEWER_VERSIONS, IS_LIVE,
 # List of conditions elements that may be repeated.
 LEGAL_REPEATABLE_CONDITIONS = [MATCHES_STORAGE_CLASS]
 
-class Rule(object):
+class Rule:
     """
     A lifecycle rule for a bucket.
 
@@ -67,7 +67,7 @@ class Rule(object):
         """Verify parent of the start tag."""
         if self.current_tag != parent:
             raise InvalidLifecycleConfigError(
-                'Invalid tag %s found inside %s tag' % (tag, self.current_tag))
+                f'Invalid tag {tag} found inside {self.current_tag} tag')
 
     def validateEndTag(self, tag):
         """Verify end tag against the start tag."""

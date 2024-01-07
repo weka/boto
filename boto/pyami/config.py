@@ -49,7 +49,7 @@ elif 'BOTO_PATH' in os.environ:
         BotoConfigLocations.append(expanduser(path))
 
 
-class Config(object):
+class Config:
 
     def __init__(self, path=None, fp=None, do_load=True):
         self._parser = ConfigParser({'working_dir': '/mnt/pyami',
@@ -65,7 +65,7 @@ class Config(object):
                 full_path = expanduser(os.environ['AWS_CREDENTIAL_FILE'])
                 try:
                     self.load_credential_file(full_path)
-                except IOError:
+                except OSError:
                     warnings.warn('Unable to load AWS_CREDENTIAL_FILE (%s)' % full_path)
 
     def __setstate__(self, state):
@@ -87,7 +87,7 @@ class Config(object):
         """Load a credential file as is setup like the Java utilities"""
         c_data = StringIO()
         c_data.write("[Credentials]\n")
-        for line in open(path, "r").readlines():
+        for line in open(path).readlines():
             c_data.write(line.replace("AWSAccessKeyId", "aws_access_key_id").replace("AWSSecretKey", "aws_secret_access_key"))
         c_data.seek(0)
         self.readfp(c_data)
@@ -95,7 +95,7 @@ class Config(object):
     def load_from_path(self, path):
         file = open(path)
         for line in file.readlines():
-            match = re.match("^#import[\s\t]*([^\s^\t]*)[\s\t]*$", line)
+            match = re.match("^#import[\\s\t]*([^\\s^\t]*)[\\s\t]*$", line)
             if match:
                 extended_file = match.group(1)
                 (dir, file) = os.path.split(path)
@@ -199,7 +199,7 @@ class Config(object):
                 if option == 'aws_secret_access_key':
                     fp.write('%s = xxxxxxxxxxxxxxxxxx\n' % option)
                 else:
-                    fp.write('%s = %s\n' % (option, self.get(section, option)))
+                    fp.write(f'{option} = {self.get(section, option)}\n')
 
     def dump_to_sdb(self, domain_name, item_name):
         from boto.compat import json

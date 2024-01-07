@@ -78,7 +78,7 @@ class CloudFormationConnection(AWSQueryConnection):
             region = RegionInfo(self, self.DefaultRegionName,
                 self.DefaultRegionEndpoint, CloudFormationConnection)
         self.region = region
-        super(CloudFormationConnection, self).__init__(aws_access_key_id,
+        super().__init__(aws_access_key_id,
                                     aws_secret_access_key,
                                     is_secure, port, proxy, proxy_port,
                                     proxy_user, proxy_pass,
@@ -299,7 +299,7 @@ class CloudFormationConnection(AWSQueryConnection):
             body = json.loads(body)
             return body
         else:
-            boto.log.error('%s %s' % (response.status, response.reason))
+            boto.log.error(f'{response.status} {response.reason}')
             boto.log.error('%s' % body)
             raise self.ResponseError(response.status, response.reason, body=body)
 
