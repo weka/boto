@@ -32,7 +32,7 @@ class TestRoute53AliasResourceRecordSets(unittest.TestCase):
     route53 = True
 
     def setUp(self):
-        super(TestRoute53AliasResourceRecordSets, self).setUp()
+        super().setUp()
         self.conn = Route53Connection()
         self.base_domain = 'boto-test-%s.com' % str(int(time.time()))
         self.zone = self.conn.create_zone(self.base_domain)
@@ -42,7 +42,7 @@ class TestRoute53AliasResourceRecordSets(unittest.TestCase):
     def tearDown(self):
         self.zone.delete_a('target.%s' % self.base_domain)
         self.zone.delete()
-        super(TestRoute53AliasResourceRecordSets, self).tearDown()
+        super().tearDown()
 
     def test_incomplete_add_alias_failure(self):
         base_record = dict(name="alias.%s." % self.base_domain,

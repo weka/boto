@@ -20,24 +20,23 @@
 # IN THE SOFTWARE.
 
 import re
-import urllib
+import urllib.parse
 import xml.sax
 
 import boto
 from boto import handler
-from boto.resultset import ResultSet
 from boto.exception import GSResponseError
 from boto.exception import InvalidAclError
 from boto.gs.acl import ACL, CannedACLStrings
 from boto.gs.acl import SupportedPermissions as GSPermissions
 from boto.gs.bucketlistresultset import VersionedBucketListResultSet
 from boto.gs.cors import Cors
-from boto.gs.lifecycle import LifecycleConfig
 from boto.gs.key import Key as GSKey
+from boto.gs.lifecycle import LifecycleConfig
+from boto.resultset import ResultSet
 from boto.s3.acl import Policy
 from boto.s3.bucket import Bucket as S3Bucket
 from boto.utils import get_utf8_value
-from boto.compat import six
 
 # constants for http query args
 DEF_OBJ_ACL = 'defaultObjectAcl'
@@ -61,7 +60,7 @@ class Bucket(S3Bucket):
     WebsiteErrorFragment = '<NotFoundPage>%s</NotFoundPage>'
 
     def __init__(self, connection=None, name=None, key_class=GSKey):
-        super(Bucket, self).__init__(connection, name, key_class)
+        super().__init__(connection, name, key_class)
 
     def startElement(self, name, attrs, connection):
         return None
@@ -104,8 +103,8 @@ class Bucket(S3Bucket):
         if generation:
             query_args_l.append('generation=%s' % generation)
         if response_headers:
-            for rk, rv in six.iteritems(response_headers):
-                query_args_l.append('%s=%s' % (rk, urllib.quote(rv)))
+            for rk, rv in response_headers.items():
+                query_args_l.append(f'{rk}={urllib.parse.quote(rv)}')
         try:
             key, resp = self._get_key_internal(key_name, headers,
                                                query_args_l=query_args_l)
@@ -179,7 +178,7 @@ class Bucket(S3Bucket):
         if src_generation:
             headers = headers or {}
             headers['x-goog-copy-source-generation'] = str(src_generation)
-        return super(Bucket, self).copy_key(
+        return super().copy_key(
             new_key_name, src_bucket_name, src_key_name, metadata=metadata,
             storage_class=storage_class, preserve_acl=preserve_acl,
             encrypt_key=encrypt_key, headers=headers, query_args=query_args)

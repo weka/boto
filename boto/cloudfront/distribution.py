@@ -30,7 +30,7 @@ from boto.cloudfront.logging import LoggingInfo
 from boto.cloudfront.origin import S3Origin, CustomOrigin
 from boto.s3.acl import ACL
 
-class DistributionConfig(object):
+class DistributionConfig:
 
     def __init__(self, connection=None, origin=None, enabled=False,
                  caller_reference='', cnames=None, comment='',
@@ -179,7 +179,7 @@ class StreamingDistributionConfig(DistributionConfig):
     def __init__(self, connection=None, origin='', enabled=False,
                  caller_reference='', cnames=None, comment='',
                  trusted_signers=None, logging=None):
-        super(StreamingDistributionConfig, self).__init__(connection=connection,
+        super().__init__(connection=connection,
                                     origin=origin, enabled=enabled,
                                     caller_reference=caller_reference,
                                     cnames=cnames, comment=comment,
@@ -217,7 +217,7 @@ class StreamingDistributionConfig(DistributionConfig):
         s += '</StreamingDistributionConfig>\n'
         return s
 
-class DistributionSummary(object):
+class DistributionSummary:
 
     def __init__(self, connection=None, domain_name='', id='',
                  last_modified_time=None, status='', origin=None,
@@ -285,7 +285,7 @@ class StreamingDistributionSummary(DistributionSummary):
     def get_distribution(self):
         return self.connection.get_streaming_distribution_info(self.id)
 
-class Distribution(object):
+class Distribution:
 
     def __init__(self, connection=None, config=None, domain_name='',
                  id='', last_modified_time=None, status=''):
@@ -509,7 +509,7 @@ class Distribution(object):
                           expire_time=None, valid_after_time=None,
                           ip_address=None, policy_url=None,
                           private_key_file=None, private_key_string=None):
-        """
+        r"""
         Creates a signed CloudFront URL that is only valid within the specified
         parameters.
 
@@ -575,7 +575,7 @@ class Distribution(object):
         signed_url_params = []
         for key in ["Expires", "Policy", "Signature", "Key-Pair-Id"]:
             if key in params:
-                param = "%s=%s" % (key, params[key])
+                param = f"{key}={params[key]}"
                 signed_url_params.append(param)
         signed_url = url + sep + "&".join(signed_url_params)
         return signed_url
@@ -665,8 +665,8 @@ class Distribution(object):
             raise ValueError("You must specify one of private_key_file or private_key_string")
         # If private_key_file is a file name, open it and read it
         if private_key_string is None:
-            if isinstance(private_key_file, six.string_types):
-                with open(private_key_file, 'r') as file_handle:
+            if isinstance(private_key_file, str):
+                with open(private_key_file) as file_handle:
                     private_key_string = file_handle.read()
             # Otherwise, treat it like a file
             else:
@@ -693,7 +693,7 @@ class StreamingDistribution(Distribution):
 
     def __init__(self, connection=None, config=None, domain_name='',
                  id='', last_modified_time=None, status=''):
-        super(StreamingDistribution, self).__init__(connection, config,
+        super().__init__(connection, config,
                               domain_name, id, last_modified_time, status)
         self._object_class = StreamingObject
 
@@ -702,7 +702,7 @@ class StreamingDistribution(Distribution):
             self.config = StreamingDistributionConfig()
             return self.config
         else:
-            return super(StreamingDistribution, self).startElement(name, attrs,
+            return super().startElement(name, attrs,
                 connection)
 
     def update(self, enabled=None, cnames=None, comment=None):

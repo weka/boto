@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2012 Thomas Parslow http://almostobsolete.net/
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -28,7 +27,7 @@ from boto.glacier.exceptions import TreeHashDoesNotMatchError, \
 from boto.glacier.utils import tree_hash_from_str
 
 
-class Job(object):
+class Job:
 
     DefaultPartSize = 4 * 1024 * 1024
 

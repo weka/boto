@@ -27,7 +27,7 @@ from boto.ec2.ec2object import TaggedEC2Object
 from boto.resultset import ResultSet
 
 
-class Icmp(object):
+class Icmp:
     """
     Defines the ICMP code and type.
     """
@@ -36,7 +36,7 @@ class Icmp(object):
         self.type   = None
 
     def __repr__(self):
-        return 'Icmp::code:%s, type:%s)' % ( self.code, self.type)
+        return f'Icmp::code:{self.code}, type:{self.type})'
 
     def startElement(self, name, attrs, connection):
         pass
@@ -51,7 +51,7 @@ class Icmp(object):
 class NetworkAcl(TaggedEC2Object):
 
     def __init__(self, connection=None):
-        super(NetworkAcl, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.vpc_id = None
         self.network_acl_entries = []
@@ -61,7 +61,7 @@ class NetworkAcl(TaggedEC2Object):
         return 'NetworkAcl:%s' % self.id
 
     def startElement(self, name, attrs, connection):
-        result = super(NetworkAcl, self).startElement(name, attrs, connection)
+        result = super().startElement(name, attrs, connection)
 
         if result is not None:
             # Parent found an interested element, just return it
@@ -84,7 +84,7 @@ class NetworkAcl(TaggedEC2Object):
         else:
             setattr(self, name, value)
 
-class NetworkAclEntry(object):
+class NetworkAclEntry:
     def __init__(self, connection=None):
         self.rule_number = None
         self.protocol = None
@@ -119,7 +119,7 @@ class NetworkAclEntry(object):
             self.rule_number = value
 
 
-class NetworkAclAssociation(object):
+class NetworkAclAssociation:
     def __init__(self, connection=None):
         self.id = None
         self.subnet_id = None
@@ -139,7 +139,7 @@ class NetworkAclAssociation(object):
         elif name == 'subnetId':
             self.subnet_id = value
 
-class PortRange(object):
+class PortRange:
     """
     Define the port range for the ACL entry if it is tcp / udp
     """
@@ -149,7 +149,7 @@ class PortRange(object):
         self.to_port   = None
 
     def __repr__(self):
-        return 'PortRange:(%s-%s)' % ( self.from_port, self.to_port)
+        return f'PortRange:({self.from_port}-{self.to_port})'
 
     def startElement(self, name, attrs, connection):
         pass

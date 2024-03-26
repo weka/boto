@@ -27,7 +27,7 @@ import boto.utils
 from boto.compat import json
 
 
-class Credentials(object):
+class Credentials:
     """
     :ivar access_key: The AccessKeyID.
     :ivar secret_key: The SecretAccessKey.
@@ -140,7 +140,7 @@ class Credentials(object):
         return delta.total_seconds() <= 0
 
 
-class FederationToken(object):
+class FederationToken:
     """
     :ivar credentials: A Credentials object containing the credentials.
     :ivar federated_user_arn: ARN specifying federated user using credentials.
@@ -177,7 +177,7 @@ class FederationToken(object):
             pass
 
 
-class AssumedRole(object):
+class AssumedRole:
     """
     :ivar user: The assumed role user.
     :ivar credentials: A Credentials object containing the credentials.
@@ -199,7 +199,7 @@ class AssumedRole(object):
         pass
 
 
-class User(object):
+class User:
     """
     :ivar arn: The arn of the user assuming the role.
     :ivar assume_role_id: The identifier of the assumed role.
@@ -218,7 +218,7 @@ class User(object):
             self.assume_role_id = value
 
 
-class DecodeAuthorizationMessage(object):
+class DecodeAuthorizationMessage:
     """
     :ivar request_id: The request ID.
     :ivar decoded_message: The decoded authorization message (may be JSON).

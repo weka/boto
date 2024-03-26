@@ -92,7 +92,7 @@ class EC2Connection(AWSQueryConnection):
             region = RegionInfo(self, self.DefaultRegionName,
                                 self.DefaultRegionEndpoint)
         self.region = region
-        super(EC2Connection, self).__init__(aws_access_key_id,
+        super().__init__(aws_access_key_id,
                                             aws_secret_access_key,
                                             is_secure, port, proxy, proxy_port,
                                             proxy_user, proxy_pass,
@@ -929,7 +929,7 @@ class EC2Connection(AWSQueryConnection):
                     l.append(group)
             self.build_list_params(params, l, 'SecurityGroup')
         if user_data:
-            if isinstance(user_data, six.text_type):
+            if isinstance(user_data, str):
                 user_data = user_data.encode('utf-8')
             params['UserData'] = base64.b64encode(user_data).decode('utf-8')
         if addressing_type:
@@ -1204,7 +1204,7 @@ class EC2Connection(AWSQueryConnection):
                 raise ValueError('You must also specify an attachment_id')
             params['Attachment.AttachmentId'] = attachment_id
         else:
-            raise ValueError('Unknown attribute "%s"' % (attr,))
+            raise ValueError(f'Unknown attribute "{attr}"')
 
         if dry_run:
             params['DryRun'] = 'true'
@@ -2691,9 +2691,9 @@ class EC2Connection(AWSQueryConnection):
                                 # with the 'preserve_snapshot' tag, delete it:
                                 try:
                                     self.delete_snapshot(snap.id)
-                                    boto.log.info('Trimmed snapshot %s (%s)' % (snap.tags['Name'], snap.start_time))
+                                    boto.log.info('Trimmed snapshot {} ({})'.format(snap.tags['Name'], snap.start_time))
                                 except EC2ResponseError:
-                                    boto.log.error('Attempt to trim snapshot %s (%s) failed. Possible result of a race condition with trimming on another server?' % (snap.tags['Name'], snap.start_time))
+                                    boto.log.error('Attempt to trim snapshot {} ({}) failed. Possible result of a race condition with trimming on another server?'.format(snap.tags['Name'], snap.start_time))
                             # go on and look at the next snapshot,
                             #leaving the time period alone
                         else:

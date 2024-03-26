@@ -24,7 +24,7 @@ from boto.compat import http_client
 from boto.sns import connect_to_region
 
 
-class StubResponse(object):
+class StubResponse:
     status = 403
     reason = 'nopenopenope'
 

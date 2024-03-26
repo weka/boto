@@ -44,7 +44,7 @@ class YAMLMessage(Message):
 
     def __init__(self, queue=None, body='', xml_attrs=None):
         self.data = None
-        super(YAMLMessage, self).__init__(queue, body)
+        super().__init__(queue, body)
 
     def set_body(self, body):
         self.data = yaml.safe_load(body)

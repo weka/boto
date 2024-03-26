@@ -23,7 +23,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from __future__ import print_function
 
 try:
     from setuptools import setup
@@ -58,7 +57,7 @@ setup(name = "boto",
                  "bin/cq", "bin/route53", "bin/cwutil", "bin/instance_events",
                  "bin/asadmin", "bin/glacier", "bin/mturk",
                  "bin/dynamodb_dump", "bin/dynamodb_load"],
-      url = "https://github.com/boto/boto/",
+      url = "https://github.com/weka/boto",
       packages = ["boto", "boto.sqs", "boto.s3", "boto.gs", "boto.file",
                   "boto.ec2", "boto.ec2.cloudwatch", "boto.ec2.autoscale",
                   "boto.ec2.elb", "boto.sdb", "boto.cacerts",
@@ -99,6 +98,7 @@ setup(name = "boto",
                      "Programming Language :: Python :: 2.7",
                      "Programming Language :: Python :: 3",
                      "Programming Language :: Python :: 3.3",
-                     "Programming Language :: Python :: 3.4"],
+                     "Programming Language :: Python :: 3.4",
+                     "Programming Language :: Python :: 3.11"],
       **extra
       )

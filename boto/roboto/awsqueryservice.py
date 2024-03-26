@@ -1,17 +1,17 @@
-from __future__ import print_function
 import os
-import urlparse
+from urllib.parse import urlparse
+
 import boto
 import boto.connection
-import boto.jsonresponse
 import boto.exception
-from boto.roboto import awsqueryrequest
+import boto.jsonresponse
+
 
 class NoCredentialsError(boto.exception.BotoClientError):
 
     def __init__(self):
         s = 'Unable to find credentials'
-        super(NoCredentialsError, self).__init__(s)
+        super().__init__(s)
 
 class AWSQueryService(boto.connection.AWSQueryConnection):
 
@@ -42,7 +42,7 @@ class AWSQueryService(boto.connection.AWSQueryConnection):
         if 'port' not in self.args:
             self.args['port'] = self.Port
         try:
-            super(AWSQueryService, self).__init__(**self.args)
+            super().__init__(**self.args)
             self.aws_response = None
         except boto.exception.NoAuthHandlerFound:
             raise NoCredentialsError()
@@ -96,7 +96,7 @@ class AWSQueryService(boto.connection.AWSQueryConnection):
         if not url and self.EnvURL in os.environ:
             url = os.environ[self.EnvURL]
         if url:
-            rslt = urlparse.urlparse(url)
+            rslt = urlparse(url)
             if 'is_secure' not in self.args:
                 if rslt.scheme == 'https':
                     self.args['is_secure'] = True

@@ -73,7 +73,7 @@ from boto.sqs.attributes import Attributes
 from boto.sqs.messageattributes import MessageAttributes
 from boto.exception import SQSDecodeError
 
-class RawMessage(object):
+class RawMessage:
     """
     Base class for SQS messages.  RawMessage does not encode the message
     in any way.  Whatever you store in the body of the message is what
@@ -164,7 +164,7 @@ class Message(RawMessage):
     """
 
     def encode(self, value):
-        if not isinstance(value, six.binary_type):
+        if not isinstance(value, bytes):
             value = value.encode('utf-8')
         return base64.b64encode(value).decode('utf-8')
 
@@ -191,7 +191,7 @@ class MHMessage(Message):
     def __init__(self, queue=None, body=None, xml_attrs=None):
         if body is None or body == '':
             body = {}
-        super(MHMessage, self).__init__(queue, body)
+        super().__init__(queue, body)
 
     def decode(self, value):
         try:
@@ -211,7 +211,7 @@ class MHMessage(Message):
     def encode(self, value):
         s = ''
         for item in value.items():
-            s = s + '%s: %s\n' % (item[0], item[1])
+            s = s + f'{item[0]}: {item[1]}\n'
         return s
 
     def __contains__(self, key):
@@ -263,9 +263,9 @@ class EncodedMHMessage(MHMessage):
             value = base64.b64decode(value.encode('utf-8')).decode('utf-8')
         except:
             raise SQSDecodeError('Unable to decode message', self)
-        return super(EncodedMHMessage, self).decode(value)
+        return super().decode(value)
 
     def encode(self, value):
-        value = super(EncodedMHMessage, self).encode(value)
+        value = super().encode(value)
         return base64.b64encode(value.encode('utf-8')).decode('utf-8')
 

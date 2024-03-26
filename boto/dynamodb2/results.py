@@ -1,4 +1,4 @@
-class ResultSet(object):
+class ResultSet:
     """
     A class used to lazily handle page-to-page navigation through a set of
     results.
@@ -21,7 +21,7 @@ class ResultSet(object):
 
     """
     def __init__(self, max_page_size=None):
-        super(ResultSet, self).__init__()
+        super().__init__()
         self.the_callable = None
         self.call_args = []
         self.call_kwargs = {}
@@ -168,7 +168,7 @@ class BatchGetResultSet(ResultSet):
     def __init__(self, *args, **kwargs):
         self._keys_left = kwargs.pop('keys', [])
         self._max_batch_get = kwargs.pop('max_batch_get', 100)
-        super(BatchGetResultSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def fetch_more(self):
         self._reset()

@@ -35,7 +35,7 @@ def handle_bool(value):
     return False
 
 
-class Domain(object):
+class Domain:
     """
     A Cloudsearch domain.
 

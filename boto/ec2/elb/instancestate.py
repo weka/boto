@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
 
 
-class InstanceState(object):
+class InstanceState:
     """
     Represents the state of an EC2 Load Balancer Instance
     """
@@ -45,7 +45,7 @@ class InstanceState(object):
         self.reason_code = reason_code
 
     def __repr__(self):
-        return 'InstanceState:(%s,%s)' % (self.instance_id, self.state)
+        return f'InstanceState:({self.instance_id},{self.state})'
 
     def startElement(self, name, attrs, connection):
         return None

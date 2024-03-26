@@ -175,7 +175,7 @@ class Order(IObject):
         print() 
         print('QTY\tNAME\tTYPE\nAMI\t\tGroups\t\t\tKeyPair')
         for item in self.items:
-            print('%s\t%s\t%s\t%s\t%s\t%s' % (item.quantity, item.name, item.instance_type,
+            print('{}\t{}\t{}\t{}\t{}\t{}'.format(item.quantity, item.name, item.instance_type,
                                               item.ami.id, item.groups, item.key.name))
 
     def place(self, block=True):

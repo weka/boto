@@ -41,7 +41,7 @@ class TestRoute53Connection(AWSMockServiceTestCase):
     connection_class = Route53Connection
 
     def setUp(self):
-        super(TestRoute53Connection, self).setUp()
+        super().setUp()
         self.calls = {
             'count': 0,
         }
@@ -117,7 +117,7 @@ class TestCreateZoneRoute53(AWSMockServiceTestCase):
     connection_class = Route53Connection
 
     def setUp(self):
-        super(TestCreateZoneRoute53, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -171,7 +171,7 @@ class TestCreateZoneRoute53(AWSMockServiceTestCase):
 
         self.assertEqual(response['CreateHostedZoneResponse']
                                  ['HostedZone']['Config']['PrivateZone'],
-                         u'false')
+                         'false')
 
 
 @attr(route53=True)
@@ -179,7 +179,7 @@ class TestCreatePrivateZoneRoute53(AWSMockServiceTestCase):
     connection_class = Route53Connection
 
     def setUp(self):
-        super(TestCreatePrivateZoneRoute53, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -223,11 +223,11 @@ class TestCreatePrivateZoneRoute53(AWSMockServiceTestCase):
                                                        )
 
         self.assertEqual(r['CreateHostedZoneResponse']['HostedZone']
-                          ['Config']['PrivateZone'], u'true')
+                          ['Config']['PrivateZone'], 'true')
         self.assertEqual(r['CreateHostedZoneResponse']['HostedZone']
-                          ['VPC']['VPCId'], u'vpc-1a2b3c4d')
+                          ['VPC']['VPCId'], 'vpc-1a2b3c4d')
         self.assertEqual(r['CreateHostedZoneResponse']['HostedZone']
-                          ['VPC']['VPCRegion'], u'us-east-1')
+                          ['VPC']['VPCRegion'], 'us-east-1')
 
 
 @attr(route53=True)
@@ -235,7 +235,7 @@ class TestGetZoneRoute53(AWSMockServiceTestCase):
     connection_class = Route53Connection
 
     def setUp(self):
-        super(TestGetZoneRoute53, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -293,7 +293,7 @@ class TestGetHostedZoneRoute53(AWSMockServiceTestCase):
     connection_class = Route53Connection
 
     def setUp(self):
-        super(TestGetHostedZoneRoute53, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -337,7 +337,7 @@ class TestGetAllRRSetsRoute53(AWSMockServiceTestCase):
     connection_class = Route53Connection
 
     def setUp(self):
-        super(TestGetAllRRSetsRoute53, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -478,7 +478,7 @@ class TestTruncatedGetAllRRSetsRoute53(AWSMockServiceTestCase):
     connection_class = Route53Connection
 
     def setUp(self):
-        super(TestTruncatedGetAllRRSetsRoute53, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -575,7 +575,7 @@ class TestCreateHealthCheckRoute53IpAddress(AWSMockServiceTestCase):
     connection_class = Route53Connection
 
     def setUp(self):
-        super(TestCreateHealthCheckRoute53IpAddress, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -649,7 +649,7 @@ class TestCreateHealthCheckRoute53FQDN(AWSMockServiceTestCase):
     connection_class = Route53Connection
 
     def setUp(self):
-        super(TestCreateHealthCheckRoute53FQDN, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""
@@ -691,7 +691,7 @@ class TestChangeResourceRecordSetsRoute53(AWSMockServiceTestCase):
     connection_class = Route53Connection
 
     def setUp(self):
-        super(TestChangeResourceRecordSetsRoute53, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""

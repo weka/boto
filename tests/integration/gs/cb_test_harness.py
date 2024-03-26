@@ -31,7 +31,7 @@ import socket
 import time
 
 
-class CallbackTestHarness(object):
+class CallbackTestHarness:
 
     def __init__(self, fail_after_n_bytes=0, num_times_to_fail=1,
                  exception=socket.error('mock socket error', 0),

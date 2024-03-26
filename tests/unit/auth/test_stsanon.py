@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
 #
 import copy
-from mock import Mock
+from unittest.mock import Mock
 from tests.unit import unittest
 
 from boto.auth import STSAnonHandler

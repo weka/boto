@@ -60,7 +60,7 @@ class KeyFile():
         return
       pos = self.key.size + pos - 1
       if pos < 0:
-        raise IOError("Invalid argument")
+        raise OSError("Invalid argument")
       self.key.open_read(headers={"Range": "bytes=%d-" % pos})
       self.key.read(1)
       self.location = pos + 1
@@ -68,11 +68,11 @@ class KeyFile():
 
     if whence == os.SEEK_SET:
       if pos < 0:
-        raise IOError("Invalid argument")
+        raise OSError("Invalid argument")
     elif whence == os.SEEK_CUR:
       pos += self.location
     else:
-      raise IOError('Invalid whence param (%d) passed to seek' % whence)
+      raise OSError('Invalid whence param (%d) passed to seek' % whence)
     try:
       self.key.open_read(headers={"Range": "bytes=%d-" % pos})
     except StorageResponseError as e:

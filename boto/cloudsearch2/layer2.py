@@ -27,14 +27,14 @@ from boto.cloudsearch2.domain import Domain
 from boto.compat import six
 
 
-class Layer2(object):
+class Layer2:
 
     def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
                  is_secure=True, port=None, proxy=None, proxy_port=None,
                  host=None, debug=0, session_token=None, region=None,
                  validate_certs=True, sign_request=False):
 
-        if isinstance(region, six.string_types):
+        if isinstance(region, str):
             import boto.cloudsearch2
             for region_info in boto.cloudsearch2.regions():
                 if region_info.name == region:

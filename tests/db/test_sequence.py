@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
  
 
-class TestDBHandler(object):
+class TestDBHandler:
     """Test the DBHandler"""
 
     def setup_class(cls):

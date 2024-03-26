@@ -31,7 +31,7 @@ class TestSESIdentity(AWSMockServiceTestCase):
     connection_class = SESConnection
 
     def setUp(self):
-        super(TestSESIdentity, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""<GetIdentityDkimAttributesResponse \
@@ -103,7 +103,7 @@ class TestSESSetIdentityNotificationTopic(AWSMockServiceTestCase):
     connection_class = SESConnection
 
     def setUp(self):
-        super(TestSESSetIdentityNotificationTopic, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""<SetIdentityNotificationTopicResponse \
@@ -149,7 +149,7 @@ class TestSESSetIdentityFeedbackForwardingEnabled(AWSMockServiceTestCase):
     connection_class = SESConnection
 
     def setUp(self):
-        super(TestSESSetIdentityFeedbackForwardingEnabled, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return b"""<SetIdentityFeedbackForwardingEnabledResponse \

@@ -142,7 +142,7 @@ def main():
     l = []
     for k, v in params.items():
         if v:
-            l.append('%s=%s' % (k, v))
+            l.append(f'{k}={v}')
     c = boto.connect_ec2()
     l.append('aws_access_key_id=%s' % c.aws_access_key_id)
     l.append('aws_secret_access_key=%s' % c.aws_secret_access_key)
@@ -155,7 +155,7 @@ def main():
         r = img.run(user_data=s, key_name=params['keypair'],
                     security_groups=[params['group']],
                     max_count=params.get('num_instances', 1))
-        print('AMI: %s - %s (Started)' % (params['ami'], img.location))
+        print('AMI: {} - {} (Started)'.format(params['ami'], img.location))
         print('Reservation %s contains the following instances:' % r.id)
         for i in r.instances:
             print('\t%s' % i.id)

@@ -48,7 +48,7 @@ class Volume(TaggedEC2Object):
     """
 
     def __init__(self, connection=None):
-        super(Volume, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.create_time = None
         self.status = None
@@ -64,7 +64,7 @@ class Volume(TaggedEC2Object):
         return 'Volume:%s' % self.id
 
     def startElement(self, name, attrs, connection):
-        retval = super(Volume, self).startElement(name, attrs, connection)
+        retval = super().startElement(name, attrs, connection)
         if retval is not None:
             return retval
         if name == 'attachmentSet':
@@ -254,7 +254,7 @@ class Volume(TaggedEC2Object):
         return mine
 
 
-class AttachmentSet(object):
+class AttachmentSet:
     """
     Represents an EBS attachmentset.
 
@@ -292,7 +292,7 @@ class AttachmentSet(object):
             setattr(self, name, value)
 
 
-class VolumeAttribute(object):
+class VolumeAttribute:
     def __init__(self, parent=None):
         self.id = None
         self._key_name = None

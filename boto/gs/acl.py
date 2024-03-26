@@ -52,7 +52,7 @@ SupportedPermissions = ['READ', 'WRITE', 'FULL_CONTROL']
 """A list of supported ACL permissions."""
 
 
-class ACL(object):
+class ACL:
 
     def __init__(self, parent=None):
         self.parent = parent
@@ -126,7 +126,7 @@ class ACL(object):
         return s
 
 
-class Entries(object):
+class Entries:
 
     def __init__(self, parent=None):
         self.parent = parent
@@ -165,7 +165,7 @@ class Entries(object):
 
 
 # Class that represents a single (Scope, Permission) entry in an ACL.
-class Entry(object):
+class Entry:
 
     def __init__(self, scope=None, type=None, id=None, name=None,
                  email_address=None, domain=None, permission=None):
@@ -175,7 +175,7 @@ class Entry(object):
         self.permission = permission
 
     def __repr__(self):
-        return '<%s: %s>' % (self.scope.__repr__(), self.permission.__repr__())
+        return f'<{self.scope.__repr__()}: {self.permission.__repr__()}>'
 
     def startElement(self, name, attrs, connection):
         if name.lower() == SCOPE.lower():
@@ -218,12 +218,12 @@ class Entry(object):
     def to_xml(self):
         s = '<%s>' % ENTRY
         s += self.scope.to_xml()
-        s += '<%s>%s</%s>' % (PERMISSION, self.permission, PERMISSION)
+        s += f'<{PERMISSION}>{self.permission}</{PERMISSION}>'
         s += '</%s>' % ENTRY
         return s
 
 
-class Scope(object):
+class Scope:
 
     # Map from Scope type.lower() to lower-cased list of allowed sub-elems.
     ALLOWED_SCOPE_TYPE_SUB_ELEMS = {
@@ -259,7 +259,7 @@ class Scope(object):
         elif self.domain:
             named_entity = self.domain
         if named_entity:
-            return '<%s: %s>' % (self.type, named_entity)
+            return f'<{self.type}: {named_entity}>'
         else:
             return '<%s>' % self.type
 
@@ -284,23 +284,23 @@ class Scope(object):
             setattr(self, name, value)
 
     def to_xml(self):
-        s = '<%s type="%s">' % (SCOPE, self.type)
+        s = f'<{SCOPE} type="{self.type}">'
         if (self.type.lower() == ALL_AUTHENTICATED_USERS.lower()
             or self.type.lower() == ALL_USERS.lower()):
             pass
         elif self.type.lower() == GROUP_BY_DOMAIN.lower():
-            s += '<%s>%s</%s>' % (DOMAIN, self.domain, DOMAIN)
+            s += f'<{DOMAIN}>{self.domain}</{DOMAIN}>'
         elif (self.type.lower() == GROUP_BY_EMAIL.lower()
               or self.type.lower() == USER_BY_EMAIL.lower()):
-            s += '<%s>%s</%s>' % (EMAIL_ADDRESS, self.email_address,
+            s += '<{}>{}</{}>'.format(EMAIL_ADDRESS, self.email_address,
                                   EMAIL_ADDRESS)
             if self.name:
-              s += '<%s>%s</%s>' % (NAME, self.name, NAME)
+              s += f'<{NAME}>{self.name}</{NAME}>'
         elif (self.type.lower() == GROUP_BY_ID.lower()
               or self.type.lower() == USER_BY_ID.lower()):
-            s += '<%s>%s</%s>' % (ID, self.id, ID)
+            s += f'<{ID}>{self.id}</{ID}>'
             if self.name:
-              s += '<%s>%s</%s>' % (NAME, self.name, NAME)
+              s += f'<{NAME}>{self.name}</{NAME}>'
         else:
             raise InvalidAclError('Invalid scope type "%s" ', self.type)
 

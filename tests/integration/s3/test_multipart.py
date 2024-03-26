@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2011 Mitch Garnaat http://garnaat.org/
 # All rights reserved.
 #
@@ -37,7 +35,7 @@ import unittest
 import time
 from boto.compat import StringIO
 
-import mock
+from unittest import mock
 
 import boto
 from boto.s3.connection import S3Connection
@@ -57,7 +55,7 @@ class S3MultiPartUploadTest(unittest.TestCase):
         self.bucket.delete()
 
     def test_abort(self):
-        key_name = u"テスト"
+        key_name = "テスト"
         mpu = self.bucket.initiate_multipart_upload(key_name)
         mpu.cancel_upload()
 
@@ -72,7 +70,7 @@ class S3MultiPartUploadTest(unittest.TestCase):
         self.assertNotEqual(cmpu.etag, None)
 
     def test_complete_japanese(self):
-        key_name = u"テスト"
+        key_name = "テスト"
         mpu = self.bucket.initiate_multipart_upload(key_name)
         fp = StringIO("small file")
         mpu.upload_part_from_file(fp, part_num=1)
@@ -82,7 +80,7 @@ class S3MultiPartUploadTest(unittest.TestCase):
         self.assertNotEqual(cmpu.etag, None)
 
     def test_list_japanese(self):
-        key_name = u"テスト"
+        key_name = "テスト"
         mpu = self.bucket.initiate_multipart_upload(key_name)
         rs = self.bucket.list_multipart_uploads()
         # New bucket, so only one upload expected
@@ -93,7 +91,7 @@ class S3MultiPartUploadTest(unittest.TestCase):
         lmpu.cancel_upload()
 
     def test_list_multipart_uploads(self):
-        key_name = u"テスト"
+        key_name = "テスト"
         mpus = []
         mpus.append(self.bucket.initiate_multipart_upload(key_name))
         mpus.append(self.bucket.initiate_multipart_upload(key_name))

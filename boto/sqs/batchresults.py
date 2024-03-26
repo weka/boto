@@ -62,7 +62,7 @@ class ResultEntry(dict):
         elif name == 'Message':
             self['error_message'] = value
     
-class BatchResults(object):
+class BatchResults:
     """
     A container for the results of a send_message_batch request.
 

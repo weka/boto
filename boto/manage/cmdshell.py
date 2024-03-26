@@ -35,7 +35,7 @@ import subprocess
 
 from boto.compat import StringIO
 
-class SSHClient(object):
+class SSHClient:
     """
     This class creates a paramiko.SSHClient() object that represents
     a session with an SSH server. You can use the SSHClient object to send
@@ -78,7 +78,7 @@ class SSHClient(object):
                                          pkey=self._pkey,
                                          timeout=self._timeout)
                 return
-            except socket.error as xxx_todo_changeme:
+            except OSError as xxx_todo_changeme:
                 (value, message) = xxx_todo_changeme.args
                 if value in (51, 61, 111):
                     print('SSH Connection refused, will retry in 5 seconds')
@@ -228,7 +228,7 @@ class SSHClient(object):
                 the stdout from the command, and the stderr from the command.
 
         """
-        boto.log.debug('running:%s on %s' % (command, self.server.instance_id))
+        boto.log.debug(f'running:{command} on {self.server.instance_id}')
         status = 0
         try:
             t = self._ssh_client.exec_command(command)
@@ -254,7 +254,7 @@ class SSHClient(object):
         :rtype: :class:`paramiko.channel.Channel`
         :return: An open channel object.
         """
-        boto.log.debug('running:%s on %s' % (command, self.server.instance_id))
+        boto.log.debug(f'running:{command} on {self.server.instance_id}')
         channel = self._ssh_client.get_transport().open_session()
         channel.get_pty()
         channel.exec_command(command)
@@ -268,7 +268,7 @@ class SSHClient(object):
         transport.close()
         self.server.reset_cmdshell()
 
-class LocalClient(object):
+class LocalClient:
     """
     :ivar server: A Server object or FakeServer object.
     :ivar host_key_file: The path to the user's .ssh key files.
@@ -346,7 +346,7 @@ class LocalClient(object):
     def close(self):
         pass
 
-class FakeServer(object):
+class FakeServer:
     """
     This object has a subset of the variables that are normally in a
     :class:`boto.manage.server.Server` object. You can use this FakeServer

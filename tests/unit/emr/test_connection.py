@@ -1044,11 +1044,11 @@ class TestRunJobFlow(AWSMockServiceTestCase):
 
         actual_params = set(self.actual_request.params.copy().items())
 
-        expected_params = set([
+        expected_params = {
             ('Steps.member.1.HadoopJarStep.Jar',
              's3://ap-northeast-2.elasticmapreduce/libs/script-runner/script-runner.jar'),
             ('Steps.member.1.HadoopJarStep.Args.member.1',
                 's3://ap-northeast-2.elasticmapreduce/libs/state-pusher/0.1/fetch'),
-        ])
+        }
 
         self.assertTrue(expected_params <= actual_params)

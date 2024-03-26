@@ -67,7 +67,7 @@ class SDBConnectionTest (unittest.TestCase):
         assert item['name2'] == attrs_1['name2']
 
         # try a search or two
-        query = 'select * from %s where name1="%s"' % (domain_name, same_value)
+        query = f'select * from {domain_name} where name1="{same_value}"'
         rs = domain.select(query, consistent_read=True)
         n = 0
         for item in rs:

@@ -49,7 +49,7 @@ class XmlHandler(xml.sax.ContentHandler):
         self.current_text += content
 
 
-class XmlHandlerWrapper(object):
+class XmlHandlerWrapper:
     def __init__(self, root_node, connection):
         self.handler = XmlHandler(root_node, connection)
         self.parser = xml.sax.make_parser()

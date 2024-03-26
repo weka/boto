@@ -54,7 +54,7 @@ def boto_except_hook(debugger_flag, debug_flag):
 
     return excepthook
 
-class Line(object):
+class Line:
 
     def __init__(self, fmt, data, label):
         self.fmt = fmt
@@ -76,22 +76,22 @@ class RequiredParamError(boto.exception.BotoClientError):
     def __init__(self, required):
         self.required = required
         s = 'Required parameters are missing: %s' % self.required
-        super(RequiredParamError, self).__init__(s)
+        super().__init__(s)
 
 class EncoderError(boto.exception.BotoClientError):
 
     def __init__(self, error_msg):
         s = 'Error encoding value (%s)' % error_msg
-        super(EncoderError, self).__init__(s)
+        super().__init__(s)
 
 class FilterError(boto.exception.BotoClientError):
 
     def __init__(self, filters):
         self.filters = filters
         s = 'Unknown filters: %s' % self.filters
-        super(FilterError, self).__init__(s)
+        super().__init__(s)
 
-class Encoder(object):
+class Encoder:
 
     @classmethod
     def encode(cls, p, rp, v, label=None):
@@ -153,7 +153,7 @@ class Encoder(object):
         for i, value in enumerate(v):
             rp[label%(i+1)] = value
 
-class AWSQueryRequest(object):
+class AWSQueryRequest:
 
     ServiceClass = None
 
@@ -272,7 +272,7 @@ class AWSQueryRequest(object):
             for p in self.Params+self.Args:
                 if p.name in required:
                     if p.short_name and p.long_name:
-                        l.append('(%s, %s)' % (p.optparse_short_name,
+                        l.append('({}, {})'.format(p.optparse_short_name,
                                                p.optparse_long_name))
                     elif p.short_name:
                         l.append('(%s)' % p.optparse_short_name)
@@ -306,7 +306,7 @@ class AWSQueryRequest(object):
             h.parse(self.body)
             return self.aws_response
         else:
-            boto.log.error('%s %s' % (self.http_response.status,
+            boto.log.error('{} {}'.format(self.http_response.status,
                                       self.http_response.reason))
             boto.log.error('%s' % self.body)
             raise conn.ResponseError(self.http_response.status,
@@ -343,7 +343,7 @@ class AWSQueryRequest(object):
         if hasattr(options, 'help_filters') and options.help_filters:
             print('Available filters:')
             for filter in self.Filters:
-                print('%s\t%s' % (filter.name, filter.doc))
+                print(f'{filter.name}\t{filter.doc}')
             sys.exit(0)
         if options.debug:
             self.args['debug'] = 2
@@ -368,7 +368,7 @@ class AWSQueryRequest(object):
         s += ' '.join(l)
         for a in self.Args:
             if a.doc:
-                s += '\n\n\t%s - %s' % (a.long_name, a.doc)
+                s += f'\n\n\t{a.long_name} - {a.doc}'
         return s
 
     def build_cli_parser(self):
@@ -455,7 +455,7 @@ class AWSQueryRequest(object):
             print(e)
             sys.exit(1)
         except self.ServiceClass.ResponseError as err:
-            print('Error(%s): %s' % (err.error_code, err.error_message))
+            print(f'Error({err.error_code}): {err.error_message}')
             sys.exit(1)
         except boto.roboto.awsqueryservice.NoCredentialsError as err:
             print('Unable to find credentials.')

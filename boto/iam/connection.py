@@ -63,7 +63,7 @@ class IAMConnection(AWSQueryConnection):
                  proxy_user=None, proxy_pass=None, host='iam.amazonaws.com',
                  debug=0, https_connection_factory=None, path='/',
                  security_token=None, validate_certs=True, profile_name=None):
-        super(IAMConnection, self).__init__(aws_access_key_id,
+        super().__init__(aws_access_key_id,
                                             aws_secret_access_key,
                                             is_secure, port, proxy,
                                             proxy_port, proxy_user, proxy_pass,
@@ -97,7 +97,7 @@ class IAMConnection(AWSQueryConnection):
                 # according to the official documentation.
                 return {}
         else:
-            boto.log.error('%s %s' % (response.status, response.reason))
+            boto.log.error(f'{response.status} {response.reason}')
             boto.log.error('%s' % body)
             raise self.ResponseError(response.status, response.reason, body)
 
@@ -1042,17 +1042,17 @@ class IAMConnection(AWSQueryConnection):
         alias = aliases[0]
 
         if self.host == 'iam.us-gov.amazonaws.com':
-            return "https://%s.signin.amazonaws-us-gov.com/console/%s" % (
+            return "https://{}.signin.amazonaws-us-gov.com/console/{}".format(
                 alias,
                 service
             )
         elif self.host.endswith('amazonaws.com.cn'):
-            return "https://%s.signin.amazonaws.cn/console/%s" % (
+            return "https://{}.signin.amazonaws.cn/console/{}".format(
                 alias,
                 service
             )
         else:
-            return "https://%s.signin.aws.amazon.com/console/%s" % (
+            return "https://{}.signin.aws.amazon.com/console/{}".format(
                 alias,
                 service
             )
@@ -1104,14 +1104,14 @@ class IAMConnection(AWSQueryConnection):
 
     def _build_policy(self, assume_role_policy_document=None):
         if assume_role_policy_document is not None:
-            if isinstance(assume_role_policy_document, six.string_types):
+            if isinstance(assume_role_policy_document, str):
                 # Historically, they had to pass a string. If it's a string,
                 # assume the user has already handled it.
                 return assume_role_policy_document
         else:
 
             for tld, policy in DEFAULT_POLICY_DOCUMENTS.items():
-                if tld is 'default':
+                if tld == 'default':
                     # Skip the default. We'll fall back to it if we don't find
                     # anything.
                     continue

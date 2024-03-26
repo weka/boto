@@ -124,11 +124,11 @@ class TestMWSResponse(AWSMockServiceTestCase):
         nests = [z.Nest for z in filter(lambda x: x.Nest, item)]
         self.assertSequenceEqual(
             [[y.Data for y in nest] for nest in nests],
-            [[u'2', u'4', u'6'], [u'1', u'3', u'5']],
+            [['2', '4', '6'], ['1', '3', '5']],
         )
         self.assertSequenceEqual(
             [element.Simple for element in item[1].List],
-            [[u'4', u'5', u'6'], [u'7', u'8', u'9']],
+            [['4', '5', '6'], ['7', '8', '9']],
         )
         self.assertSequenceEqual(
             item[-1].List[0].Simple,

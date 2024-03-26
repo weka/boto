@@ -122,7 +122,7 @@ class DynamoDBLayer2Test(unittest.TestCase):
             'Replies': 0,
             'Answered': 0,
             'Public': True,
-            'Tags': set(['index', 'primarykey', 'table']),
+            'Tags': {'index', 'primarykey', 'table'},
             'LastPostDateTime': '12/9/2011 11:36:03 PM'}
 
         # Test a few corner cases with new_item
@@ -163,7 +163,7 @@ class DynamoDBLayer2Test(unittest.TestCase):
         assert item1_copy.range_key == item1.range_key
         for attr_name in item1_attrs:
             val = item1_copy[attr_name]
-            if isinstance(val, (int, long_type, float, six.string_types)):
+            if isinstance(val, (int, long_type, float, (str,))):
                 assert val == item1[attr_name]
 
         # Try retrieving only select attributes
@@ -200,9 +200,9 @@ class DynamoDBLayer2Test(unittest.TestCase):
         item1.delete_attribute(removed_attr)
 
         removed_tag = item1_attrs['Tags'].copy().pop()
-        item1.delete_attribute('Tags', set([removed_tag]))
+        item1.delete_attribute('Tags', {removed_tag})
 
-        replies_by_set = set(['Adam', 'Arnie'])
+        replies_by_set = {'Adam', 'Arnie'}
         item1.put_attribute('RepliesBy', replies_by_set)
         retvals = item1.save(return_values='ALL_OLD')
         # Need more tests here for variations on return_values
@@ -226,7 +226,7 @@ class DynamoDBLayer2Test(unittest.TestCase):
             'Views': 0,
             'Replies': 0,
             'Answered': 0,
-            'Tags': set(["index", "primarykey", "table"]),
+            'Tags': {"index", "primarykey", "table"},
             'LastPost2DateTime': '12/9/2011 11:36:03 PM'}
         item2 = table.new_item(item2_key, item2_range, item2_attrs)
         item2.put()
@@ -239,7 +239,7 @@ class DynamoDBLayer2Test(unittest.TestCase):
             'Views': 0,
             'Replies': 0,
             'Answered': 0,
-            'Tags': set(['largeobject', 'multipart upload']),
+            'Tags': {'largeobject', 'multipart upload'},
             'LastPostDateTime': '12/9/2011 11:36:03 PM'
         }
         item3 = table.new_item(item3_key, item3_range, item3_attrs)
@@ -297,10 +297,10 @@ class DynamoDBLayer2Test(unittest.TestCase):
         item3['FalseBoolean'] = False
 
         # Test some set values
-        integer_set = set([1, 2, 3, 4, 5])
-        float_set = set([1.1, 2.2, 3.3, 4.4, 5.5])
-        mixed_set = set([1, 2, 3.3, 4, 5.555])
-        str_set = set(['foo', 'bar', 'fie', 'baz'])
+        integer_set = {1, 2, 3, 4, 5}
+        float_set = {1.1, 2.2, 3.3, 4.4, 5.5}
+        mixed_set = {1, 2, 3.3, 4, 5.555}
+        str_set = {'foo', 'bar', 'fie', 'baz'}
         item3['IntSetAttr'] = integer_set
         item3['FloatSetAttr'] = float_set
         item3['MixedSetAttr'] = mixed_set
@@ -346,7 +346,7 @@ class DynamoDBLayer2Test(unittest.TestCase):
             'Views': 0,
             'Replies': 0,
             'Answered': 0,
-            'Tags': set(['largeobject', 'multipart upload']),
+            'Tags': {'largeobject', 'multipart upload'},
             'LastPostDateTime': '12/9/2011 11:36:03 PM'
         }
         item5_key = 'Amazon S3'
@@ -357,7 +357,7 @@ class DynamoDBLayer2Test(unittest.TestCase):
             'Views': 0,
             'Replies': 0,
             'Answered': 0,
-            'Tags': set(['largeobject', 'multipart upload']),
+            'Tags': {'largeobject', 'multipart upload'},
             'LastPostDateTime': '12/9/2011 11:36:03 PM'
         }
         item4 = table.new_item(item4_key, item4_range, item4_attrs)
@@ -433,8 +433,8 @@ class DynamoDBLayer2Test(unittest.TestCase):
             'Replies': 0,
             'Answered': 0,
             'BinaryData': Binary(b'\x01\x02\x03\x04'),
-            'BinarySequence': set([Binary(b'\x01\x02'), Binary(b'\x03\x04')]),
-            'Tags': set(['largeobject', 'multipart upload']),
+            'BinarySequence': {Binary(b'\x01\x02'), Binary(b'\x03\x04')},
+            'Tags': {'largeobject', 'multipart upload'},
             'LastPostDateTime': '12/9/2011 11:36:03 PM'
         }
         item1 = table.new_item(item1_key, item1_range, item1_attrs)
@@ -444,12 +444,12 @@ class DynamoDBLayer2Test(unittest.TestCase):
         self.assertEqual(retrieved['Message'], 'S3 Thread 1 message text')
         self.assertEqual(retrieved['Views'], 0)
         self.assertEqual(retrieved['Tags'],
-                         set(['largeobject', 'multipart upload']))
+                         {'largeobject', 'multipart upload'})
         self.assertEqual(retrieved['BinaryData'], Binary(b'\x01\x02\x03\x04'))
         # Also comparable directly to bytes:
         self.assertEqual(retrieved['BinaryData'], b'\x01\x02\x03\x04')
         self.assertEqual(retrieved['BinarySequence'],
-                         set([Binary(b'\x01\x02'), Binary(b'\x03\x04')]))
+                         {Binary(b'\x01\x02'), Binary(b'\x03\x04')})
 
     def test_put_decimal_attrs(self):
         self.dynamodb.use_decimals()

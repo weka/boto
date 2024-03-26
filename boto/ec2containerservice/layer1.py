@@ -66,7 +66,7 @@ class EC2ContainerServiceConnection(AWSQueryConnection):
         if 'host' not in kwargs or kwargs['host'] is None:
             kwargs['host'] = region.endpoint
 
-        super(EC2ContainerServiceConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
 
     def _required_auth_capability(self):

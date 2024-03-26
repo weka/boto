@@ -19,7 +19,7 @@
 # IN THE SOFTWARE.
 
 
-class InstanceGroup(object):
+class InstanceGroup:
     def __init__(self, num_instances, role, type, market, name, bidprice=None):
         self.num_instances = num_instances
         self.role = role
@@ -33,11 +33,11 @@ class InstanceGroup(object):
 
     def __repr__(self):
         if self.market == 'SPOT':
-            return '%s.%s(name=%r, num_instances=%r, role=%r, type=%r, market = %r, bidprice = %r)' % (
+            return '{}.{}(name={!r}, num_instances={!r}, role={!r}, type={!r}, market = {!r}, bidprice = {!r})'.format(
                 self.__class__.__module__, self.__class__.__name__,
                 self.name, self.num_instances, self.role, self.type, self.market,
                 self.bidprice)
         else:
-            return '%s.%s(name=%r, num_instances=%r, role=%r, type=%r, market = %r)' % (
+            return '{}.{}(name={!r}, num_instances={!r}, role={!r}, type={!r}, market = {!r})'.format(
                 self.__class__.__module__, self.__class__.__name__,
                 self.name, self.num_instances, self.role, self.type, self.market)

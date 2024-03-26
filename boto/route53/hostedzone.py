@@ -23,7 +23,7 @@
 #
 
 
-class HostedZone(object):
+class HostedZone:
 
     def __init__(self, id=None, name=None, owner=None, version=None,
                  caller_reference=None):

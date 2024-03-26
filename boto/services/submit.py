@@ -22,7 +22,7 @@ import time
 import os
 
 
-class Submitter(object):
+class Submitter:
 
     def __init__(self, sd):
         self.sd = sd

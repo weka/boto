@@ -18,7 +18,6 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
-from __future__ import print_function
 
 """
 Represents an SDB Domain
@@ -27,7 +26,7 @@ Represents an SDB Domain
 from boto.sdb.queryresultset import SelectResultSet
 from boto.compat import six
 
-class Domain(object):
+class Domain:
 
     def __init__(self, connection=None, name=None):
         self.connection = connection
@@ -254,10 +253,10 @@ class Domain(object):
                     values = [values]
                 for value in values:
                     print('\t\t\t<value><![CDATA[', end=' ', file=f)
-                    if isinstance(value, six.text_type):
+                    if isinstance(value, str):
                         value = value.encode('utf-8', 'replace')
                     else:
-                        value = six.text_type(value, errors='replace').encode('utf-8', 'replace')
+                        value = str(value, errors='replace').encode('utf-8', 'replace')
                     f.write(value)
                     print(']]></value>', file=f)
                 print('\t\t</attribute>', file=f)
@@ -282,7 +281,7 @@ class Domain(object):
         return self.connection.delete_domain(self)
 
 
-class DomainMetaData(object):
+class DomainMetaData:
 
     def __init__(self, domain=None):
         self.domain = domain
@@ -367,7 +366,7 @@ class UploaderThread(Thread):
     def __init__(self, domain):
         self.db = domain
         self.items = {}
-        super(UploaderThread, self).__init__()
+        super().__init__()
 
     def run(self):
         try:

@@ -79,7 +79,7 @@ def structured_lists(*fields):
                         kw[newkey + str(i + 1)] = kw[key][i]
                     kw.pop(key)
             return func(self, *args, **kw)
-        wrapper.__doc__ = "{0}\nLists: {1}".format(func.__doc__,
+        wrapper.__doc__ = "{}\nLists: {}".format(func.__doc__,
                                                    ', '.join(fields))
         return add_attrs_from(func, to=wrapper)
     return decorator
@@ -91,7 +91,7 @@ def http_body(field):
 
         def wrapper(*args, **kw):
             if any([f not in kw for f in (field, 'content_type')]):
-                message = "{0} requires {1} and content_type arguments for " \
+                message = "{} requires {} and content_type arguments for " \
                           "building HTTP body".format(func.action, field)
                 raise KeyError(message)
             kw['body'] = kw.pop(field)
@@ -100,8 +100,8 @@ def http_body(field):
                 'Content-MD5':  content_md5(kw['body']),
             }
             return func(*args, **kw)
-        wrapper.__doc__ = "{0}\nRequired HTTP Body: " \
-                          "{1}".format(func.__doc__, field)
+        wrapper.__doc__ = "{}\nRequired HTTP Body: " \
+                          "{}".format(func.__doc__, field)
         return add_attrs_from(func, to=wrapper)
     return decorator
 
@@ -109,15 +109,15 @@ def http_body(field):
 def destructure_object(value, into, prefix, members=False):
     if isinstance(value, boto.mws.response.ResponseElement):
         destructure_object(value.__dict__, into, prefix, members=members)
-    elif isinstance(value, collections.Mapping):
+    elif isinstance(value, collections.abc.Mapping):
         for name in value:
             if name.startswith('_'):
                 continue
             destructure_object(value[name], into, prefix + '.' + name,
                                members=members)
-    elif isinstance(value, six.string_types):
+    elif isinstance(value, str):
         into[prefix] = value
-    elif isinstance(value, collections.Iterable):
+    elif isinstance(value, collections.abc.Iterable):
         for index, element in enumerate(value):
             suffix = (members and '.member.' or '.') + str(index + 1)
             destructure_object(element, into, prefix + suffix,
@@ -137,7 +137,7 @@ def structured_objects(*fields, **kwargs):
             for field in filter(lambda i: i in kw, fields):
                 destructure_object(kw.pop(field), kw, field, members=members)
             return func(*args, **kw)
-        wrapper.__doc__ = "{0}\nElement|Iter|Map: {1}\n" \
+        wrapper.__doc__ = "{}\nElement|Iter|Map: {}\n" \
                           "(ResponseElement or anything iterable/dict-like)" \
                           .format(func.__doc__, ', '.join(fields))
         return add_attrs_from(func, to=wrapper)
@@ -152,12 +152,12 @@ def requires(*groups):
             hasgroup = lambda group: all(key in kw for key in group)
             if 1 != len(list(filter(hasgroup, groups))):
                 message = ' OR '.join(['+'.join(g) for g in groups])
-                message = "{0} requires {1} argument(s)" \
+                message = "{} requires {} argument(s)" \
                           "".format(func.action, message)
                 raise KeyError(message)
             return func(*args, **kw)
         message = ' OR '.join(['+'.join(g) for g in groups])
-        requires.__doc__ = "{0}\nRequired: {1}".format(func.__doc__,
+        requires.__doc__ = "{}\nRequired: {}".format(func.__doc__,
                                                        message)
         return add_attrs_from(func, to=requires)
     return decorator
@@ -171,12 +171,12 @@ def exclusive(*groups):
             hasgroup = lambda group: all(key in kw for key in group)
             if len(list(filter(hasgroup, groups))) not in (0, 1):
                 message = ' OR '.join(['+'.join(g) for g in groups])
-                message = "{0} requires either {1}" \
+                message = "{} requires either {}" \
                           "".format(func.action, message)
                 raise KeyError(message)
             return func(*args, **kw)
         message = ' OR '.join(['+'.join(g) for g in groups])
-        wrapper.__doc__ = "{0}\nEither: {1}".format(func.__doc__,
+        wrapper.__doc__ = "{}\nEither: {}".format(func.__doc__,
                                                     message)
         return add_attrs_from(func, to=wrapper)
     return decorator
@@ -190,12 +190,12 @@ def dependent(field, *groups):
             hasgroup = lambda group: all(key in kw for key in group)
             if field in kw and not any(hasgroup(g) for g in groups):
                 message = ' OR '.join(['+'.join(g) for g in groups])
-                message = "{0} argument {1} requires {2}" \
+                message = "{} argument {} requires {}" \
                           "".format(func.action, field, message)
                 raise KeyError(message)
             return func(*args, **kw)
         message = ' OR '.join(['+'.join(g) for g in groups])
-        wrapper.__doc__ = "{0}\n{1} requires: {2}".format(func.__doc__,
+        wrapper.__doc__ = "{}\n{} requires: {}".format(func.__doc__,
                                                           field,
                                                           message)
         return add_attrs_from(func, to=wrapper)
@@ -208,11 +208,11 @@ def requires_some_of(*fields):
 
         def requires(*args, **kw):
             if not any(i in kw for i in fields):
-                message = "{0} requires at least one of {1} argument(s)" \
+                message = "{} requires at least one of {} argument(s)" \
                           "".format(func.action, ', '.join(fields))
                 raise KeyError(message)
             return func(*args, **kw)
-        requires.__doc__ = "{0}\nSome Required: {1}".format(func.__doc__,
+        requires.__doc__ = "{}\nSome Required: {}".format(func.__doc__,
                                                             ', '.join(fields))
         return add_attrs_from(func, to=requires)
     return decorator
@@ -226,7 +226,7 @@ def boolean_arguments(*fields):
             for field in [f for f in fields if isinstance(kw.get(f), bool)]:
                 kw[field] = str(kw[field]).lower()
             return func(*args, **kw)
-        wrapper.__doc__ = "{0}\nBooleans: {1}".format(func.__doc__,
+        wrapper.__doc__ = "{}\nBooleans: {}".format(func.__doc__,
                                                       ', '.join(fields))
         return add_attrs_from(func, to=wrapper)
     return decorator
@@ -241,8 +241,8 @@ def api_action(section, quota, restore, *api):
         def wrapper(self, *args, **kw):
             kw.setdefault(accesskey, getattr(self, accesskey, None))
             if kw[accesskey] is None:
-                message = "{0} requires {1} argument. Set the " \
-                          "MWSConnection.{2} attribute?" \
+                message = "{} requires {} argument. Set the " \
+                          "MWSConnection.{} attribute?" \
                           "".format(action, accesskey, accesskey)
                 raise KeyError(message)
             kw['Action'] = action
@@ -252,8 +252,8 @@ def api_action(section, quota, restore, *api):
             return func(self, request, response, *args, **kw)
         for attr in decorated_attrs:
             setattr(wrapper, attr, locals().get(attr))
-        wrapper.__doc__ = "MWS {0}/{1} API call; quota={2} restore={3:.2f}\n" \
-                          "{4}".format(action, version, quota, restore,
+        wrapper.__doc__ = "MWS {}/{} API call; quota={} restore={:.2f}\n" \
+                          "{}".format(action, version, quota, restore,
                                        func.__doc__)
         api_call_map[action] = func.__name__
         return wrapper
@@ -271,7 +271,7 @@ class MWSConnection(AWSQueryConnection):
         self.Merchant = kw.pop('Merchant', None) or kw.get('SellerId')
         self.SellerId = kw.pop('SellerId', None) or self.Merchant
         kw = self._setup_factories(kw.pop('factory_scopes', []), **kw)
-        super(MWSConnection, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
 
     def _setup_factories(self, extrascopes, **kw):
         for factory, (scope, Default) in {
@@ -317,7 +317,7 @@ class MWSConnection(AWSQueryConnection):
             raise self._response_error_factory(response.status,
                                                response.reason, body)
         if response.status != 200:
-            boto.log.error('%s %s' % (response.status, response.reason))
+            boto.log.error(f'{response.status} {response.reason}')
             boto.log.error('%s' % body)
             raise self._response_error_factory(response.status,
                                                response.reason, body)
@@ -350,7 +350,7 @@ class MWSConnection(AWSQueryConnection):
            call responses made using the NextToken.
         """
         method = self.method_for(call)
-        assert method, 'No call named "{0}"'.format(call)
+        assert method, f'No call named "{call}"'
         return self.iter_response(method(*args, **kw))
 
     def iter_response(self, response):
@@ -418,9 +418,9 @@ class MWSConnection(AWSQueryConnection):
         """Instruct the user on how to get service status.
         """
         sections = ', '.join(map(str.lower, api_version_path.keys()))
-        message = "Use {0}.get_(section)_service_status(), " \
+        message = "Use {}.get_(section)_service_status(), " \
                   "where (section) is one of the following: " \
-                  "{1}".format(self.__class__.__name__, sections)
+                  "{}".format(self.__class__.__name__, sections)
         raise AttributeError(message)
 
     @requires(['ReportType'])
@@ -718,16 +718,16 @@ class MWSConnection(AWSQueryConnection):
         """Returns a list of orders created or updated during a time
            frame that you specify.
         """
-        toggle = set(('FulfillmentChannel.Channel.1',
+        toggle = {'FulfillmentChannel.Channel.1',
                       'OrderStatus.Status.1', 'PaymentMethod.1',
-                      'LastUpdatedAfter', 'LastUpdatedBefore'))
+                      'LastUpdatedAfter', 'LastUpdatedBefore'}
         for do, dont in {
             'BuyerEmail': toggle.union(['SellerOrderId']),
             'SellerOrderId': toggle.union(['BuyerEmail']),
         }.items():
             if do in kw and any(i in dont for i in kw):
-                message = "Don't include {0} when specifying " \
-                          "{1}".format(' or '.join(dont), do)
+                message = "Don't include {} when specifying " \
+                          "{}".format(' or '.join(dont), do)
                 raise AssertionError(message)
         return self._post_request(request, kw, response)
 

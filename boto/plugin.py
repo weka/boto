@@ -41,7 +41,7 @@ import imp
 import os.path
 
 
-class Plugin(object):
+class Plugin:
     """Base class for all plugins."""
 
     capability = []

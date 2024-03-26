@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2011 Mitch Garnaat http://garnaat.org/
 # All rights reserved.
 #
@@ -26,7 +24,7 @@
 Some unit tests for the S3 Bucket
 """
 
-from mock import patch, Mock
+from unittest.mock import patch, Mock
 import unittest
 import time
 
@@ -90,7 +88,7 @@ class S3BucketTest (unittest.TestCase):
 
 
     def test_list_with_url_encoding(self):
-        expected = [u"α", u"β", u"γ"]
+        expected = ["α", "β", "γ"]
         for key_name in expected:
             key = self.bucket.new_key(key_name)
             key.set_contents_from_string(key_name)
@@ -116,7 +114,7 @@ class S3BucketTest (unittest.TestCase):
         # grant log write perms to target bucket using canned-acl
         self.bucket.set_acl("log-delivery-write")
         target_bucket = self.bucket_name
-        target_prefix = u"jp/ログ/"
+        target_prefix = "jp/ログ/"
         # Check existing status is disabled
         bls = sb.get_logging_status()
         self.assertEqual(bls.target, None)

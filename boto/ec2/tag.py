@@ -49,7 +49,7 @@ class TagSet(dict):
             self[self._current_key] = self._current_value
 
 
-class Tag(object):
+class Tag:
     """
     A Tag is used when creating or listing all tags related to
     an AWS account.  It records not only the key and value but

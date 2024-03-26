@@ -60,7 +60,7 @@ class AWSLambdaConnection(AWSAuthConnection):
         else:
             del kwargs['region']
         kwargs['host'] = region.endpoint
-        super(AWSLambdaConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
 
     def _required_auth_capability(self):
@@ -145,7 +145,7 @@ class AWSLambdaConnection(AWSAuthConnection):
 
         """
 
-        uri = '/2014-11-13/functions/{0}'.format(function_name)
+        uri = f'/2014-11-13/functions/{function_name}'
         return self.make_request('DELETE', uri, expected_status=204)
 
     def get_event_source(self, uuid):
@@ -161,7 +161,7 @@ class AWSLambdaConnection(AWSAuthConnection):
 
         """
 
-        uri = '/2014-11-13/event-source-mappings/{0}'.format(uuid)
+        uri = f'/2014-11-13/event-source-mappings/{uuid}'
         return self.make_request('GET', uri, expected_status=200)
 
     def get_function(self, function_name):
@@ -181,7 +181,7 @@ class AWSLambdaConnection(AWSAuthConnection):
 
         """
 
-        uri = '/2014-11-13/functions/{0}'.format(function_name)
+        uri = f'/2014-11-13/functions/{function_name}'
         return self.make_request('GET', uri, expected_status=200)
 
     def get_function_configuration(self, function_name):
@@ -199,7 +199,7 @@ class AWSLambdaConnection(AWSAuthConnection):
 
         """
 
-        uri = '/2014-11-13/functions/{0}/configuration'.format(function_name)
+        uri = f'/2014-11-13/functions/{function_name}/configuration'
         return self.make_request('GET', uri, expected_status=200)
 
     def invoke_async(self, function_name, invoke_args):
@@ -220,7 +220,7 @@ class AWSLambdaConnection(AWSAuthConnection):
             function as input.
 
         """
-        uri = '/2014-11-13/functions/{0}/invoke-async/'.format(function_name)
+        uri = f'/2014-11-13/functions/{function_name}/invoke-async/'
         headers = {}
         query_params = {}
         try:
@@ -230,7 +230,7 @@ class AWSLambdaConnection(AWSAuthConnection):
             # the file size via fstat.
             try:
                 invoke_args.tell()
-            except (AttributeError, OSError, IOError):
+            except (AttributeError, OSError):
                 raise TypeError(
                     "File-like object passed to parameter "
                     "``invoke_args`` must be seekable."
@@ -335,7 +335,7 @@ class AWSLambdaConnection(AWSAuthConnection):
 
         """
 
-        uri = '/2014-11-13/event-source-mappings/{0}'.format(uuid)
+        uri = f'/2014-11-13/event-source-mappings/{uuid}'
         return self.make_request('DELETE', uri, expected_status=204)
 
     def update_function_configuration(self, function_name, role=None,
@@ -384,7 +384,7 @@ class AWSLambdaConnection(AWSAuthConnection):
 
         """
 
-        uri = '/2014-11-13/functions/{0}/configuration'.format(function_name)
+        uri = f'/2014-11-13/functions/{function_name}/configuration'
         params = {}
         headers = {}
         query_params = {}
@@ -464,7 +464,7 @@ class AWSLambdaConnection(AWSAuthConnection):
             value is 128 MB. The value must be a multiple of 64 MB.
 
         """
-        uri = '/2014-11-13/functions/{0}'.format(function_name)
+        uri = f'/2014-11-13/functions/{function_name}'
         headers = {}
         query_params = {}
         if runtime is not None:
@@ -489,7 +489,7 @@ class AWSLambdaConnection(AWSAuthConnection):
             # the file size via fstat.
             try:
                 function_zip.tell()
-            except (AttributeError, OSError, IOError):
+            except (AttributeError, OSError):
                 raise TypeError(
                     "File-like object passed to parameter "
                     "``function_zip`` must be seekable."

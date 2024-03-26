@@ -24,7 +24,7 @@
 from boto.dynamodb.types import dynamize_value
 
 
-class Condition(object):
+class Condition:
     """
     Base class for conditions.  Doesn't do a darn thing but allows
     is to test if something is a Condition instance or not.
@@ -57,7 +57,7 @@ class ConditionOneArg(Condition):
         self.v1 = v1
 
     def __repr__(self):
-        return '%s:%s' % (self.__class__.__name__, self.v1)
+        return f'{self.__class__.__name__}:{self.v1}'
 
     def to_dict(self):
         return {'AttributeValueList': [dynamize_value(self.v1)],
@@ -75,7 +75,7 @@ class ConditionTwoArgs(Condition):
         self.v2 = v2
 
     def __repr__(self):
-        return '%s(%s, %s)' % (self.__class__.__name__, self.v1, self.v2)
+        return f'{self.__class__.__name__}({self.v1}, {self.v2})'
 
     def to_dict(self):
         values = (self.v1, self.v2)
@@ -92,7 +92,7 @@ class ConditionSeveralArgs(Condition):
         self.values = values
 
     def __repr__(self):
-        return '{0}({1})'.format(self.__class__.__name__,
+        return '{}({})'.format(self.__class__.__name__,
                                ', '.join(self.values))
 
     def to_dict(self):

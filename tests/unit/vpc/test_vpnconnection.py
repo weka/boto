@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 from tests.unit import unittest
 from tests.unit import AWSMockServiceTestCase
 
@@ -170,9 +169,9 @@ class TestCreateVPNConnection(AWSMockServiceTestCase):
                                   'SignatureVersion', 'Timestamp',
                                   'Version'])
         self.assertIsInstance(api_response, VpnConnection)
-        self.assertEquals(api_response.id, 'vpn-83ad48ea')
-        self.assertEquals(api_response.customer_gateway_id, 'cgw-b4dc3961')
-        self.assertEquals(api_response.options.static_routes_only, True)
+        self.assertEqual(api_response.id, 'vpn-83ad48ea')
+        self.assertEqual(api_response.customer_gateway_id, 'cgw-b4dc3961')
+        self.assertEqual(api_response.options.static_routes_only, True)
 
 
 class TestDeleteVPNConnection(AWSMockServiceTestCase):
@@ -196,7 +195,7 @@ class TestDeleteVPNConnection(AWSMockServiceTestCase):
             ignore_params_values=['AWSAccessKeyId', 'SignatureMethod',
                                   'SignatureVersion', 'Timestamp',
                                   'Version'])
-        self.assertEquals(api_response, True)
+        self.assertEqual(api_response, True)
 
 
 class TestCreateVPNConnectionRoute(AWSMockServiceTestCase):
@@ -222,7 +221,7 @@ class TestCreateVPNConnectionRoute(AWSMockServiceTestCase):
             ignore_params_values=['AWSAccessKeyId', 'SignatureMethod',
                                   'SignatureVersion', 'Timestamp',
                                   'Version'])
-        self.assertEquals(api_response, True)
+        self.assertEqual(api_response, True)
 
 
 class TestDeleteVPNConnectionRoute(AWSMockServiceTestCase):
@@ -248,7 +247,7 @@ class TestDeleteVPNConnectionRoute(AWSMockServiceTestCase):
             ignore_params_values=['AWSAccessKeyId', 'SignatureMethod',
                                   'SignatureVersion', 'Timestamp',
                                   'Version'])
-        self.assertEquals(api_response, True)
+        self.assertEqual(api_response, True)
 
 if __name__ == '__main__':
     unittest.main()

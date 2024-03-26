@@ -30,14 +30,14 @@ import base64
 
 # this should use the corresponding object from boto.ec2
 # Currently in use by deprecated local BlockDeviceMapping class
-class Ebs(object):
+class Ebs:
     def __init__(self, connection=None, snapshot_id=None, volume_size=None):
         self.connection = connection
         self.snapshot_id = snapshot_id
         self.volume_size = volume_size
 
     def __repr__(self):
-        return 'Ebs(%s, %s)' % (self.snapshot_id, self.volume_size)
+        return f'Ebs({self.snapshot_id}, {self.volume_size})'
 
     def startElement(self, name, attrs, connection):
         pass
@@ -49,7 +49,7 @@ class Ebs(object):
             self.volume_size = value
 
 
-class InstanceMonitoring(object):
+class InstanceMonitoring:
     def __init__(self, connection=None, enabled='false'):
         self.connection = connection
         self.enabled = enabled
@@ -68,7 +68,7 @@ class InstanceMonitoring(object):
 # this should use the BlockDeviceMapping from boto.ec2.blockdevicemapping
 # Currently in use by deprecated code for backwards compatability
 # Removing this class can also remove the Ebs class in this same file
-class BlockDeviceMapping(object):
+class BlockDeviceMapping:
     def __init__(self, connection=None, device_name=None, virtual_name=None,
                  ebs=None, no_device=None):
         self.connection = connection
@@ -78,7 +78,7 @@ class BlockDeviceMapping(object):
         self.no_device = no_device
 
     def __repr__(self):
-        return 'BlockDeviceMapping(%s, %s)' % (self.device_name,
+        return 'BlockDeviceMapping({}, {})'.format(self.device_name,
                                                self.virtual_name)
 
     def startElement(self, name, attrs, connection):
@@ -95,7 +95,7 @@ class BlockDeviceMapping(object):
             self.no_device = bool(value)
 
 
-class LaunchConfiguration(object):
+class LaunchConfiguration:
     def __init__(self, connection=None, name=None, image_id=None,
                  key_name=None, security_groups=None, user_data=None,
                  instance_type='m1.small', kernel_id=None,

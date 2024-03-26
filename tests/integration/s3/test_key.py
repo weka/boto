@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2012 Mitch Garnaat http://garnaat.org/
 # All rights reserved.
 #
@@ -387,7 +386,7 @@ class S3KeyTest(unittest.TestCase):
         key.set_contents_from_string('Some text here.')
 
         check = self.bucket.get_key('test_date')
-        self.assertEqual(check.get_metadata('date'), u'20130524T155935Z')
+        self.assertEqual(check.get_metadata('date'), '20130524T155935Z')
         self.assertTrue('x-amz-meta-date' in check._get_remote_metadata())
 
     def test_header_casing(self):
@@ -404,15 +403,15 @@ class S3KeyTest(unittest.TestCase):
     def test_header_encoding(self):
         key = self.bucket.new_key('test_header_encoding')
 
-        key.set_metadata('Cache-control', u'public, max-age=500')
-        key.set_metadata('Test-Plus', u'A plus (+)')
-        key.set_metadata('Content-disposition', u'filename=Schöne Zeit.txt')
+        key.set_metadata('Cache-control', 'public, max-age=500')
+        key.set_metadata('Test-Plus', 'A plus (+)')
+        key.set_metadata('Content-disposition', 'filename=Schöne Zeit.txt')
         key.set_metadata('Content-Encoding', 'gzip')
         key.set_metadata('Content-Language', 'de')
         key.set_metadata('Content-Type', 'application/pdf')
         self.assertEqual(key.content_type, 'application/pdf')
         key.set_metadata('X-Robots-Tag', 'all')
-        key.set_metadata('Expires', u'Thu, 01 Dec 1994 16:00:00 GMT')
+        key.set_metadata('Expires', 'Thu, 01 Dec 1994 16:00:00 GMT')
         key.set_contents_from_string('foo')
 
         check = self.bucket.get_key('test_header_encoding')
@@ -438,7 +437,7 @@ class S3KeyTest(unittest.TestCase):
         self.assertEqual(check.expires, 'Thu,%2001%20Dec%201994%2016:00:00%20GMT')
         self.assertEqual(remote_metadata['expires'], 'Thu,%2001%20Dec%201994%2016:00:00%20GMT')
 
-        expected = u'filename=Schöne Zeit.txt'
+        expected = 'filename=Schöne Zeit.txt'
         if six.PY2:
             # Newer versions of python default to unicode strings, but python 2
             # requires encoding to UTF-8 to compare the two properly
@@ -496,7 +495,7 @@ class S3KeySigV4Test(unittest.TestCase):
 
     def test_head_put_get_with_non_ascii_key(self):
         k = Key(self.bucket)
-        k.key = u'''pt-Olá_ch-你好_ko-안녕_ru-Здравствуйте%20,.<>~`!@#$%^&()_-+='"'''
+        k.key = '''pt-Olá_ch-你好_ko-안녕_ru-Здравствуйте%20,.<>~`!@#$%^&()_-+='"'''
         body = 'This is a test of S3'
 
         k.set_contents_from_string(body)

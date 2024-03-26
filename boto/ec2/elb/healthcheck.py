@@ -22,7 +22,7 @@
 # IN THE SOFTWARE.
 
 
-class HealthCheck(object):
+class HealthCheck:
     """
     Represents an EC2 Access Point Health Check. See
     :ref:`elb-configuring-a-health-check` for a walkthrough on configuring

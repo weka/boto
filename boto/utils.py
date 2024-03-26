@@ -140,7 +140,7 @@ def canonical_string(method, path, headers, expires=None,
     for key in sorted_header_keys:
         val = interesting_headers[key]
         if key.startswith(provider.header_prefix):
-            buf += "%s:%s\n" % (key, val)
+            buf += f"{key}:{val}\n"
         else:
             buf += "%s\n" % val
 
@@ -210,7 +210,7 @@ def retry_url(url, retry_on_404=True, num_retries=10, timeout=None):
             r = opener.open(req, timeout=timeout)
             result = r.read()
 
-            if(not isinstance(result, six.string_types) and
+            if(not isinstance(result, str) and
                     hasattr(result, 'decode')):
                 result = result.decode('utf-8')
 
@@ -265,10 +265,10 @@ class LazyLoadMetadata(dict):
     def __getitem__(self, key):
         if key not in self:
             # allow dict to throw the KeyError
-            return super(LazyLoadMetadata, self).__getitem__(key)
+            return super().__getitem__(key)
 
         # already loaded
-        val = super(LazyLoadMetadata, self).__getitem__(key)
+        val = super().__getitem__(key)
         if val is not None:
             return val
 
@@ -294,7 +294,7 @@ class LazyLoadMetadata(dict):
 
                 except JSONDecodeError as e:
                     boto.log.debug(
-                        "encountered '%s' exception: %s" % (
+                        "encountered '{}' exception: {}".format(
                             e.__class__.__name__, e))
                     boto.log.debug(
                         'corrupted JSON data found: %s' % val)
@@ -318,7 +318,7 @@ class LazyLoadMetadata(dict):
             else:
                 boto.log.error('Unable to read meta data, giving up')
                 boto.log.error(
-                    "encountered '%s' exception: %s" % (
+                    "encountered '{}' exception: {}".format(
                         last_exception.__class__.__name__, last_exception))
                 raise last_exception
 
@@ -327,7 +327,7 @@ class LazyLoadMetadata(dict):
             self[key] = LazyLoadMetadata(self._url + key + '/',
                                          self._num_retries)
 
-        return super(LazyLoadMetadata, self).__getitem__(key)
+        return super().__getitem__(key)
 
     def get(self, key, default=None):
         try:
@@ -337,19 +337,19 @@ class LazyLoadMetadata(dict):
 
     def values(self):
         self._materialize()
-        return super(LazyLoadMetadata, self).values()
+        return super().values()
 
     def items(self):
         self._materialize()
-        return super(LazyLoadMetadata, self).items()
+        return super().items()
 
     def __str__(self):
         self._materialize()
-        return super(LazyLoadMetadata, self).__str__()
+        return super().__str__()
 
     def __repr__(self):
         self._materialize()
-        return super(LazyLoadMetadata, self).__repr__()
+        return super().__repr__()
 
 
 def _build_instance_metadata_url(url, version, path):
@@ -373,7 +373,7 @@ def _build_instance_metadata_url(url, version, path):
 
     :return: The full metadata URL
     """
-    return '%s/%s/%s' % (url, version, path)
+    return f'{url}/{version}/{path}'
 
 
 def get_instance_metadata(version='latest', url='http://169.254.169.254',
@@ -476,7 +476,7 @@ def parse_ts(ts):
 
 def find_class(module_name, class_name=None):
     if class_name:
-        module_name = "%s.%s" % (module_name, class_name)
+        module_name = f"{module_name}.{class_name}"
     modules = module_name.split('.')
     c = None
 
@@ -536,7 +536,7 @@ def fetch_file(uri, file=None, username=None, password=None):
     return file
 
 
-class ShellCommand(object):
+class ShellCommand:
 
     def __init__(self, command, wait=True, fail_fast=False, cwd=None):
         self.exit_code = 0
@@ -606,7 +606,7 @@ class AuthSMTPHandler(logging.handlers.SMTPHandler):
         We have extended the constructor to accept a username/password
         for SMTP authentication.
         """
-        super(AuthSMTPHandler, self).__init__(mailhost, fromaddr,
+        super().__init__(mailhost, fromaddr,
                                               toaddrs, subject)
         self.username = username
         self.password = password
@@ -626,7 +626,7 @@ class AuthSMTPHandler(logging.handlers.SMTPHandler):
             smtp = smtplib.SMTP(self.mailhost, port)
             smtp.login(self.username, self.password)
             msg = self.format(record)
-            msg = "From: %s\r\nTo: %s\r\nSubject: %s\r\nDate: %s\r\n\r\n%s" % (
+            msg = "From: {}\r\nTo: {}\r\nSubject: {}\r\nDate: {}\r\n\r\n{}".format(
                 self.fromaddr,
                 ','.join(self.toaddrs),
                 self.getSubject(record),
@@ -677,7 +677,7 @@ class LRUCache(dict):
     BSD License).
     """
 
-    class _Item(object):
+    class _Item:
         def __init__(self, key, value):
             self.previous = self.next = None
             self.key = key
@@ -758,7 +758,7 @@ class LRUCache(dict):
         self.head.previous = self.head = item
 
 
-class Password(object):
+class Password:
     """
     Password object that stores itself as hashed.
     Hash defaults to SHA512 if available, MD5 otherwise.
@@ -800,7 +800,7 @@ def notify(subject, body=None, html_body=None, to_string=None,
            attachments=None, append_instance_id=True):
     attachments = attachments or []
     if append_instance_id:
-        subject = "[%s] %s" % (
+        subject = "[{}] {}".format(
             boto.config.get_value("Instance", "instance-id"), subject)
     if not to_string:
         to_string = boto.config.get_value('Notification', 'smtp_to', None)
@@ -856,10 +856,10 @@ def get_utf8_value(value):
     if not six.PY2 and isinstance(value, bytes):
         return value
 
-    if not isinstance(value, six.string_types):
-        value = six.text_type(value)
+    if not isinstance(value, str):
+        value = str(value)
 
-    if isinstance(value, six.text_type):
+    if isinstance(value, str):
         value = value.encode('utf-8')
 
     return value
@@ -1043,7 +1043,7 @@ def merge_headers_by_name(name, headers):
                     if headers[h] is not None)
 
 
-class RequestHook(object):
+class RequestHook:
     """
     This can be extended and supplied to the connection object
     to gain access to request and response object after the request completes.

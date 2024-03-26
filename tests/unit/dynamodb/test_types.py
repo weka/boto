@@ -37,13 +37,13 @@ class TestDynamizer(unittest.TestCase):
         self.assertEqual(dynamizer.encode('foo'), {'S': 'foo'})
         self.assertEqual(dynamizer.encode(54), {'N': '54'})
         self.assertEqual(dynamizer.encode(Decimal('1.1')), {'N': '1.1'})
-        self.assertEqual(dynamizer.encode(set([1, 2, 3])),
+        self.assertEqual(dynamizer.encode({1, 2, 3}),
                          {'NS': ['1', '2', '3']})
-        self.assertIn(dynamizer.encode(set(['foo', 'bar'])),
+        self.assertIn(dynamizer.encode({'foo', 'bar'}),
                       ({'SS': ['foo', 'bar']}, {'SS': ['bar', 'foo']}))
         self.assertEqual(dynamizer.encode(types.Binary(b'\x01')),
                          {'B': 'AQ=='})
-        self.assertEqual(dynamizer.encode(set([types.Binary(b'\x01')])),
+        self.assertEqual(dynamizer.encode({types.Binary(b'\x01')}),
                          {'BS': ['AQ==']})
         self.assertEqual(dynamizer.encode(['foo', 54, [1]]),
                          {'L': [{'S': 'foo'}, {'N': '54'}, {'L': [{'N': '1'}]}]})
@@ -58,12 +58,12 @@ class TestDynamizer(unittest.TestCase):
         self.assertEqual(dynamizer.decode({'N': '54'}), 54)
         self.assertEqual(dynamizer.decode({'N': '1.1'}), Decimal('1.1'))
         self.assertEqual(dynamizer.decode({'NS': ['1', '2', '3']}),
-                         set([1, 2, 3]))
+                         {1, 2, 3})
         self.assertEqual(dynamizer.decode({'SS': ['foo', 'bar']}),
-                         set(['foo', 'bar']))
+                         {'foo', 'bar'})
         self.assertEqual(dynamizer.decode({'B': 'AQ=='}), types.Binary(b'\x01'))
         self.assertEqual(dynamizer.decode({'BS': ['AQ==']}),
-                         set([types.Binary(b'\x01')]))
+                         {types.Binary(b'\x01')})
         self.assertEqual(dynamizer.decode({'L': [{'S': 'foo'}, {'N': '54'}, {'L': [{'N': '1'}]}]}),
                          ['foo', 54, [1]])
         self.assertEqual(dynamizer.decode({'M': {'foo': {'S': 'bar'}, 'hoge': {'M': {'sub': {'N': '1'}}}}}),
@@ -90,16 +90,16 @@ class TestDynamizer(unittest.TestCase):
         self.assertEqual(dynamizer.encode(1.1), {'N': '1.1'})
         self.assertEqual(dynamizer.decode({'N': '1.1'}), 1.1)
 
-        self.assertEqual(dynamizer.encode(set([1.1])),
+        self.assertEqual(dynamizer.encode({1.1}),
                          {'NS': ['1.1']})
         self.assertEqual(dynamizer.decode({'NS': ['1.1', '2.2', '3.3']}),
-                         set([1.1, 2.2, 3.3]))
+                         {1.1, 2.2, 3.3})
 
     def test_decoding_full_doc(self):
         '''Simple List decoding that had caused some errors'''
         dynamizer = types.Dynamizer()
         doc = '{"__type__":{"S":"Story"},"company_tickers":{"SS":["NASDAQ-TSLA","NYSE-F","NYSE-GM"]},"modified_at":{"N":"1452525162"},"created_at":{"N":"1452525162"},"version":{"N":"1"},"categories":{"SS":["AUTOMTVE","LTRTR","MANUFCTU","PN","PRHYPE","TAXE","TJ","TL"]},"provider_categories":{"L":[{"S":"F"},{"S":"GM"},{"S":"TSLA"}]},"received_at":{"S":"2016-01-11T11:26:31Z"}}'
-        output_doc = {'provider_categories': ['F', 'GM', 'TSLA'], '__type__': 'Story', 'company_tickers': set(['NASDAQ-TSLA', 'NYSE-GM', 'NYSE-F']), 'modified_at': Decimal('1452525162'), 'version': Decimal('1'), 'received_at': '2016-01-11T11:26:31Z', 'created_at': Decimal('1452525162'), 'categories': set(['LTRTR', 'TAXE', 'MANUFCTU', 'TL', 'TJ', 'AUTOMTVE', 'PRHYPE', 'PN'])}
+        output_doc = {'provider_categories': ['F', 'GM', 'TSLA'], '__type__': 'Story', 'company_tickers': {'NASDAQ-TSLA', 'NYSE-GM', 'NYSE-F'}, 'modified_at': Decimal('1452525162'), 'version': Decimal('1'), 'received_at': '2016-01-11T11:26:31Z', 'created_at': Decimal('1452525162'), 'categories': {'LTRTR', 'TAXE', 'MANUFCTU', 'TL', 'TJ', 'AUTOMTVE', 'PRHYPE', 'PN'}}
         self.assertEqual(json.loads(doc, object_hook=dynamizer.decode), output_doc)
 
 
@@ -129,13 +129,13 @@ class TestBinary(unittest.TestCase):
     @unittest.skipUnless(six.PY2, "Python 2 only")
     def test_unicode_py2(self):
         # It's dirty. But remains for backward compatibility.
-        data = types.Binary(u'\x01')
+        data = types.Binary('\x01')
         self.assertEqual(data, b'\x01')
         self.assertEqual(bytes(data), b'\x01')
 
         # Delegate to built-in b'\x01' == u'\x01'
         # In Python 2.x these are considered equal
-        self.assertEqual(data, u'\x01')
+        self.assertEqual(data, '\x01')
 
         # Check that the value field is of type bytes
         self.assertEqual(type(data.value), bytes)
@@ -143,7 +143,7 @@ class TestBinary(unittest.TestCase):
     @unittest.skipUnless(six.PY3, "Python 3 only")
     def test_unicode_py3(self):
         with self.assertRaises(TypeError):
-            types.Binary(u'\x01')
+            types.Binary('\x01')
 
 if __name__ == '__main__':
     unittest.main()

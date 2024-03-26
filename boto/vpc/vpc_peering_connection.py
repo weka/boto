@@ -25,7 +25,7 @@ Represents a VPC Peering Connection.
 
 from boto.ec2.ec2object import TaggedEC2Object
 
-class VpcInfo(object):
+class VpcInfo:
     def __init__(self):
         """
         Information on peer Vpc.
@@ -55,7 +55,7 @@ class VpcInfo(object):
         else:
             setattr(self, name, value)
 
-class VpcPeeringConnectionStatus(object):
+class VpcPeeringConnectionStatus:
     """
     The status of VPC peering connection.
 
@@ -104,7 +104,7 @@ class VpcPeeringConnection(TaggedEC2Object):
         :ivar status_code: The status of the VPC peering connection.
         :ivar status_message: A message that provides more information about the status of the VPC peering connection, if applicable.
         """
-        super(VpcPeeringConnection, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.accepter_vpc_info = VpcInfo()
         self.requester_vpc_info = VpcInfo()
@@ -123,7 +123,7 @@ class VpcPeeringConnection(TaggedEC2Object):
         return 'VpcPeeringConnection:%s' % self.id
 
     def startElement(self, name, attrs, connection):
-        retval = super(VpcPeeringConnection, self).startElement(name, attrs, connection)
+        retval = super().startElement(name, attrs, connection)
         if retval is not None:
             return retval
         
@@ -159,5 +159,5 @@ class VpcPeeringConnection(TaggedEC2Object):
             updated_vpc_peering_connection = vpc_peering_connection_list[0]
             self._update(updated_vpc_peering_connection)
         elif validate:
-            raise ValueError('%s is not a valid VpcPeeringConnection ID' % (self.id,))
+            raise ValueError(f'{self.id} is not a valid VpcPeeringConnection ID')
         return self.status_code

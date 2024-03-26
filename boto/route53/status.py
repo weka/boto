@@ -22,7 +22,7 @@
 # IN THE SOFTWARE.
 
 
-class Status(object):
+class Status:
     def __init__(self, route53connection, change_dict):
         self.route53connection = route53connection
         for key in change_dict:

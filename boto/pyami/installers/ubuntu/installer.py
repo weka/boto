@@ -44,8 +44,8 @@ class Installer(boto.pyami.installers.Installer):
         fp = open('/etc/cron.d/%s' % name, "w")
         if env:
             for key, value in env.items():
-                fp.write('%s=%s\n' % (key, value))
-        fp.write('%s %s %s %s %s %s %s\n' % (minute, hour, mday, month, wday, who, command))
+                fp.write(f'{key}={value}\n')
+        fp.write(f'{minute} {hour} {mday} {month} {wday} {who} {command}\n')
         fp.close()
 
     def add_init_script(self, file, name):
@@ -65,11 +65,11 @@ class Installer(boto.pyami.installers.Installer):
         For Ubuntu, the best place is /etc/environment.  Values placed here do
         not need to be exported.
         """
-        boto.log.info('Adding env variable: %s=%s' % (key, value))
+        boto.log.info(f'Adding env variable: {key}={value}')
         if not os.path.exists("/etc/environment.orig"):
             self.run('cp /etc/environment /etc/environment.orig', notify=False, exit_on_error=False)
         fp = open('/etc/environment', 'a')
-        fp.write('\n%s="%s"' % (key, value))
+        fp.write(f'\n{key}="{value}"')
         fp.close()
         os.environ[key] = value
 

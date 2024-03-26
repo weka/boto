@@ -1,7 +1,7 @@
 import boto.swf.layer2
 from boto.swf.layer2 import Decider, ActivityWorker
 from tests.unit import unittest
-from mock import Mock
+from unittest.mock import Mock
 
 
 class TestActors(unittest.TestCase):

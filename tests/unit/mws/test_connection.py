@@ -29,7 +29,7 @@ from tests.compat import unittest
 
 from tests.unit import AWSMockServiceTestCase
 
-from mock import MagicMock
+from unittest.mock import MagicMock
 
 
 class TestMWSConnection(AWSMockServiceTestCase):
@@ -77,7 +77,7 @@ doc/2009-01-01/">
         response.C = 'four'
         response.D = 'five'
         inputs = [
-            ('A', 'B'), ['B', 'A'], set(['C']),
+            ('A', 'B'), ['B', 'A'], {'C'},
             False, 'String', {'A': 'one', 'B': 'two'},
             response,
             {'A': 'one', 'B': 'two',

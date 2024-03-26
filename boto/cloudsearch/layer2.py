@@ -26,7 +26,7 @@ from boto.cloudsearch.layer1 import Layer1
 from boto.cloudsearch.domain import Domain
 
 
-class Layer2(object):
+class Layer2:
 
     def __init__(self, aws_access_key_id=None, aws_secret_access_key=None,
                  is_secure=True, port=None, proxy=None, proxy_port=None,

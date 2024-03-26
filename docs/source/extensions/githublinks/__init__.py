@@ -16,7 +16,7 @@ def make_node(rawtext, app, type_, slug, options):
     if base_url is None:
         raise ValueError(
             "Configuration value for 'github_project_url' is not set.")
-    relative = '%s/%s' % (type_, slug)
+    relative = f'{type_}/{slug}'
     full_ref = urljoin(base_url, relative)
     set_classes(options)
     if type_ == 'issues':

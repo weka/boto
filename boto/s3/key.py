@@ -45,7 +45,7 @@ from boto.utils import find_matching_headers
 from boto.utils import merge_headers_by_name
 
 
-class Key(object):
+class Key:
     """
     Represents a key (object) in an S3 bucket.
 
@@ -87,10 +87,10 @@ class Key(object):
     # The object metadata fields a user can set, other than custom metadata
     # fields (i.e., those beginning with a provider-specific prefix like
     # x-amz-meta).
-    base_user_settable_fields = set(["cache-control", "content-disposition",
+    base_user_settable_fields = {"cache-control", "content-disposition",
                                     "content-encoding", "content-language",
                                     "content-md5", "content-type",
-                                     "x-robots-tag", "expires"])
+                                     "x-robots-tag", "expires"}
     _underscore_base_user_settable_fields = set()
     for f in base_user_settable_fields:
       _underscore_base_user_settable_fields.add(f.replace('-', '_'))
@@ -98,7 +98,7 @@ class Key(object):
     # metadata fields (i.e., those beginning with a provider specific prefix
     # like x-amz-meta).
     base_fields = (base_user_settable_fields |
-                   set(["last-modified", "content-length", "date", "etag"]))
+                   {"last-modified", "content-length", "date", "etag"})
 
 
 
@@ -136,9 +136,9 @@ class Key(object):
 
     def __repr__(self):
         if self.bucket:
-            name = u'<Key: %s,%s>' % (self.bucket.name, self.name)
+            name = f'<Key: {self.bucket.name},{self.name}>'
         else:
-            name = u'<Key: None,%s>' % self.name
+            name = '<Key: None,%s>' % self.name
 
         # Encode to bytes for Python 2 to prevent display decoding issues
         if not isinstance(name, str):
@@ -185,7 +185,7 @@ class Key(object):
 
     def _set_base64md5(self, value):
         if value:
-            if not isinstance(value, six.string_types):
+            if not isinstance(value, str):
                 value = value.decode('utf-8')
             self.local_hashes['md5'] = binascii.a2b_base64(value)
         elif 'md5' in self.local_hashes:
@@ -265,7 +265,7 @@ class Key(object):
             return
         parts = header.split(',', 1)
         for part in parts:
-            key, val = [i.strip() for i in part.split('=')]
+            key, val = (i.strip() for i in part.split('='))
             val = val.replace('"', '')
             if key == 'ongoing-request':
                 self.ongoing_restore = True if val.lower() == 'true' else False
@@ -767,7 +767,7 @@ class Key(object):
         provider = self.bucket.connection.provider
         try:
             spos = fp.tell()
-        except IOError:
+        except OSError:
             spos = None
             self.read_from_stream = False
 
@@ -775,7 +775,7 @@ class Key(object):
         # default to an MD5 hash_alg to hash the data on-the-fly.
         if hash_algs is None and not self.md5:
             hash_algs = {'md5': md5}
-        digesters = dict((alg, hash_algs[alg]()) for alg in hash_algs or {})
+        digesters = {alg: hash_algs[alg]() for alg in hash_algs or {}}
 
         def sender(http_conn, method, path, data, headers):
             # This function is called repeatedly for temporary retries
@@ -1508,7 +1508,7 @@ class Key(object):
 
         if hash_algs is None and not torrent:
             hash_algs = {'md5': md5}
-        digesters = dict((alg, hash_algs[alg]()) for alg in hash_algs or {})
+        digesters = {alg: hash_algs[alg]() for alg in hash_algs or {}}
 
         # If a version_id is passed in, use that.  If not, check to see
         # if the Key object has an explicit version_id and, if so, use that.
@@ -1519,7 +1519,7 @@ class Key(object):
             query_args.append('versionId=%s' % version_id)
         if response_headers:
             for key in response_headers:
-                query_args.append('%s=%s' % (
+                query_args.append('{}={}'.format(
                     key, urllib.parse.quote(response_headers[key])))
         query_args = '&'.join(query_args)
         self.open('r', headers, query_args=query_args,
@@ -1556,7 +1556,7 @@ class Key(object):
                     if i == cb_count or cb_count == -1:
                         cb(data_len, cb_size)
                         i = 0
-        except IOError as e:
+        except OSError as e:
             if e.errno == errno.ENOSPC:
                 raise StorageDataError('Out of space for destination file '
                                        '%s' % fp.name)
@@ -1880,7 +1880,7 @@ class Key(object):
         prefix = self.provider.metadata_prefix
         for underscore_name in self.metadata:
             field_name = underscore_name.replace('_', '-')
-            metadata['%s%s' % (prefix, field_name.lower())] = (
+            metadata[f'{prefix}{field_name.lower()}'] = (
                 self.metadata[underscore_name])
         return metadata
 

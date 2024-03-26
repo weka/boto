@@ -23,7 +23,7 @@
 Represents an DBSubnetGroup
 """
 
-class DBSubnetGroup(object):
+class DBSubnetGroup:
     """
     Represents an RDS database subnet group
 

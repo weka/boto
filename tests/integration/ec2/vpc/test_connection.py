@@ -72,7 +72,7 @@ class TestVPCConnection(unittest.TestCase):
 
     def terminate_instance(self, instance):
         instance.terminate()
-        for i in six.moves.range(300):
+        for i in range(300):
             instance.update()
             if instance.state == 'terminated':
                 # Give it a litle more time to settle.

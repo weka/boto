@@ -21,7 +21,7 @@
 
 import uuid
 
-class OriginAccessIdentity(object):
+class OriginAccessIdentity:
     def __init__(self, connection=None, config=None, id='',
                  s3_user_id='', comment=''):
         self.connection = connection
@@ -64,7 +64,7 @@ class OriginAccessIdentity(object):
         return 'origin-access-identity/cloudfront/%s' % self.id
 
 
-class OriginAccessIdentityConfig(object):
+class OriginAccessIdentityConfig:
     def __init__(self, connection=None, caller_reference='', comment=''):
         self.connection = connection
         if caller_reference:
@@ -94,7 +94,7 @@ class OriginAccessIdentityConfig(object):
             setattr(self, name, value)
 
 
-class OriginAccessIdentitySummary(object):
+class OriginAccessIdentitySummary:
     def __init__(self, connection=None, id='',
                  s3_user_id='', comment=''):
         self.connection = connection

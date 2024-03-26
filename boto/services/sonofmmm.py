@@ -28,7 +28,7 @@ import mimetypes
 class SonOfMMM(Service):
 
     def __init__(self, config_file=None):
-        super(SonOfMMM, self).__init__(config_file)
+        super().__init__(config_file)
         self.log_file = '%s.log' % self.instance_id
         self.log_path = os.path.join(self.working_dir, self.log_file)
         boto.set_file_logger(self.name, self.log_path)
@@ -78,4 +78,4 @@ class SonOfMMM(Service):
             if self.output_bucket:
                 key = self.output_bucket.new_key(self.log_file)
                 key.set_contents_from_filename(self.log_path)
-        super(SonOfMMM, self).shutdown()
+        super().shutdown()

@@ -19,14 +19,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 #
+import os
+from io import StringIO
+
 import boto
 from boto.pyami.scriptbase import ScriptBase
-import os, StringIO
+
 
 class CopyBot(ScriptBase):
 
     def __init__(self):
-        super(CopyBot, self).__init__()
+        super().__init__()
         self.wdir = boto.config.get('Pyami', 'working_dir')
         self.log_file = '%s.log' % self.instance_id
         self.log_path = os.path.join(self.wdir, self.log_file)
@@ -64,7 +67,7 @@ class CopyBot(ScriptBase):
                 if not self.replace:
                     exists = self.dst.lookup(key.name)
                     if exists:
-                        boto.log.info('key=%s already exists in %s, skipping' % (key.name, self.dst.name))
+                        boto.log.info(f'key={key.name} already exists in {self.dst.name}, skipping')
                         continue
                 boto.log.info('copying %d bytes from key=%s' % (key.size, key.name))
                 prefix, base = os.path.split(key.name)
@@ -82,14 +85,14 @@ class CopyBot(ScriptBase):
         key.set_contents_from_filename(self.log_path)
 
     def main(self):
-        fp = StringIO.StringIO()
+        fp = StringIO()
         boto.config.dump_safe(fp)
-        self.notify('%s (%s) Starting' % (self.name, self.instance_id), fp.getvalue())
+        self.notify(f'{self.name} ({self.instance_id}) Starting', fp.getvalue())
         if self.src and self.dst:
             self.copy_keys()
         if self.dst:
             self.copy_log()
-        self.notify('%s (%s) Stopping' % (self.name, self.instance_id),
+        self.notify(f'{self.name} ({self.instance_id}) Stopping',
                     'Copy Operation Complete')
         if boto.config.getbool(self.name, 'exit_on_completion', True):
             ec2 = boto.connect_ec2()

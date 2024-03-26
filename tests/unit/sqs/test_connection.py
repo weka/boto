@@ -38,7 +38,7 @@ class SQSAuthParams(AWSMockServiceTestCase):
     connection_class = SQSConnection
 
     def setUp(self):
-        super(SQSAuthParams, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return """<?xml version="1.0"?>
@@ -113,14 +113,14 @@ class SQSAuthParams(AWSMockServiceTestCase):
         self.service_connection.get_queue('my_queue', '599169622985')
 
         assert 'QueueOwnerAWSAccountId' in self.actual_request.params.keys()
-        self.assertEquals(self.actual_request.params['QueueOwnerAWSAccountId'], '599169622985')
+        self.assertEqual(self.actual_request.params['QueueOwnerAWSAccountId'], '599169622985')
 
 class SQSProfileName(MockServiceWithConfigTestCase):
     connection_class = SQSConnection
     profile_name = 'prod'
 
     def setUp(self):
-        super(SQSProfileName, self).setUp()
+        super().setUp()
         self.config = {
             "profile prod": {
                 'aws_access_key_id': 'access_key',
@@ -140,7 +140,7 @@ class SQSProfileName(MockServiceWithConfigTestCase):
         self.initialize_service_connection()
         self.set_http_response(status_code=200)
 
-        self.assertEquals(self.service_connection.profile_name, self.profile_name)
+        self.assertEqual(self.service_connection.profile_name, self.profile_name)
 
 class SQSMessageAttributesParsing(AWSMockServiceTestCase):
     connection_class = SQSConnection

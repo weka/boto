@@ -31,7 +31,7 @@ class SecurityGroup(TaggedEC2Object):
 
     def __init__(self, connection=None, owner_id=None,
                  name=None, description=None, id=None):
-        super(SecurityGroup, self).__init__(connection)
+        super().__init__(connection)
         self.id = id
         self.owner_id = owner_id
         self.name = name
@@ -44,7 +44,7 @@ class SecurityGroup(TaggedEC2Object):
         return 'SecurityGroup:%s' % self.name
 
     def startElement(self, name, attrs, connection):
-        retval = super(SecurityGroup, self).startElement(name, attrs, connection)
+        retval = super().startElement(name, attrs, connection)
         if retval is not None:
             return retval
         if name == 'ipPermissions':
@@ -74,7 +74,7 @@ class SecurityGroup(TaggedEC2Object):
                 self.status = True
             else:
                 raise Exception(
-                    'Unexpected value of status %s for group %s' % (
+                    'Unexpected value of status {} for group {}'.format(
                         value,
                         self.name
                     )
@@ -322,7 +322,7 @@ class IPPermissionsList(list):
         pass
 
 
-class IPPermissions(object):
+class IPPermissions:
 
     def __init__(self, parent=None):
         self.parent = parent
@@ -332,7 +332,7 @@ class IPPermissions(object):
         self.grants = []
 
     def __repr__(self):
-        return 'IPPermissions:%s(%s-%s)' % (self.ip_protocol,
+        return 'IPPermissions:{}({}-{})'.format(self.ip_protocol,
                                             self.from_port, self.to_port)
 
     def startElement(self, name, attrs, connection):
@@ -362,7 +362,7 @@ class IPPermissions(object):
         return grant
 
 
-class GroupOrCIDR(object):
+class GroupOrCIDR:
 
     def __init__(self, parent=None):
         self.owner_id = None
@@ -374,7 +374,7 @@ class GroupOrCIDR(object):
         if self.cidr_ip:
             return '%s' % self.cidr_ip
         else:
-            return '%s-%s' % (self.name or self.group_id, self.owner_id)
+            return f'{self.name or self.group_id}-{self.owner_id}'
 
     def startElement(self, name, attrs, connection):
         return None

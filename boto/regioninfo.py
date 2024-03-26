@@ -53,7 +53,7 @@ def _load_json_file(path):
 
     :returns: The loaded data
     """
-    with open(path, 'r') as endpoints_file:
+    with open(path) as endpoints_file:
         return json.load(endpoints_file)
 
 
@@ -249,7 +249,7 @@ def _use_endpoint_heuristics():
     return env_var == 'true' or config_var
 
 
-class RegionInfo(object):
+class RegionInfo:
     """
     Represents an AWS Region
     """

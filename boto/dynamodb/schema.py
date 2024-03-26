@@ -22,7 +22,7 @@
 #
 
 
-class Schema(object):
+class Schema:
     """
     Represents a DynamoDB schema.
 
@@ -42,7 +42,7 @@ class Schema(object):
 
     def __repr__(self):
         if self.range_key_name:
-            s = 'Schema(%s:%s)' % (self.hash_key_name, self.range_key_name)
+            s = f'Schema({self.hash_key_name}:{self.range_key_name})'
         else:
             s = 'Schema(%s)' % self.hash_key_name
         return s

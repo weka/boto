@@ -68,7 +68,7 @@ class ParameterGroup(dict):
         param.apply_method = apply_method
         self.params.append(param)
 
-class Parameter(object):
+class Parameter:
     """
     Represents a RDS Parameter
     """

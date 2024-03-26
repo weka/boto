@@ -1,7 +1,7 @@
 from boto.resultset import ResultSet
 from boto.cloudformation.stack import Capability
 
-class Template(object):
+class Template:
     def __init__(self, connection=None):
         self.connection = connection
         self.description = None
@@ -27,7 +27,7 @@ class Template(object):
         else:
             setattr(self, name, value)
 
-class TemplateParameter(object):
+class TemplateParameter:
     def __init__(self, parent):
         self.parent = parent
         self.default_value = None

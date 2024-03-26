@@ -29,7 +29,7 @@ from boto.exception import BotoClientError
 from boto.exception import InvalidUriError
 
 
-class StorageUri(object):
+class StorageUri:
     """
     Base class for representing storage provider-independent bucket and
     object name with a shorthand URI-like syntax.
@@ -76,7 +76,7 @@ class StorageUri(object):
     def _check_bucket_uri(self, function_name):
         if issubclass(type(self), BucketStorageUri) and not self.bucket_name:
             raise InvalidUriError(
-                '%s on bucket-less URI (%s)' % (function_name, self.uri))
+                f'{function_name} on bucket-less URI ({self.uri})')
 
     def _check_object_uri(self, function_name):
         if issubclass(type(self), BucketStorageUri) and not self.object_name:
@@ -247,7 +247,7 @@ class BucketStorageUri(StorageUri):
     """
 
     delim = '/'
-    capabilities = set([])  # A set of additional capabilities.
+    capabilities = set()  # A set of additional capabilities.
 
     def __init__(self, scheme, bucket_name=None, object_name=None,
                  debug=0, connection_args=None, suppress_consec_slashes=True,
@@ -300,20 +300,20 @@ class BucketStorageUri(StorageUri):
 
     def _build_uri_strings(self):
         if self.bucket_name and self.object_name:
-            self.versionless_uri = '%s://%s/%s' % (self.scheme, self.bucket_name,
+            self.versionless_uri = '{}://{}/{}'.format(self.scheme, self.bucket_name,
                                                    self.object_name)
             if self.generation:
-                self.version_specific_uri = '%s#%s' % (self.versionless_uri,
+                self.version_specific_uri = '{}#{}'.format(self.versionless_uri,
                                                        self.generation)
             elif self.version_id:
-                self.version_specific_uri = '%s#%s' % (
+                self.version_specific_uri = '{}#{}'.format(
                     self.versionless_uri, self.version_id)
             if self.is_version_specific:
                 self.uri = self.version_specific_uri
             else:
                 self.uri = self.versionless_uri
         elif self.bucket_name:
-            self.uri = ('%s://%s/' % (self.scheme, self.bucket_name))
+            self.uri = (f'{self.scheme}://{self.bucket_name}/')
         else:
             self.uri = ('%s://' % self.scheme)
 

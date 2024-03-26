@@ -29,7 +29,7 @@ from boto.ec2.ec2object import EC2Object
 class BundleInstanceTask(EC2Object):
 
     def __init__(self, connection=None):
-        super(BundleInstanceTask, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.instance_id = None
         self.progress = None

@@ -25,7 +25,7 @@ from boto.s3.connection import SubdomainCallingFormat
 from boto.s3.connection import check_lowercase_bucketname
 from boto.utils import get_utf8_value
 
-class Location(object):
+class Location:
     DEFAULT = 'US'
     EU = 'EU'
 
@@ -40,7 +40,7 @@ class GSConnection(S3Connection):
                  host=DefaultHost, debug=0, https_connection_factory=None,
                  calling_format=SubdomainCallingFormat(), path='/',
                  suppress_consec_slashes=True):
-        super(GSConnection, self).__init__(gs_access_key_id, gs_secret_access_key,
+        super().__init__(gs_access_key_id, gs_secret_access_key,
                  is_secure, port, proxy, proxy_port, proxy_user, proxy_pass,
                  host, debug, https_connection_factory, calling_format, path,
                  "google", Bucket,

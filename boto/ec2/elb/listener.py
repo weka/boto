@@ -24,7 +24,7 @@
 from boto.ec2.elb.listelement import ListElement
 
 
-class Listener(object):
+class Listener:
     """
     Represents an EC2 Load Balancer Listener tuple
     """

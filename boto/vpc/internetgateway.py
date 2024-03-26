@@ -28,7 +28,7 @@ from boto.resultset import ResultSet
 
 class InternetGateway(TaggedEC2Object):
     def __init__(self, connection=None):
-        super(InternetGateway, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.attachments = []
 
@@ -36,7 +36,7 @@ class InternetGateway(TaggedEC2Object):
         return 'InternetGateway:%s' % self.id
 
     def startElement(self, name, attrs, connection):
-        result = super(InternetGateway, self).startElement(name, attrs, connection)
+        result = super().startElement(name, attrs, connection)
 
         if result is not None:
             # Parent found an interested element, just return it
@@ -54,7 +54,7 @@ class InternetGateway(TaggedEC2Object):
         else:
             setattr(self, name, value)
 
-class InternetGatewayAttachment(object):
+class InternetGatewayAttachment:
     def __init__(self, connection=None):
         self.vpc_id = None
         self.state = None

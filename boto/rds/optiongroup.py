@@ -28,7 +28,7 @@ from boto.rds.dbsecuritygroup import DBSecurityGroup
 from boto.resultset import ResultSet
 
 
-class OptionGroup(object):
+class OptionGroup:
     """
     Represents an RDS option group
 
@@ -100,7 +100,7 @@ class OptionGroup(object):
         return self.connection.delete_option_group(self.name)
 
 
-class Option(object):
+class Option:
     """
     Describes a Option for use in an OptionGroup
 
@@ -177,7 +177,7 @@ class Option(object):
             setattr(self, name, value)
 
 
-class OptionSetting(object):
+class OptionSetting:
     """
     Describes a OptionSetting for use in an Option
 
@@ -242,7 +242,7 @@ class OptionSetting(object):
             setattr(self, name, value)
 
 
-class VpcSecurityGroup(object):
+class VpcSecurityGroup:
     """
     Describes a VPC security group for use in a OptionGroup
     """
@@ -265,7 +265,7 @@ class VpcSecurityGroup(object):
             setattr(self, name, value)
 
 
-class OptionGroupOption(object):
+class OptionGroupOption:
     """
     Describes a OptionGroupOption for use in an OptionGroup
 
@@ -352,7 +352,7 @@ class OptionGroupOption(object):
             setattr(self, name, value)
 
 
-class OptionGroupOptionSetting(object):
+class OptionGroupOptionSetting:
     """
     Describes a OptionGroupOptionSetting for use in an OptionGroupOption.
 

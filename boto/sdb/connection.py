@@ -47,7 +47,7 @@ class ItemThread(threading.Thread):
             :class:`Domain <boto.sdb.domain.Domain>`.
         :ivar list items: A list of items retrieved. Starts as empty list.
         """
-        super(ItemThread, self).__init__(name=name)
+        super().__init__(name=name)
         #print 'starting %s with %d items' % (name, len(item_names))
         self.domain_name = domain_name
         self.conn = SDBConnection()
@@ -111,7 +111,7 @@ class SDBConnection(AWSQueryConnection):
                     break
 
         self.region = region
-        super(SDBConnection, self).__init__(aws_access_key_id,
+        super().__init__(aws_access_key_id,
                                     aws_secret_access_key,
                                     is_secure, port, proxy,
                                     proxy_port, proxy_user, proxy_pass,
@@ -614,5 +614,5 @@ class SDBConnection(AWSQueryConnection):
             return self.get_list('Select', params, [('Item', self.item_cls)],
                              parent=domain)
         except SDBResponseError as e:
-            e.body = "Query: %s\n%s" % (query, e.body)
+            e.body = f"Query: {query}\n{e.body}"
             raise e

@@ -36,7 +36,7 @@ class TestRDSConnection(AWSMockServiceTestCase):
     connection_class = RDSConnection
 
     def setUp(self):
-        super(TestRDSConnection, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return """
@@ -148,7 +148,7 @@ class TestRDSConnection(AWSMockServiceTestCase):
         self.assertEqual(db.allocated_storage, 200)
         self.assertEqual(
             db.endpoint,
-            (u'mydbinstance2.c0hjqouvn9mf.us-west-2.rds.amazonaws.com', 3306))
+            ('mydbinstance2.c0hjqouvn9mf.us-west-2.rds.amazonaws.com', 3306))
         self.assertEqual(db.instance_class, 'db.m1.large')
         self.assertEqual(db.master_username, 'awsuser')
         self.assertEqual(db.availability_zone, 'us-west-2b')
@@ -188,7 +188,7 @@ class TestRDSCCreateDBInstance(AWSMockServiceTestCase):
     connection_class = RDSConnection
 
     def setUp(self):
-        super(TestRDSCCreateDBInstance, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return """
@@ -350,7 +350,7 @@ class TestRDSConnectionRestoreDBInstanceFromPointInTime(AWSMockServiceTestCase):
     connection_class = RDSConnection
 
     def setUp(self):
-        super(TestRDSConnectionRestoreDBInstanceFromPointInTime, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return """
@@ -508,7 +508,7 @@ class TestRDSOptionGroups(AWSMockServiceTestCase):
     connection_class = RDSConnection
 
     def setUp(self):
-        super(TestRDSOptionGroups, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return """
@@ -556,7 +556,7 @@ class TestRDSLogFile(AWSMockServiceTestCase):
     connection_class = RDSConnection
 
     def setUp(self):
-        super(TestRDSLogFile, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return """
@@ -639,7 +639,7 @@ class TestRDSLogFile(AWSMockServiceTestCase):
 
 class TestRDSLogFileDownload(AWSMockServiceTestCase):
     connection_class = RDSConnection
-    logfile_sample = """
+    logfile_sample = r"""
 ??2014-01-26 23:59:00.01 spid54      Microsoft SQL Server 2012 - 11.0.2100.60 (X64) 
     
     Feb 10 2012 19:39:15 
@@ -686,7 +686,7 @@ class TestRDSLogFileDownload(AWSMockServiceTestCase):
     """
 
     def setUp(self):
-        super(TestRDSLogFileDownload, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return """
@@ -738,7 +738,7 @@ class TestRDSOptionGroupOptions(AWSMockServiceTestCase):
     connection_class = RDSConnection
 
     def setUp(self):
-        super(TestRDSOptionGroupOptions, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return """

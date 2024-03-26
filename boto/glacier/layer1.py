@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2012 Mitch Garnaat http://garnaat.org/
 # Copyright (c) 2012 Amazon.com, Inc. or its affiliates.  All Rights Reserved
 #
@@ -88,7 +87,7 @@ class Layer1(AWSAuthConnection):
 
         self.region = region
         self.account_id = account_id
-        super(Layer1, self).__init__(region.endpoint,
+        super().__init__(region.endpoint,
                                      aws_access_key_id, aws_secret_access_key,
                                      is_secure, port, proxy, proxy_port,
                                      proxy_user, proxy_pass, debug,
@@ -106,8 +105,8 @@ class Layer1(AWSAuthConnection):
         if headers is None:
             headers = {}
         headers['x-amz-glacier-version'] = self.Version
-        uri = '/%s/%s' % (self.account_id, resource)
-        response = super(Layer1, self).make_request(verb, uri,
+        uri = f'/{self.account_id}/{resource}'
+        response = super().make_request(verb, uri,
                                                     params=params,
                                                     headers=headers,
                                                     sender=sender,
@@ -510,7 +509,7 @@ class Layer1(AWSAuthConnection):
         :type job_id: string
         :param job_id: The ID of the job to describe.
         """
-        uri = 'vaults/%s/jobs/%s' % (vault_name, job_id)
+        uri = f'vaults/{vault_name}/jobs/{job_id}'
         return self.make_request('GET', uri, ok_responses=(200,))
 
     def initiate_job(self, vault_name, job_data):
@@ -651,8 +650,8 @@ class Layer1(AWSAuthConnection):
 
         """
         uri = 'vaults/%s/jobs' % vault_name
-        response_headers = [('x-amz-job-id', u'JobId'),
-                            ('Location', u'Location')]
+        response_headers = [('x-amz-job-id', 'JobId'),
+                            ('Location', 'Location')]
         json_job_data = json.dumps(job_data)
         return self.make_request('POST', uri, data=json_job_data,
                                  ok_responses=(202,),
@@ -728,13 +727,13 @@ class Layer1(AWSAuthConnection):
             "Range: bytes=0-1048575". By default, this operation downloads the
             entire output.
         """
-        response_headers = [('x-amz-sha256-tree-hash', u'TreeHash'),
-                            ('Content-Range', u'ContentRange'),
-                            ('Content-Type', u'ContentType')]
+        response_headers = [('x-amz-sha256-tree-hash', 'TreeHash'),
+                            ('Content-Range', 'ContentRange'),
+                            ('Content-Type', 'ContentType')]
         headers = None
         if byte_range:
             headers = {'Range': 'bytes=%d-%d' % byte_range}
-        uri = 'vaults/%s/jobs/%s/output' % (vault_name, job_id)
+        uri = f'vaults/{vault_name}/jobs/{job_id}/output'
         response = self.make_request('GET', uri, headers=headers,
                                      ok_responses=(200, 206),
                                      response_headers=response_headers)
@@ -807,9 +806,9 @@ class Layer1(AWSAuthConnection):
         :param description: The optional description of the archive you
             are uploading.
         """
-        response_headers = [('x-amz-archive-id', u'ArchiveId'),
-                            ('Location', u'Location'),
-                            ('x-amz-sha256-tree-hash', u'TreeHash')]
+        response_headers = [('x-amz-archive-id', 'ArchiveId'),
+                            ('Location', 'Location'),
+                            ('x-amz-sha256-tree-hash', 'TreeHash')]
         uri = 'vaults/%s/archives' % vault_name
         try:
             content_length = str(len(archive))
@@ -870,7 +869,7 @@ class Layer1(AWSAuthConnection):
         :type archive_id: string
         :param archive_id: The ID of the archive to delete.
         """
-        uri = 'vaults/%s/archives/%s' % (vault_name, archive_id)
+        uri = f'vaults/{vault_name}/archives/{archive_id}'
         return self.make_request('DELETE', uri, ok_responses=(204,))
 
     # Multipart
@@ -938,8 +937,8 @@ class Layer1(AWSAuthConnection):
         :param part_size: The size of each part except the last, in bytes. The
             last part can be smaller than this part size.
         """
-        response_headers = [('x-amz-multipart-upload-id', u'UploadId'),
-                            ('Location', u'Location')]
+        response_headers = [('x-amz-multipart-upload-id', 'UploadId'),
+                            ('Location', 'Location')]
         headers = {'x-amz-part-size': str(part_size)}
         if description:
             headers['x-amz-archive-description'] = description
@@ -1029,11 +1028,11 @@ class Layer1(AWSAuthConnection):
             archive. This value should be the sum of all the sizes of
             the individual parts that you uploaded.
         """
-        response_headers = [('x-amz-archive-id', u'ArchiveId'),
-                            ('Location', u'Location')]
+        response_headers = [('x-amz-archive-id', 'ArchiveId'),
+                            ('Location', 'Location')]
         headers = {'x-amz-sha256-tree-hash': sha256_treehash,
                    'x-amz-archive-size': str(archive_size)}
-        uri = 'vaults/%s/multipart-uploads/%s' % (vault_name, upload_id)
+        uri = f'vaults/{vault_name}/multipart-uploads/{upload_id}'
         response = self.make_request('POST', uri, headers=headers,
                                      ok_responses=(201,),
                                      response_headers=response_headers)
@@ -1071,7 +1070,7 @@ class Layer1(AWSAuthConnection):
         :type upload_id: string
         :param upload_id: The upload ID of the multipart upload to delete.
         """
-        uri = 'vaults/%s/multipart-uploads/%s' % (vault_name, upload_id)
+        uri = f'vaults/{vault_name}/multipart-uploads/{upload_id}'
         return self.make_request('DELETE', uri, ok_responses=(204,))
 
     def list_multipart_uploads(self, vault_name, limit=None, marker=None):
@@ -1187,7 +1186,7 @@ class Layer1(AWSAuthConnection):
             params['limit'] = limit
         if marker:
             params['marker'] = marker
-        uri = 'vaults/%s/multipart-uploads/%s' % (vault_name, upload_id)
+        uri = f'vaults/{vault_name}/multipart-uploads/{upload_id}'
         return self.make_request('GET', uri, params=params)
 
     def upload_part(self, vault_name, upload_id, linear_hash,
@@ -1272,8 +1271,8 @@ class Layer1(AWSAuthConnection):
         headers = {'x-amz-content-sha256': linear_hash,
                    'x-amz-sha256-tree-hash': tree_hash,
                    'Content-Range': 'bytes %d-%d/*' % byte_range}
-        response_headers = [('x-amz-sha256-tree-hash', u'TreeHash')]
-        uri = 'vaults/%s/multipart-uploads/%s' % (str(vault_name), upload_id)
+        response_headers = [('x-amz-sha256-tree-hash', 'TreeHash')]
+        uri = f'vaults/{str(vault_name)}/multipart-uploads/{upload_id}'
         return self.make_request('PUT', uri, headers=headers,
                                  data=part_data, ok_responses=(204,),
                                  response_headers=response_headers)

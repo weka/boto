@@ -21,7 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-class SourceAttribute(object):
+class SourceAttribute:
     """
     Provide information about attributes for an index field.
     A maximum of 20 source attributes can be configured for

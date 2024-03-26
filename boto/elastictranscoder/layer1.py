@@ -55,7 +55,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
         else:
             del kwargs['region']
         kwargs['host'] = region.endpoint
-        super(ElasticTranscoderConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
 
     def _required_auth_capability(self):
@@ -75,7 +75,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
             of `Submitted`, use the ListJobsByStatus API action.
 
         """
-        uri = '/2012-09-25/jobs/{0}'.format(id)
+        uri = f'/2012-09-25/jobs/{id}'
         return self.make_request('DELETE', uri, expected_status=202)
 
     def create_job(self, pipeline_id=None, input_name=None, output=None,
@@ -433,7 +433,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
         :param id: The identifier of the pipeline that you want to delete.
 
         """
-        uri = '/2012-09-25/pipelines/{0}'.format(id)
+        uri = f'/2012-09-25/pipelines/{id}'
         return self.make_request('DELETE', uri, expected_status=202)
 
     def delete_preset(self, id=None):
@@ -449,7 +449,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
             detailed information.
 
         """
-        uri = '/2012-09-25/presets/{0}'.format(id)
+        uri = f'/2012-09-25/presets/{id}'
         return self.make_request('DELETE', uri, expected_status=202)
 
     def list_jobs_by_pipeline(self, pipeline_id=None, ascending=None,
@@ -477,7 +477,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
             each successive page of results.
 
         """
-        uri = '/2012-09-25/jobsByPipeline/{0}'.format(pipeline_id)
+        uri = f'/2012-09-25/jobsByPipeline/{pipeline_id}'
         params = {}
         if pipeline_id is not None:
             params['PipelineId'] = pipeline_id
@@ -512,7 +512,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
             each successive page of results.
 
         """
-        uri = '/2012-09-25/jobsByStatus/{0}'.format(status)
+        uri = f'/2012-09-25/jobsByStatus/{status}'
         params = {}
         if status is not None:
             params['Status'] = status
@@ -539,7 +539,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
             each successive page of results.
 
         """
-        uri = '/2012-09-25/pipelines'.format()
+        uri = f'/2012-09-25/pipelines'
         params = {}
         if ascending is not None:
             params['Ascending'] = ascending
@@ -565,7 +565,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
             each successive page of results.
 
         """
-        uri = '/2012-09-25/presets'.format()
+        uri = f'/2012-09-25/presets'
         params = {}
         if ascending is not None:
             params['Ascending'] = ascending
@@ -584,7 +584,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
             information.
 
         """
-        uri = '/2012-09-25/jobs/{0}'.format(id)
+        uri = f'/2012-09-25/jobs/{id}'
         return self.make_request('GET', uri, expected_status=200)
 
     def read_pipeline(self, id=None):
@@ -596,7 +596,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
         :param id: The identifier of the pipeline to read.
 
         """
-        uri = '/2012-09-25/pipelines/{0}'.format(id)
+        uri = f'/2012-09-25/pipelines/{id}'
         return self.make_request('GET', uri, expected_status=200)
 
     def read_preset(self, id=None):
@@ -609,7 +609,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
             detailed information.
 
         """
-        uri = '/2012-09-25/presets/{0}'.format(id)
+        uri = f'/2012-09-25/presets/{id}'
         return self.make_request('GET', uri, expected_status=200)
 
     def test_role(self, role=None, input_bucket=None, output_bucket=None,
@@ -819,7 +819,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
               the thumbnails that it stores in your Amazon S3 bucket.
 
         """
-        uri = '/2012-09-25/pipelines/{0}'.format(id)
+        uri = f'/2012-09-25/pipelines/{id}'
         params = {}
         if name is not None:
             params['Name'] = name
@@ -874,7 +874,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
               is the ARN that Amazon SNS returned when you created the topic.
 
         """
-        uri = '/2012-09-25/pipelines/{0}/notifications'.format(id)
+        uri = f'/2012-09-25/pipelines/{id}/notifications'
         params = {}
         if id is not None:
             params['Id'] = id
@@ -908,7 +908,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
         + `Paused`: The pipeline is not currently processing jobs.
 
         """
-        uri = '/2012-09-25/pipelines/{0}/status'.format(id)
+        uri = f'/2012-09-25/pipelines/{id}/status'
         params = {}
         if id is not None:
             params['Id'] = id
@@ -921,7 +921,7 @@ class ElasticTranscoderConnection(AWSAuthConnection):
                      expected_status=None, params=None):
         if headers is None:
             headers = {}
-        response = super(ElasticTranscoderConnection, self).make_request(
+        response = super().make_request(
             verb, resource, headers=headers, data=data, params=params)
         body = json.loads(response.read().decode('utf-8'))
         if response.status == expected_status:

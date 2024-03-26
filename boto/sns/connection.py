@@ -65,7 +65,7 @@ class SNSConnection(AWSQueryConnection):
                                 self.DefaultRegionEndpoint,
                                 connection_cls=SNSConnection)
         self.region = region
-        super(SNSConnection, self).__init__(aws_access_key_id,
+        super().__init__(aws_access_key_id,
                                     aws_secret_access_key,
                                     is_secure, port, proxy, proxy_port,
                                     proxy_user, proxy_pass,
@@ -98,7 +98,7 @@ class SNSConnection(AWSQueryConnection):
       items = sorted(dictionary.items(), key=lambda x:x[0])
       for kv, index in zip(items, list(range(1, len(items)+1))):
         key, value = kv
-        prefix = '%s.entry.%s' % (name, index)
+        prefix = f'{name}.entry.{index}'
         params['%s.key' % prefix] = key
         params['%s.value' % prefix] = value
 
@@ -277,15 +277,15 @@ class SNSConnection(AWSQueryConnection):
             keys = sorted(message_attributes.keys())
             for i, name in enumerate(keys, start=1):
                 attribute = message_attributes[name]
-                params['MessageAttributes.entry.{0}.Name'.format(i)] = name
+                params[f'MessageAttributes.entry.{i}.Name'] = name
                 if 'data_type' in attribute:
-                    params['MessageAttributes.entry.{0}.Value.DataType'.format(i)] = \
+                    params[f'MessageAttributes.entry.{i}.Value.DataType'] = \
                         attribute['data_type']
                 if 'string_value' in attribute:
-                    params['MessageAttributes.entry.{0}.Value.StringValue'.format(i)] = \
+                    params[f'MessageAttributes.entry.{i}.Value.StringValue'] = \
                         attribute['string_value']
                 if 'binary_value' in attribute:
-                    params['MessageAttributes.entry.{0}.Value.BinaryValue'.format(i)] = \
+                    params[f'MessageAttributes.entry.{i}.Value.BinaryValue'] = \
                         attribute['binary_value']
         return self._make_request('Publish', params, '/', 'POST')
 
@@ -760,6 +760,6 @@ class SNSConnection(AWSQueryConnection):
         if response.status == 200:
             return json.loads(body)
         else:
-            boto.log.error('%s %s' % (response.status, response.reason))
+            boto.log.error(f'{response.status} {response.reason}')
             boto.log.error('%s' % body)
             raise self.ResponseError(response.status, response.reason, body)

@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-class Key(object):
+class Key:
 
     @classmethod
     def from_path(cls, *args, **kwds):

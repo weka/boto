@@ -39,7 +39,7 @@ class BotoClientError(StandardError):
     General Boto Client error (error accessing AWS)
     """
     def __init__(self, reason, *args):
-        super(BotoClientError, self).__init__(reason, *args)
+        super().__init__(reason, *args)
         self.reason = reason
 
     def __repr__(self):
@@ -76,7 +76,7 @@ class GSPermissionsError(StoragePermissionsError):
 
 class BotoServerError(StandardError):
     def __init__(self, status, reason, body=None, *args):
-        super(BotoServerError, self).__init__(status, reason, body, *args)
+        super().__init__(status, reason, body, *args)
         self.status = status
         self.reason = reason
         self.body = body or ''
@@ -145,14 +145,14 @@ class BotoServerError(StandardError):
         if name == 'error_message':
             self.message = value
         else:
-            super(BotoServerError, self).__setattr__(name, value)
+            super().__setattr__(name, value)
 
     def __repr__(self):
-        return '%s: %s %s\n%s' % (self.__class__.__name__,
+        return '{}: {} {}\n{}'.format(self.__class__.__name__,
                                   self.status, self.reason, self.body)
 
     def __str__(self):
-        return '%s: %s %s\n%s' % (self.__class__.__name__,
+        return '{}: {} {}\n{}'.format(self.__class__.__name__,
                                   self.status, self.reason, self.body)
 
     def startElement(self, name, attrs, connection):
@@ -176,7 +176,7 @@ class BotoServerError(StandardError):
         self.box_usage = None
 
 
-class ConsoleOutput(object):
+class ConsoleOutput:
     def __init__(self, parent=None):
         self.parent = parent
         self.instance_id = None
@@ -202,13 +202,13 @@ class StorageCreateError(BotoServerError):
     """
     def __init__(self, status, reason, body=None):
         self.bucket = None
-        super(StorageCreateError, self).__init__(status, reason, body)
+        super().__init__(status, reason, body)
 
     def endElement(self, name, value, connection):
         if name == 'BucketName':
             self.bucket = value
         else:
-            return super(StorageCreateError, self).endElement(name, value, connection)
+            return super().endElement(name, value, connection)
 
 
 class S3CreateError(StorageCreateError):
@@ -253,10 +253,10 @@ class SQSError(BotoServerError):
     def __init__(self, status, reason, body=None):
         self.detail = None
         self.type = None
-        super(SQSError, self).__init__(status, reason, body)
+        super().__init__(status, reason, body)
 
     def startElement(self, name, attrs, connection):
-        return super(SQSError, self).startElement(name, attrs, connection)
+        return super().startElement(name, attrs, connection)
 
     def endElement(self, name, value, connection):
         if name == 'Detail':
@@ -264,10 +264,10 @@ class SQSError(BotoServerError):
         elif name == 'Type':
             self.type = value
         else:
-            return super(SQSError, self).endElement(name, value, connection)
+            return super().endElement(name, value, connection)
 
     def _cleanupParsedProperties(self):
-        super(SQSError, self)._cleanupParsedProperties()
+        super()._cleanupParsedProperties()
         for p in ('detail', 'type'):
             setattr(self, p, None)
 
@@ -277,7 +277,7 @@ class SQSDecodeError(BotoClientError):
     Error when decoding an SQS message.
     """
     def __init__(self, reason, message):
-        super(SQSDecodeError, self).__init__(reason, message)
+        super().__init__(reason, message)
         self.message = message
 
     def __repr__(self):
@@ -293,21 +293,21 @@ class StorageResponseError(BotoServerError):
     """
     def __init__(self, status, reason, body=None):
         self.resource = None
-        super(StorageResponseError, self).__init__(status, reason, body)
+        super().__init__(status, reason, body)
 
     def startElement(self, name, attrs, connection):
-        return super(StorageResponseError, self).startElement(
+        return super().startElement(
             name, attrs, connection)
 
     def endElement(self, name, value, connection):
         if name == 'Resource':
             self.resource = value
         else:
-            return super(StorageResponseError, self).endElement(
+            return super().endElement(
                 name, value, connection)
 
     def _cleanupParsedProperties(self):
-        super(StorageResponseError, self)._cleanupParsedProperties()
+        super()._cleanupParsedProperties()
         for p in ('resource'):
             setattr(self, p, None)
 
@@ -333,7 +333,7 @@ class EC2ResponseError(BotoServerError):
     def __init__(self, status, reason, body=None):
         self.errors = None
         self._errorResultSet = []
-        super(EC2ResponseError, self).__init__(status, reason, body)
+        super().__init__(status, reason, body)
         self.errors = [
             (e.error_code, e.error_message) for e in self._errorResultSet]
         if len(self.errors):
@@ -353,7 +353,7 @@ class EC2ResponseError(BotoServerError):
             return None  # don't call subclass here
 
     def _cleanupParsedProperties(self):
-        super(EC2ResponseError, self)._cleanupParsedProperties()
+        super()._cleanupParsedProperties()
         self._errorResultSet = []
         for p in ('errors'):
             setattr(self, p, None)
@@ -398,7 +398,7 @@ class EmrResponseError(BotoServerError):
     pass
 
 
-class _EC2Error(object):
+class _EC2Error:
     def __init__(self, connection=None):
         self.connection = connection
         self.error_code = None
@@ -455,7 +455,7 @@ class InvalidUriError(Exception):
     """Exception raised when URI is invalid."""
 
     def __init__(self, message):
-        super(InvalidUriError, self).__init__(message)
+        super().__init__(message)
         self.message = message
 
 
@@ -463,7 +463,7 @@ class InvalidAclError(Exception):
     """Exception raised when ACL XML is invalid."""
 
     def __init__(self, message):
-        super(InvalidAclError, self).__init__(message)
+        super().__init__(message)
         self.message = message
 
 
@@ -471,7 +471,7 @@ class InvalidCorsError(Exception):
     """Exception raised when CORS XML is invalid."""
 
     def __init__(self, message):
-        super(InvalidCorsError, self).__init__(message)
+        super().__init__(message)
         self.message = message
 
 
@@ -484,12 +484,12 @@ class InvalidLifecycleConfigError(Exception):
     """Exception raised when GCS lifecycle configuration XML is invalid."""
 
     def __init__(self, message):
-        super(InvalidLifecycleConfigError, self).__init__(message)
+        super().__init__(message)
         self.message = message
 
 
 # Enum class for resumable upload failure disposition.
-class ResumableTransferDisposition(object):
+class ResumableTransferDisposition:
     # START_OVER means an attempt to resume an existing transfer failed,
     # and a new resumable upload should be attempted (without delay).
     START_OVER = 'START_OVER'
@@ -521,12 +521,12 @@ class ResumableUploadException(Exception):
     """
 
     def __init__(self, message, disposition):
-        super(ResumableUploadException, self).__init__(message, disposition)
+        super().__init__(message, disposition)
         self.message = message
         self.disposition = disposition
 
     def __repr__(self):
-        return 'ResumableUploadException("%s", %s)' % (
+        return 'ResumableUploadException("{}", {})'.format(
             self.message, self.disposition)
 
 
@@ -538,12 +538,12 @@ class ResumableDownloadException(Exception):
     """
 
     def __init__(self, message, disposition):
-        super(ResumableDownloadException, self).__init__(message, disposition)
+        super().__init__(message, disposition)
         self.message = message
         self.disposition = disposition
 
     def __repr__(self):
-        return 'ResumableDownloadException("%s", %s)' % (
+        return 'ResumableDownloadException("{}", {})'.format(
             self.message, self.disposition)
 
 
@@ -554,7 +554,7 @@ class TooManyRecordsException(Exception):
     """
 
     def __init__(self, message):
-        super(TooManyRecordsException, self).__init__(message)
+        super().__init__(message)
         self.message = message
 
 
@@ -567,7 +567,7 @@ class PleaseRetryException(Exception):
         self.response = response
 
     def __repr__(self):
-        return 'PleaseRetryException("%s", %s)' % (
+        return 'PleaseRetryException("{}", {})'.format(
             self.message,
             self.response
         )
@@ -582,4 +582,4 @@ class InvalidInstanceMetadataError(Exception):
     )
     def __init__(self, msg):
         final_msg = msg + '\n' + self.MSG
-        super(InvalidInstanceMetadataError, self).__init__(final_msg)
+        super().__init__(final_msg)

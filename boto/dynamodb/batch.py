@@ -23,7 +23,7 @@
 from boto.compat import six
 
 
-class Batch(object):
+class Batch:
     """
     Used to construct a BatchGet request.
 
@@ -80,7 +80,7 @@ class Batch(object):
         return batch_dict
 
 
-class BatchWrite(object):
+class BatchWrite:
     """
     Used to construct a BatchWrite request.  Each BatchWrite object
     represents a collection of PutItem and DeleteItem requests for
@@ -177,7 +177,7 @@ class BatchList(list):
         if not self.unprocessed:
             return None
 
-        for table_name, table_req in six.iteritems(self.unprocessed):
+        for table_name, table_req in self.unprocessed.items():
             table_keys = table_req['Keys']
             table = self.layer2.get_table(table_name)
 

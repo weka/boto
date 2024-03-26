@@ -84,7 +84,7 @@ class Layer1(AWSAuthConnection):
                     break
 
         self.region = region
-        super(Layer1, self).__init__(self.region.endpoint,
+        super().__init__(self.region.endpoint,
                                    aws_access_key_id,
                                    aws_secret_access_key,
                                    is_secure, port, proxy, proxy_port,
@@ -106,7 +106,7 @@ class Layer1(AWSAuthConnection):
         """
         :raises: ``DynamoDBExpiredTokenError`` if the security token expires.
         """
-        headers = {'X-Amz-Target': '%s_%s.%s' % (self.ServiceName,
+        headers = {'X-Amz-Target': '{}_{}.{}'.format(self.ServiceName,
                                                  self.Version, action),
                    'Host': self.region.endpoint,
                    'Content-Type': 'application/x-amz-json-1.0',
@@ -134,7 +134,7 @@ class Layer1(AWSAuthConnection):
             data = json.loads(response_body)
             if self.ThruputError in data.get('__type'):
                 self.throughput_exceeded_events += 1
-                msg = "%s, retry attempt %s" % (self.ThruputError, i)
+                msg = f"{self.ThruputError}, retry attempt {i}"
                 next_sleep = self._exponential_time(i)
                 i += 1
                 status = (msg, i, next_sleep)

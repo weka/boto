@@ -95,7 +95,7 @@ SIGV4_DETECT = [
 ]
 
 
-class HmacKeys(object):
+class HmacKeys:
     """Key based Auth handler helper."""
 
     def __init__(self, host, config, provider):
@@ -152,7 +152,7 @@ class AnonAuthHandler(AuthHandler, HmacKeys):
     capability = ['anon']
 
     def __init__(self, host, config, provider):
-        super(AnonAuthHandler, self).__init__(host, config, provider)
+        super().__init__(host, config, provider)
 
     def add_auth(self, http_request, **kwargs):
         pass
@@ -169,7 +169,7 @@ class HmacAuthV1Handler(AuthHandler, HmacKeys):
         self._hmac_256 = None
 
     def update_provider(self, provider):
-        super(HmacAuthV1Handler, self).update_provider(provider)
+        super().update_provider(provider)
         self._hmac_256 = None
 
     def add_auth(self, http_request, **kwargs):
@@ -188,7 +188,7 @@ class HmacAuthV1Handler(AuthHandler, HmacKeys):
         boto.log.debug('StringToSign:\n%s' % string_to_sign)
         b64_hmac = self.sign_string(string_to_sign)
         auth_hdr = self._provider.auth_header
-        auth = ("%s %s:%s" % (auth_hdr, self._provider.access_key, b64_hmac))
+        auth = (f"{auth_hdr} {self._provider.access_key}:{b64_hmac}")
         boto.log.debug('Signature:\n%s' % auth)
         headers['Authorization'] = auth
 
@@ -205,7 +205,7 @@ class HmacAuthV2Handler(AuthHandler, HmacKeys):
         self._hmac_256 = None
 
     def update_provider(self, provider):
-        super(HmacAuthV2Handler, self).update_provider(provider)
+        super().update_provider(provider)
         self._hmac_256 = None
 
     def add_auth(self, http_request, **kwargs):
@@ -243,7 +243,7 @@ class HmacAuthV3Handler(AuthHandler, HmacKeys):
 
         b64_hmac = self.sign_string(headers['Date'])
         s = "AWS3-HTTPS AWSAccessKeyId=%s," % self._provider.access_key
-        s += "Algorithm=%s,Signature=%s" % (self.algorithm(), b64_hmac)
+        s += f"Algorithm={self.algorithm()},Signature={b64_hmac}"
         headers['X-Amzn-Authorization'] = s
 
 
@@ -277,7 +277,7 @@ class HmacAuthV3HTTPHandler(AuthHandler, HmacKeys):
         case, sorting them in alphabetical order and then joining
         them into a string, separated by newlines.
         """
-        l = sorted(['%s:%s' % (n.lower().strip(),
+        l = sorted(['{}:{}'.format(n.lower().strip(),
                     headers_to_sign[n].strip()) for n in headers_to_sign])
         return '\n'.join(l)
 
@@ -371,7 +371,7 @@ class HmacAuthV4Handler(AuthHandler, HmacKeys):
         secure = http_request.protocol == 'https'
         if ((port == 80 and not secure) or (port == 443 and secure)):
             return host
-        return '%s:%s' % (host, port)
+        return f'{host}:{port}'
 
     def query_string(self, http_request):
         parameter_names = sorted(http_request.params.keys())
@@ -390,7 +390,7 @@ class HmacAuthV4Handler(AuthHandler, HmacKeys):
         l = []
         for param in sorted(http_request.params):
             value = boto.utils.get_utf8_value(http_request.params[param])
-            l.append('%s=%s' % (urllib.parse.quote(param, safe='-_.~'),
+            l.append('{}={}'.format(urllib.parse.quote(param, safe='-_.~'),
                                 urllib.parse.quote(value, safe='-_.~')))
         return '&'.join(l)
 
@@ -410,7 +410,7 @@ class HmacAuthV4Handler(AuthHandler, HmacKeys):
                 c_value = raw_value.strip()
             else:
                 c_value = ' '.join(raw_value.strip().split())
-            canonical.append('%s:%s' % (c_name, c_value))
+            canonical.append(f'{c_name}:{c_value}')
         return '\n'.join(sorted(canonical))
 
     def signed_headers(self, headers_to_sign):
@@ -589,7 +589,7 @@ class S3HmacAuthV4Handler(HmacAuthV4Handler, AuthHandler):
     capability = ['hmac-v4-s3']
 
     def __init__(self, *args, **kwargs):
-        super(S3HmacAuthV4Handler, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.region_name:
             self.region_name = self.clean_region_name(self.region_name)
@@ -617,7 +617,7 @@ class S3HmacAuthV4Handler(HmacAuthV4Handler, AuthHandler):
         l = []
         for param in sorted(http_request.params):
             value = boto.utils.get_utf8_value(http_request.params[param])
-            l.append('%s=%s' % (urllib.parse.quote(param, safe='-_.~'),
+            l.append('{}={}'.format(urllib.parse.quote(param, safe='-_.~'),
                                 urllib.parse.quote(value, safe='-_.~')))
         return '&'.join(l)
 
@@ -626,7 +626,7 @@ class S3HmacAuthV4Handler(HmacAuthV4Handler, AuthHandler):
         secure = http_request.protocol == 'https'
         if ((port == 80 and not secure) or (port == 443 and secure)):
             return http_request.host
-        return '%s:%s' % (http_request.host, port)
+        return f'{http_request.host}:{port}'
 
     def headers_to_sign(self, http_request):
         """
@@ -741,7 +741,7 @@ class S3HmacAuthV4Handler(HmacAuthV4Handler, AuthHandler):
         if http_request.headers.get('x-amz-content-sha256'):
             return http_request.headers['x-amz-content-sha256']
 
-        return super(S3HmacAuthV4Handler, self).payload(http_request)
+        return super().payload(http_request)
 
     def add_auth(self, req, **kwargs):
         if 'x-amz-content-sha256' not in req.headers:
@@ -750,7 +750,7 @@ class S3HmacAuthV4Handler(HmacAuthV4Handler, AuthHandler):
             else:
                 req.headers['x-amz-content-sha256'] = self.payload(req)
         updated_req = self.mangle_path_and_params(req)
-        return super(S3HmacAuthV4Handler, self).add_auth(updated_req,
+        return super().add_auth(updated_req,
                                                          unmangled_req=req,
                                                          **kwargs)
 
@@ -769,7 +769,7 @@ class S3HmacAuthV4Handler(HmacAuthV4Handler, AuthHandler):
 
         params = {
             'X-Amz-Algorithm': 'AWS4-HMAC-SHA256',
-            'X-Amz-Credential': '%s/%s/%s/%s/aws4_request' % (
+            'X-Amz-Credential': '{}/{}/{}/{}/aws4_request'.format(
                 self._provider.access_key,
                 iso_date[:8],
                 region,
@@ -803,7 +803,7 @@ class S3HmacAuthV4Handler(HmacAuthV4Handler, AuthHandler):
         # Add signature to params now that we have it
         req.params['X-Amz-Signature'] = signature
 
-        return '%s://%s%s?%s' % (req.protocol, req.host, req.path,
+        return '{}://{}{}?{}'.format(req.protocol, req.host, req.path,
                                  urllib.parse.urlencode(req.params))
 
 
@@ -861,7 +861,7 @@ class QuerySignatureHelper(HmacKeys):
         qs, signature = self._calc_signature(
             http_request.params, http_request.method,
             http_request.auth_path, http_request.host)
-        boto.log.debug('query_string: %s Signature: %s' % (qs, signature))
+        boto.log.debug(f'query_string: {qs} Signature: {signature}')
         if http_request.method == 'POST':
             headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
             http_request.body = qs + '&Signature=' + urllib.parse.quote_plus(signature)
@@ -933,7 +933,7 @@ class QuerySignatureV2AuthHandler(QuerySignatureHelper, AuthHandler):
 
     def _calc_signature(self, params, verb, path, server_name):
         boto.log.debug('using _calc_signature_2')
-        string_to_sign = '%s\n%s\n%s\n' % (verb, server_name.lower(), path)
+        string_to_sign = f'{verb}\n{server_name.lower()}\n{path}\n'
         hmac = self._get_hmac()
         params['SignatureMethod'] = self.algorithm()
         if self._provider.security_token:
@@ -969,7 +969,7 @@ class POSTPathQSV2AuthHandler(QuerySignatureV2AuthHandler, AuthHandler):
         req.params['Timestamp'] = boto.utils.get_ts()
         qs, signature = self._calc_signature(req.params, req.method,
                                              req.auth_path, req.host)
-        boto.log.debug('query_string: %s Signature: %s' % (qs, signature))
+        boto.log.debug(f'query_string: {qs} Signature: {signature}')
         if req.method == 'POST':
             req.headers['Content-Length'] = str(len(req.body))
             req.headers['Content-Type'] = req.headers.get('Content-Type',

@@ -21,7 +21,7 @@
 # IN THE SOFTWARE.
 from boto.compat import six
 
-class Rule(object):
+class Rule:
     """
     A Lifecycle rule for an S3 bucket.
 
@@ -48,7 +48,7 @@ class Rule(object):
         self.id = id
         self.prefix = '' if prefix is None else prefix
         self.status = status
-        if isinstance(expiration, six.integer_types):
+        if isinstance(expiration, int):
             # retain backwards compatibility???
             self.expiration = Expiration(days=expiration)
         else:
@@ -98,7 +98,7 @@ class Rule(object):
         s += '</Rule>'
         return s
 
-class Expiration(object):
+class Expiration:
     """
     When an object will expire.
 
@@ -136,7 +136,7 @@ class Expiration(object):
         s += '</Expiration>'
         return s
 
-class Transition(object):
+class Transition:
     """
     A transition to a different storage class.
 
@@ -158,7 +158,7 @@ class Transition(object):
             how_long = "on: %s" % self.date
         else:
             how_long = "in: %s days" % self.days
-        return '<Transition: %s, %s>' % (how_long, self.storage_class)
+        return f'<Transition: {how_long}, {self.storage_class}>'
 
     def to_xml(self):
         s = '<Transition>'

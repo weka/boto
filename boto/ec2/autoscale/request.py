@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
 
 
-class Request(object):
+class Request:
     def __init__(self, connection=None):
         self.connection = connection
         self.request_id = ''

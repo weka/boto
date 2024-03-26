@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 import boto
 import sys
@@ -12,8 +10,8 @@ autoclass_content = "both"
 templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'index'
-project = u'boto'
-copyright = u'2009,2010, Mitch Garnaat'
+project = 'boto'
+copyright = '2009,2010, Mitch Garnaat'
 version = boto.__version__
 exclude_trees = []
 pygments_style = 'sphinx'
@@ -22,8 +20,8 @@ html_theme_path = ["."]
 html_static_path = ['_static']
 htmlhelp_basename = 'botodoc'
 latex_documents = [
-  ('index', 'boto.tex', u'boto Documentation',
-   u'Mitch Garnaat', 'manual'),
+  ('index', 'boto.tex', 'boto Documentation',
+   'Mitch Garnaat', 'manual'),
 ]
 intersphinx_mapping = {'http://docs.python.org/': None}
 github_project_url = 'https://github.com/boto/boto/'

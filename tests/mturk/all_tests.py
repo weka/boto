@@ -1,4 +1,3 @@
-
 import unittest
 import doctest
 from glob import glob
@@ -17,7 +16,7 @@ doctest_suite = doctest.DocFileSuite(
 class Program(unittest.TestProgram):
 	def runTests(self, *args, **kwargs):
 		self.test = unittest.TestSuite([self.test, doctest_suite])
-		super(Program, self).runTests(*args, **kwargs)
+		super().runTests(*args, **kwargs)
 
 if __name__ == '__main__':
 	Program()

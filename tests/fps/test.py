@@ -63,7 +63,7 @@ class FPSTestCase(unittest.TestCase):
             'callerReference':      'foo',
         }
         result = self.fps.cbui_url(**inputs)
-        print "cbui_url() yields {0}".format(result)
+        print "cbui_url() yields {}".format(result)
 
     @unittest.skipUnless(simple, "skipping simple test")
     def test_get_account_activity(self):

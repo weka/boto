@@ -100,7 +100,7 @@ class OpsWorksConnection(AWSQueryConnection):
         if 'host' not in kwargs or kwargs['host'] is None:
             kwargs['host'] = region.endpoint
 
-        super(OpsWorksConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
 
     def _required_auth_capability(self):
@@ -2637,7 +2637,7 @@ class OpsWorksConnection(AWSQueryConnection):
                      install_updates_on_boot=None,
                      use_ebs_optimized_instances=None,
                      lifecycle_event_configuration=None):
-        """
+        r"""
         Updates a specified layer.
 
         **Required Permissions**: To use this action, an IAM user must
@@ -3070,7 +3070,7 @@ class OpsWorksConnection(AWSQueryConnection):
 
     def make_request(self, action, body):
         headers = {
-            'X-Amz-Target': '%s.%s' % (self.TargetPrefix, action),
+            'X-Amz-Target': f'{self.TargetPrefix}.{action}',
             'Host': self.region.endpoint,
             'Content-Type': 'application/x-amz-json-1.1',
             'Content-Length': str(len(body)),

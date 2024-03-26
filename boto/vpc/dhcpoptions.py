@@ -49,7 +49,7 @@ class DhcpConfigSet(dict):
 class DhcpOptions(TaggedEC2Object):
 
     def __init__(self, connection=None):
-        super(DhcpOptions, self).__init__(connection)
+        super().__init__(connection)
         self.id = None
         self.options = None
 
@@ -57,7 +57,7 @@ class DhcpOptions(TaggedEC2Object):
         return 'DhcpOptions:%s' % self.id
 
     def startElement(self, name, attrs, connection):
-        retval = super(DhcpOptions, self).startElement(name, attrs, connection)
+        retval = super().startElement(name, attrs, connection)
         if retval is not None:
             return retval
         if name == 'dhcpConfigurationSet':

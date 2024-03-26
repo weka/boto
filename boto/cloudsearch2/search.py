@@ -35,7 +35,7 @@ class SearchServiceException(Exception):
     pass
 
 
-class SearchResults(object):
+class SearchResults:
     def __init__(self, **attrs):
         self.rid = attrs['status']['rid']
         self.time_ms = attrs['status']['time-ms']
@@ -49,7 +49,7 @@ class SearchResults(object):
         if 'facets' in attrs:
             for (facet, values) in attrs['facets'].items():
                 if 'buckets' in values:
-                    self.facets[facet] = dict((k, v) for (k, v) in map(lambda x: (x['value'], x['count']), values.get('buckets', [])))
+                    self.facets[facet] = {k: v for (k, v) in map(lambda x: (x['value'], x['count']), values.get('buckets', []))}
 
         self.num_pages_needed = ceil(self.hits / self.query.real_size)
 
@@ -73,7 +73,7 @@ class SearchResults(object):
             raise StopIteration
 
 
-class Query(object):
+class Query:
 
     RESULTS_PER_PAGE = 500
 
@@ -118,17 +118,17 @@ class Query(object):
             params['fq'] = self.fq
 
         if self.expr:
-            for k, v in six.iteritems(self.expr):
+            for k, v in self.expr.items():
                 params['expr.%s' % k] = v
 
         if self.facet:
-            for k, v in six.iteritems(self.facet):
-                if not isinstance(v, six.string_types):
+            for k, v in self.facet.items():
+                if not isinstance(v, str):
                     v = json.dumps(v)
                 params['facet.%s' % k] = v
 
         if self.highlight:
-            for k, v in six.iteritems(self.highlight):
+            for k, v in self.highlight.items():
                 params['highlight.%s' % k] = v
 
         if self.options:
@@ -166,15 +166,15 @@ class Query(object):
 
         if self.expr:
             expr = {}
-            for k, v in six.iteritems(self.expr):
+            for k, v in self.expr.items():
                 expr['expr.%s' % k] = v
 
             params['expr'] = expr
 
         if self.facet:
             facet = {}
-            for k, v in six.iteritems(self.facet):
-                if not isinstance(v, six.string_types):
+            for k, v in self.facet.items():
+                if not isinstance(v, str):
                     v = json.dumps(v)
                 facet['facet.%s' % k] = v
 
@@ -182,7 +182,7 @@ class Query(object):
 
         if self.highlight:
             highlight = {}
-            for k, v in six.iteritems(self.highlight):
+            for k, v in self.highlight.items():
                 highlight['highlight.%s' % k] = v
 
             params['highlight'] = highlight
@@ -202,7 +202,7 @@ class Query(object):
         return params
 
 
-class SearchConnection(object):
+class SearchConnection:
 
     def __init__(self, domain=None, endpoint=None):
         self.domain = domain
@@ -339,7 +339,7 @@ class SearchConnection(object):
         return self.domain_connection.search(params.pop("q", ""), **params)
 
     def _search_without_auth(self, params, api_version):
-        url = "http://%s/%s/search" % (self.endpoint, api_version)
+        url = f"http://{self.endpoint}/{api_version}/search"
         resp = self.session.get(url, params=params)
 
         return {'body': resp.content.decode('utf-8'), 'status_code': resp.status_code}
@@ -434,8 +434,7 @@ class SearchConnection(object):
         while page <= num_pages_needed:
             results = self(query)
             num_pages_needed = results.num_pages_needed
-            for doc in results:
-                yield doc
+            yield from results
             query.start += query.real_size
             page += 1
 

@@ -100,7 +100,7 @@ class TestVault(unittest.TestCase):
             description=mock.ANY, part_size=expected_part_size)
 
     def test_retrieve_inventory(self):
-        class FakeResponse(object):
+        class FakeResponse:
             status = 202
 
             def getheader(self, key, default=None):

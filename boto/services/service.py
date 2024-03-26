@@ -35,7 +35,7 @@ class Service(ScriptBase):
     ProcessingTime = 60
 
     def __init__(self, config_file=None, mimetype_files=None):
-        super(Service, self).__init__(config_file)
+        super().__init__(config_file)
         self.name = self.__class__.__name__
         self.working_dir = boto.config.get('Pyami', 'working_dir')
         self.sd = ServiceDef(config_file)
@@ -71,7 +71,7 @@ class Service(ScriptBase):
         bucket_name = message['Bucket']
         key_name = message['InputKey']
         file_name = os.path.join(self.working_dir, message.get('OriginalFileName', 'in_file'))
-        boto.log.info('get_file: %s/%s to %s' % (bucket_name, key_name, file_name))
+        boto.log.info(f'get_file: {bucket_name}/{key_name} to {file_name}')
         bucket = boto.lookup('s3', bucket_name)
         key = bucket.new_key(key_name)
         key.get_contents_to_filename(os.path.join(self.working_dir, file_name))
@@ -83,7 +83,7 @@ class Service(ScriptBase):
 
     # store result file in S3
     def put_file(self, bucket_name, file_path, key_name=None):
-        boto.log.info('putting file %s as %s.%s' % (file_path, bucket_name, key_name))
+        boto.log.info(f'putting file {file_path} as {bucket_name}.{key_name}')
         bucket = boto.lookup('s3', bucket_name)
         key = bucket.new_key(key_name)
         key.set_contents_from_filename(file_path)
@@ -98,7 +98,7 @@ class Service(ScriptBase):
                 output_bucket = input_message['Bucket']
             key_name = os.path.split(file)[1]
             key = self.put_file(output_bucket, file, key_name)
-            output_keys.append('%s;type=%s' % (key.name, type))
+            output_keys.append(f'{key.name};type={type}')
         output_message['OutputKey'] = ','.join(output_keys)
 
     # write message to each output queue

@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
 
 
-class User(object):
+class User:
     def __init__(self, parent=None, id='', name=''):
         if parent:
             parent.owner = self
@@ -44,7 +44,7 @@ class User(object):
 
     def to_xml(self, element_name='Owner'):
         if self.type:
-            s = '<%s type="%s">' % (element_name, self.type)
+            s = f'<{element_name} type="{self.type}">'
         else:
             s = '<%s>' % element_name
         s += '<ID>%s</ID>' % self.id

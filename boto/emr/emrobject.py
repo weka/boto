@@ -28,7 +28,7 @@ This module contains EMR response objects
 from boto.resultset import ResultSet
 
 
-class EmrObject(object):
+class EmrObject:
     Fields = set()
 
     def __init__(self, connection=None):
@@ -43,13 +43,13 @@ class EmrObject(object):
 
 
 class RunJobFlowResponse(EmrObject):
-    Fields = set(['JobFlowId'])
+    Fields = {'JobFlowId'}
 
 class AddInstanceGroupsResponse(EmrObject):
-    Fields = set(['InstanceGroupIds', 'JobFlowId'])
+    Fields = {'InstanceGroupIds', 'JobFlowId'}
     
 class ModifyInstanceGroupsResponse(EmrObject):
-    Fields = set(['RequestId'])
+    Fields = {'RequestId'}
     
 
 class Arg(EmrObject):
@@ -82,12 +82,12 @@ class JobFlowStepList(EmrObject):
 
 
 class BootstrapAction(EmrObject):
-    Fields = set([
+    Fields = {
         'Args',
         'Name',
         'Path',
         'ScriptPath',
-    ])
+    }
 
     def startElement(self, name, attrs, connection):
         if name == 'Args':
@@ -96,14 +96,14 @@ class BootstrapAction(EmrObject):
 
 
 class KeyValue(EmrObject):
-    Fields = set([
+    Fields = {
         'Key',
         'Value',
-    ])
+    }
 
 
 class Step(EmrObject):
-    Fields = set([
+    Fields = {
         'ActionOnFailure',
         'CreationDateTime',
         'EndDateTime',
@@ -113,7 +113,7 @@ class Step(EmrObject):
         'Name',
         'StartDateTime',
         'State',
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -129,7 +129,7 @@ class Step(EmrObject):
 
 
 class InstanceGroup(EmrObject):
-    Fields = set([
+    Fields = {
         'BidPrice',
         'CreationDateTime',
         'EndDateTime',
@@ -145,11 +145,11 @@ class InstanceGroup(EmrObject):
         'ReadyDateTime',
         'StartDateTime',
         'State',
-    ])
+    }
 
 
 class JobFlow(EmrObject):
-    Fields = set([
+    Fields = {
         'AmiVersion',
         'AvailabilityZone',
         'CreationDateTime',
@@ -176,7 +176,7 @@ class JobFlow(EmrObject):
         'Type',
         'Value',
         'VisibleToAllUsers',
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -202,24 +202,24 @@ class JobFlow(EmrObject):
 
 
 class ClusterTimeline(EmrObject):
-    Fields = set([
+    Fields = {
         'CreationDateTime',
         'ReadyDateTime',
         'EndDateTime'
-    ])
+    }
 
 class ClusterStateChangeReason(EmrObject):
-    Fields = set([
+    Fields = {
         'Code',
         'Message'
-    ])
+    }
 
 class ClusterStatus(EmrObject):
-    Fields = set([
+    Fields = {
         'State',
         'StateChangeReason',
         'Timeline'
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -237,25 +237,25 @@ class ClusterStatus(EmrObject):
 
 
 class Ec2InstanceAttributes(EmrObject):
-    Fields = set([
+    Fields = {
         'Ec2KeyName',
         'Ec2SubnetId',
         'Ec2AvailabilityZone',
         'IamInstanceProfile'
-    ])
+    }
 
 
 class Application(EmrObject):
-    Fields = set([
+    Fields = {
         'Name',
         'Version',
         'Args',
         'AdditionalInfo'
-    ])
+    }
 
 
 class Cluster(EmrObject):
-    Fields = set([
+    Fields = {
         'Id',
         'Name',
         'LogUri',
@@ -267,7 +267,7 @@ class Cluster(EmrObject):
         'MasterPublicDnsName',
         'NormalizedInstanceHours',
         'ServiceRole'
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -294,11 +294,11 @@ class Cluster(EmrObject):
 
 
 class ClusterSummary(EmrObject):
-    Fields = set([
+    Fields = {
         'Id',
         'Name',
         'NormalizedInstanceHours'
-    ])
+    }
 
     def __init__(self, connection):
         self.connection = connection
@@ -313,9 +313,9 @@ class ClusterSummary(EmrObject):
 
 
 class ClusterSummaryList(EmrObject):
-    Fields = set([
+    Fields = {
         'Marker'
-    ])
+    }
 
     def __init__(self, connection):
         self.connection = connection
@@ -330,10 +330,10 @@ class ClusterSummaryList(EmrObject):
 
 
 class StepConfig(EmrObject):
-    Fields = set([
+    Fields = {
         'Jar',
         'MainClass'
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -352,11 +352,11 @@ class StepConfig(EmrObject):
 
 
 class HadoopStep(EmrObject):
-    Fields = set([
+    Fields = {
         'Id',
         'Name',
         'ActionOnFailure'
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -376,7 +376,7 @@ class HadoopStep(EmrObject):
 
 
 class InstanceGroupInfo(EmrObject):
-    Fields = set([
+    Fields = {
         'Id',
         'Name',
         'Market',
@@ -385,7 +385,7 @@ class InstanceGroupInfo(EmrObject):
         'InstanceType',
         'RequestedInstanceCount',
         'RunningInstanceCount'
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -400,9 +400,9 @@ class InstanceGroupInfo(EmrObject):
 
 
 class InstanceGroupList(EmrObject):
-    Fields = set([
+    Fields = {
         'Marker'
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -417,14 +417,14 @@ class InstanceGroupList(EmrObject):
 
 
 class InstanceInfo(EmrObject):
-    Fields = set([
+    Fields = {
         'Id',
         'Ec2InstanceId',
         'PublicDnsName',
         'PublicIpAddress',
         'PrivateDnsName',
         'PrivateIpAddress'
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -439,9 +439,9 @@ class InstanceInfo(EmrObject):
 
 
 class InstanceList(EmrObject):
-    Fields = set([
+    Fields = {
         'Marker'
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -456,10 +456,10 @@ class InstanceList(EmrObject):
 
 
 class StepSummary(EmrObject):
-    Fields = set([
+    Fields = {
         'Id',
         'Name'
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -478,9 +478,9 @@ class StepSummary(EmrObject):
 
 
 class StepSummaryList(EmrObject):
-    Fields = set([
+    Fields = {
         'Marker'
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection
@@ -495,9 +495,9 @@ class StepSummaryList(EmrObject):
 
 
 class BootstrapActionList(EmrObject):
-    Fields = set([
+    Fields = {
         'Marker'
-    ])
+    }
 
     def __init__(self, connection=None):
         self.connection = connection

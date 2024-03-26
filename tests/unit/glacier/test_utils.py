@@ -129,10 +129,7 @@ class TestFileHash(unittest.TestCase):
         # Compute a hash from a file object. On Python 2 this uses a non-
         # binary mode. On Python 3, however, binary mode is required for
         # binary files. If not used, you will get UTF-8 code errors.
-        if six.PY2:
-            mode = "w+"
-        else:
-            mode = "wb+"
+        mode = "wb+"
 
         with tempfile.TemporaryFile(mode=mode) as f:
             f.write(self._gen_data())

@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-class Prefix(object):
+class Prefix:
     def __init__(self, bucket=None, name=None):
         self.bucket = bucket
         self.name = name

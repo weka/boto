@@ -361,7 +361,7 @@ class CloudSearchSearchFacetTest(CloudSearchSearchBaseTest):
         results = search.search(q='Test', facet=['tags'])
 
         self.assertTrue('tags' not in results.facets)
-        self.assertEqual(results.facets['animals'], {u'lions': u'1', u'fish': u'2'})
+        self.assertEqual(results.facets['animals'], {'lions': '1', 'fish': '2'})
 
 
 class CloudSearchNonJsonTest(CloudSearchSearchBaseTest):
@@ -384,11 +384,11 @@ class CloudSearchUnauthorizedTest(CloudSearchSearchBaseTest):
     def test_response(self):
         search = SearchConnection(endpoint=HOSTNAME)
 
-        with self.assertRaisesRegexp(SearchServiceException, 'foo bar baz'):
+        with self.assertRaisesRegex(SearchServiceException, 'foo bar baz'):
             search.search(q='Test')
 
 
-class FakeResponse(object):
+class FakeResponse:
     status_code = 405
     content = b''
 
@@ -397,7 +397,7 @@ class CloudSearchConnectionTest(unittest.TestCase):
     cloudsearch = True
 
     def setUp(self):
-        super(CloudSearchConnectionTest, self).setUp()
+        super().setUp()
         self.conn = SearchConnection(
             endpoint='test-domain.cloudsearch.amazonaws.com'
         )

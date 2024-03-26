@@ -29,7 +29,7 @@ class ModelMeta(type):
     "Metaclass for all Models"
 
     def __init__(cls, name, bases, dict):
-        super(ModelMeta, cls).__init__(name, bases, dict)
+        super().__init__(name, bases, dict)
         # Make sure this is a subclass of Model - mainly copied from django ModelBase (thanks!)
         cls.__sub_classes__ = []
 
@@ -57,7 +57,7 @@ class ModelMeta(type):
             # Model class, defined below.
             pass
 
-class Model(object):
+class Model:
     __metaclass__ = ModelMeta
     __consistent__ = False # Consistent is set off by default
     id = None
@@ -171,7 +171,7 @@ class Model(object):
                     boto.log.exception(e)
 
     def __repr__(self):
-        return '%s<%s>' % (self.__class__.__name__, self.id)
+        return f'{self.__class__.__name__}<{self.id}>'
 
     def __str__(self):
         return str(self.id)

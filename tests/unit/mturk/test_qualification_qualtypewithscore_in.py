@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from tests.unit import AWSMockServiceTestCase
 
 from boto.mturk.connection import MTurkConnection
@@ -21,7 +19,7 @@ class TestMTurkPostingWithQualQualtypewithscoreIn(AWSMockServiceTestCase):
     connection_class = MTurkConnection
 
     def setUp(self):
-        super(TestMTurkPostingWithQualQualtypewithscoreIn, self).setUp()
+        super().setUp()
 
     def test_qualification_qualtypewithscore_in(self):
         self.set_http_response(
@@ -77,4 +75,4 @@ class TestMTurkPostingWithQualQualtypewithscoreIn(AWSMockServiceTestCase):
                                   'Reward.1.CurrencyCode',
                                   'Keywords',
                                   'Operation'])
-        self.assertEquals(create_hit_rs.status, True)
+        self.assertEqual(create_hit_rs.status, True)

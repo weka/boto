@@ -19,16 +19,18 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
-import boto
 import re
-from boto.utils import find_class
+import urllib.parse
 import uuid
-from boto.sdb.db.key import Key
-from boto.sdb.db.blob import Blob
-from boto.sdb.db.property import ListProperty, MapProperty
 from datetime import datetime, date, time
-from boto.exception import SDBPersistenceError, S3ResponseError
+
+import boto
 from boto.compat import map, six, long_type
+from boto.exception import SDBPersistenceError, S3ResponseError
+from boto.sdb.db.blob import Blob
+from boto.sdb.db.key import Key
+from boto.sdb.db.property import ListProperty, MapProperty
+from boto.utils import find_class
 
 ISO8601 = '%Y-%m-%dT%H:%M:%SZ'
 
@@ -37,7 +39,7 @@ class TimeDecodeError(Exception):
     pass
 
 
-class SDBConverter(object):
+class SDBConverter:
     """
     Responsible for converting base Python types to format compatible
     with underlying database.  For SimpleDB, that means everything
@@ -108,7 +110,6 @@ class SDBConverter(object):
         return self.encode_map(prop, values)
 
     def encode_map(self, prop, value):
-        import urllib
         if value is None:
             return None
         if not isinstance(value, dict):
@@ -120,7 +121,7 @@ class SDBConverter(object):
                 item_type = self.model_class
             encoded_value = self.encode(item_type, value[key])
             if encoded_value is not None:
-                new_value.append('%s:%s' % (urllib.quote(key), encoded_value))
+                new_value.append(f'{urllib.parse.quote(key)}:{encoded_value}')
         return new_value
 
     def encode_prop(self, prop, value):
@@ -160,11 +161,10 @@ class SDBConverter(object):
 
     def decode_map_element(self, item_type, value):
         """Decode a single element for a map"""
-        import urllib
         key = value
         if ":" in value:
             key, value = value.split(':', 1)
-            key = urllib.unquote(key)
+            key = urllib.parse.unquote(key)
         if self.model_class in item_type.mro():
             value = item_type(id=value)
         else:
@@ -245,7 +245,7 @@ class SDBConverter(object):
             mantissa = mantissa.ljust(18, '0')
             exponent = 999 - int(exponent)
             exponent = '%03d' % exponent
-        return '%s %s %s' % (case, exponent, mantissa)
+        return f'{case} {exponent} {mantissa}'
 
     def decode_float(self, value):
         case = value[0]
@@ -262,11 +262,11 @@ class SDBConverter(object):
             exponent = '-' + exponent
         else:
             mantissa = '%f' % (float(mantissa) - 10)
-            exponent = '%03d' % abs((int(exponent) - 999))
+            exponent = '%03d' % abs(int(exponent) - 999)
         return float(mantissa + 'e' + exponent)
 
     def encode_datetime(self, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return value
         if isinstance(value, datetime):
             return value.strftime(ISO8601)
@@ -291,7 +291,7 @@ class SDBConverter(object):
             return None
 
     def encode_date(self, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return value
         return value.isoformat()
 
@@ -324,7 +324,7 @@ class SDBConverter(object):
     def encode_reference(self, value):
         if value in (None, 'None', '', ' '):
             return None
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return value
         else:
             return value.id
@@ -337,15 +337,15 @@ class SDBConverter(object):
     def encode_blob(self, value):
         if not value:
             return None
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return value
 
         if not value.id:
             bucket = self.manager.get_blob_bucket()
             key = bucket.new_key(str(uuid.uuid4()))
-            value.id = "s3://%s/%s" % (key.bucket.name, key.name)
+            value.id = f"s3://{key.bucket.name}/{key.name}"
         else:
-            match = re.match("^s3:\/\/([^\/]*)\/(.*)$", value.id)
+            match = re.match(r"^s3:\/\/([^\/]*)\/(.*)$", value.id)
             if match:
                 s3 = self.manager.get_s3_connection()
                 bucket = s3.get_bucket(match.group(1), validate=False)
@@ -360,7 +360,7 @@ class SDBConverter(object):
     def decode_blob(self, value):
         if not value:
             return None
-        match = re.match("^s3:\/\/([^\/]*)\/(.*)$", value)
+        match = re.match(r"^s3:\/\/([^\/]*)\/(.*)$", value)
         if match:
             s3 = self.manager.get_s3_connection()
             bucket = s3.get_bucket(match.group(1), validate=False)
@@ -373,7 +373,7 @@ class SDBConverter(object):
         else:
             return None
         if key:
-            return Blob(file=key, id="s3://%s/%s" % (key.bucket.name, key.name))
+            return Blob(file=key, id=f"s3://{key.bucket.name}/{key.name}")
         else:
             return None
 
@@ -382,15 +382,15 @@ class SDBConverter(object):
         if not isinstance(value, str):
             return value
         try:
-            return six.text_type(value, 'utf-8')
+            return str(value, 'utf-8')
         except:
             # really, this should throw an exception.
             # in the interest of not breaking current
             # systems, however:
             arr = []
             for ch in value:
-                arr.append(six.unichr(ord(ch)))
-            return u"".join(arr)
+                arr.append(chr(ord(ch)))
+            return "".join(arr)
 
     def decode_string(self, value):
         """Decoding a string is really nothing, just
@@ -398,7 +398,7 @@ class SDBConverter(object):
         return value
 
 
-class SDBManager(object):
+class SDBManager:
 
     def __init__(self, cls, db_name, db_user, db_passwd,
                  db_host, db_port, db_table, ddl_dir, enable_ssl,
@@ -474,7 +474,7 @@ class SDBManager(object):
 
     def get_blob_bucket(self, bucket_name=None):
         s3 = self.get_s3_connection()
-        bucket_name = "%s-%s" % (s3.aws_access_key_id, self.domain.name)
+        bucket_name = f"{s3.aws_access_key_id}-{self.domain.name}"
         bucket_name = bucket_name.lower()
         try:
             self.bucket = s3.get_bucket(bucket_name)
@@ -513,7 +513,7 @@ class SDBManager(object):
                 obj = cls(id, **params)
                 obj._loaded = True
             else:
-                s = '(%s) class %s.%s not found' % (id, a['__module__'], a['__type__'])
+                s = '({}) class {}.{} not found'.format(id, a['__module__'], a['__type__'])
                 boto.log.info('sdbmanager: %s' % s)
         return obj
 
@@ -521,7 +521,7 @@ class SDBManager(object):
         return self.get_object(None, id)
 
     def query(self, query):
-        query_str = "select * from `%s` %s" % (self.domain.name, self._build_filter_part(query.model_class, query.filters, query.sort_by, query.select))
+        query_str = f"select * from `{self.domain.name}` {self._build_filter_part(query.model_class, query.filters, query.sort_by, query.select)}"
         if query.limit:
             query_str += " limit %s" % query.limit
         rs = self.domain.select(query_str, max_items=query.limit, next_token=query.next_token)
@@ -533,7 +533,7 @@ class SDBManager(object):
         Get the number of results that would
         be returned in this query
         """
-        query = "select count(*) from `%s` %s" % (self.domain.name, self._build_filter_part(cls, filters, sort_by, select))
+        query = f"select count(*) from `{self.domain.name}` {self._build_filter_part(cls, filters, sort_by, select)}"
         count = 0
         for row in self.domain.select(query):
             count += int(row['Count'])
@@ -548,7 +548,7 @@ class SDBManager(object):
             name = '`%s`' % name
         if val is None:
             if op in ('is', '='):
-                return "%(name)s is null" % {"name": name}
+                return f"{name} is null"
             elif op in ('is not', '!='):
                 return "%s is not null" % name
             else:
@@ -560,7 +560,7 @@ class SDBManager(object):
                 op = "not like"
             if not(op in ["like", "not like"] and val.startswith("%")):
                 val = "%%:%s" % val
-        return "%s %s '%s'" % (name, op, val.replace("'", "''"))
+        return "{} {} '{}'".format(name, op, val.replace("'", "''"))
 
     def _build_filter_part(self, cls, filters, order_by=None, select=None):
         """
@@ -583,12 +583,12 @@ class SDBManager(object):
                 order_by_filtered = True
             query_parts.append("(%s)" % select)
 
-        if isinstance(filters, six.string_types):
-            query = "WHERE %s AND `__type__` = '%s'" % (filters, cls.__name__)
+        if isinstance(filters, str):
+            query = f"WHERE {filters} AND `__type__` = '{cls.__name__}'"
             if order_by in ["__id__", "itemName()"]:
                 query += " ORDER BY itemName() %s" % order_by_method
             elif order_by is not None:
-                query += " ORDER BY `%s` %s" % (order_by, order_by_method)
+                query += f" ORDER BY `{order_by}` {order_by_method}"
             return query
 
         for filter in filters:
@@ -636,10 +636,10 @@ class SDBManager(object):
             if order_by in ["__id__", "itemName()"]:
                 order_by_query = " ORDER BY itemName() %s" % order_by_method
             else:
-                order_by_query = " ORDER BY `%s` %s" % (order_by, order_by_method)
+                order_by_query = f" ORDER BY `{order_by}` {order_by_method}"
 
         if len(query_parts) > 0:
-            return "WHERE %s %s" % (" AND ".join(query_parts), order_by_query)
+            return "WHERE {} {}".format(" AND ".join(query_parts), order_by_query)
         else:
             return ""
 

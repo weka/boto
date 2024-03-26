@@ -27,7 +27,7 @@ from boto.file.key import Key
 from boto.file.simpleresultset import SimpleResultSet
 from boto.s3.bucketlistresultset import BucketListResultSet
 
-class Bucket(object):
+class Bucket:
     def __init__(self, name, contained_key):
         """Instantiate an anonymous file-based Bucket around a single key.
         """

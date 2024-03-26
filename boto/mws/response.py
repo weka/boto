@@ -24,13 +24,13 @@ class ComplexType(dict):
     _value = 'Value'
 
     def __repr__(self):
-        return '{0}{1}'.format(getattr(self, self._value, None), self.copy())
+        return f'{getattr(self, self._value, None)}{self.copy()}'
 
     def __str__(self):
         return str(getattr(self, self._value, ''))
 
 
-class DeclarativeType(object):
+class DeclarativeType:
     def __init__(self, _hint=None, **kw):
         self._value = None
         if _hint is not None:
@@ -40,14 +40,14 @@ class DeclarativeType(object):
         class JITResponse(ResponseElement):
             pass
         self._hint = JITResponse
-        self._hint.__name__ = 'JIT_{0}/{1}'.format(self.__class__.__name__,
+        self._hint.__name__ = 'JIT_{}/{}'.format(self.__class__.__name__,
                                                    hex(id(self._hint))[2:])
         for name, value in kw.items():
             setattr(self._hint, name, value)
 
     def __repr__(self):
         parent = getattr(self, '_parent', None)
-        return '<{0}_{1}/{2}_{3}>'.format(self.__class__.__name__,
+        return '<{}_{}/{}_{}>'.format(self.__class__.__name__,
                                           parent and parent._name or '?',
                                           getattr(self, '_name', '?'),
                                           hex(id(self.__class__)))
@@ -81,7 +81,7 @@ class Element(DeclarativeType):
 
 class SimpleList(DeclarativeType):
     def __init__(self, *args, **kw):
-        super(SimpleList, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self._value = []
 
     def start(self, *args, **kw):
@@ -103,22 +103,22 @@ class ElementList(SimpleList):
 
 class MemberList(Element):
     def __init__(self, _member=None, _hint=None, *args, **kw):
-        message = 'Invalid `member` specification in {0}'.format(self.__class__.__name__)
+        message = f'Invalid `member` specification in {self.__class__.__name__}'
         assert 'member' not in kw, message
         if _member is None:
             if _hint is None:
-                super(MemberList, self).__init__(*args, member=ElementList(**kw))
+                super().__init__(*args, member=ElementList(**kw))
             else:
-                super(MemberList, self).__init__(_hint=_hint)
+                super().__init__(_hint=_hint)
         else:
             if _hint is None:
                 if issubclass(_member, DeclarativeType):
                     member = _member(**kw)
                 else:
                     member = ElementList(_member, **kw)
-                super(MemberList, self).__init__(*args, member=member)
+                super().__init__(*args, member=member)
             else:
-                message = 'Nonsensical {0} hint {1!r}'.format(self.__class__.__name__,
+                message = 'Nonsensical {} hint {!r}'.format(self.__class__.__name__,
                                                               _hint)
                 raise AssertionError(message)
 
@@ -129,10 +129,10 @@ class MemberList(Element):
             if isinstance(self._value.member, DeclarativeType):
                 self._value.member = []
             self._value = self._value.member
-        super(MemberList, self).teardown(*args, **kw)
+        super().teardown(*args, **kw)
 
 
-class ResponseFactory(object):
+class ResponseFactory:
     def __init__(self, scopes=None):
         self.scopes = [] if scopes is None else scopes
 
@@ -210,13 +210,13 @@ class ResponseElement(dict):
         return self._connection
 
     def __repr__(self):
-        render = lambda pair: '{0!s}: {1!r}'.format(*pair)
+        render = lambda pair: '{!s}: {!r}'.format(*pair)
         do_show = lambda pair: not pair[0].startswith('_')
         attrs = filter(do_show, self.__dict__.items())
         name = self.__class__.__name__
         if name.startswith('JIT_'):
-            name = '^{0}^'.format(self._name or '')
-        return '{0}{1!r}({2})'.format(
+            name = '^{}^'.format(self._name or '')
+        return '{}{!r}({})'.format(
             name, self.copy(), ', '.join(map(render, attrs)))
 
     def _type_for(self, name, attrs):
@@ -254,7 +254,7 @@ class Response(ResponseElement):
         if name == self._name:
             self.update(attrs)
         else:
-            return super(Response, self).startElement(name, attrs, connection)
+            return super().startElement(name, attrs, connection)
 
     @property
     def _result(self):
@@ -270,7 +270,7 @@ class ResponseResultList(Response):
 
     def __init__(self, *args, **kw):
         setattr(self, self._action + 'Result', ElementList(self._ResultClass))
-        super(ResponseResultList, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
 
 
 class FeedSubmissionInfo(ResponseElement):
@@ -356,7 +356,7 @@ class ComplexAmount(ResponseElement):
     _amount = 'Value'
 
     def __repr__(self):
-        return '{0} {1}'.format(self.CurrencyCode, getattr(self, self._amount))
+        return f'{self.CurrencyCode} {getattr(self, self._amount)}'
 
     def __float__(self):
         return float(getattr(self, self._amount))
@@ -367,15 +367,15 @@ class ComplexAmount(ResponseElement):
     @strip_namespace
     def startElement(self, name, attrs, connection):
         if name not in ('CurrencyCode', self._amount):
-            message = 'Unrecognized tag {0} in ComplexAmount'.format(name)
+            message = f'Unrecognized tag {name} in ComplexAmount'
             raise AssertionError(message)
-        return super(ComplexAmount, self).startElement(name, attrs, connection)
+        return super().startElement(name, attrs, connection)
 
     @strip_namespace
     def endElement(self, name, value, connection):
         if name == self._amount:
             value = Decimal(value)
-        super(ComplexAmount, self).endElement(name, value, connection)
+        super().endElement(name, value, connection)
 
 
 class ComplexMoney(ComplexAmount):
@@ -384,7 +384,7 @@ class ComplexMoney(ComplexAmount):
 
 class ComplexWeight(ResponseElement):
     def __repr__(self):
-        return '{0} {1}'.format(self.Value, self.Unit)
+        return f'{self.Value} {self.Unit}'
 
     def __float__(self):
         return float(self.Value)
@@ -395,15 +395,15 @@ class ComplexWeight(ResponseElement):
     @strip_namespace
     def startElement(self, name, attrs, connection):
         if name not in ('Unit', 'Value'):
-            message = 'Unrecognized tag {0} in ComplexWeight'.format(name)
+            message = f'Unrecognized tag {name} in ComplexWeight'
             raise AssertionError(message)
-        return super(ComplexWeight, self).startElement(name, attrs, connection)
+        return super().startElement(name, attrs, connection)
 
     @strip_namespace
     def endElement(self, name, value, connection):
         if name == 'Value':
             value = Decimal(value)
-        super(ComplexWeight, self).endElement(name, value, connection)
+        super().endElement(name, value, connection)
 
 
 class Dimension(ComplexType):
@@ -421,7 +421,7 @@ class ComplexDimensions(ResponseElement):
     @strip_namespace
     def startElement(self, name, attrs, connection):
         if name not in self._dimensions:
-            message = 'Unrecognized tag {0} in ComplexDimensions'.format(name)
+            message = f'Unrecognized tag {name} in ComplexDimensions'
             raise AssertionError(message)
         setattr(self, name, Dimension(attrs.copy()))
 
@@ -492,7 +492,7 @@ class ItemAttributes(AttributeSet):
                  'MediaType', 'OperatingSystem', 'Platform')
         for name in names:
             setattr(self, name, SimpleList())
-        super(ItemAttributes, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
 
 
 class VariationRelationship(ResponseElement):
@@ -612,7 +612,7 @@ class ProductCategory(ResponseElement):
 
     def __init__(self, *args, **kw):
         setattr(self, 'Parent', Element(ProductCategory))
-        super(ProductCategory, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
 
 
 class GetProductCategoriesResult(ResponseElement):

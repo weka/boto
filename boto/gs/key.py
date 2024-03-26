@@ -63,7 +63,7 @@ class Key(S3Key):
     """
 
     def __init__(self, bucket=None, name=None, generation=None):
-        super(Key, self).__init__(bucket=bucket, name=name)
+        super().__init__(bucket=bucket, name=name)
         self.generation = generation
         self.meta_generation = None
         self.cloud_hashes = {}
@@ -71,13 +71,13 @@ class Key(S3Key):
 
     def __repr__(self):
         if self.generation and self.metageneration:
-            ver_str = '#%s.%s' % (self.generation, self.metageneration)
+            ver_str = f'#{self.generation}.{self.metageneration}'
         else:
             ver_str = ''
         if self.bucket:
-            return '<Key: %s,%s%s>' % (self.bucket.name, self.name, ver_str)
+            return f'<Key: {self.bucket.name},{self.name}{ver_str}>'
         else:
-            return '<Key: None,%s%s>' % (self.name, ver_str)
+            return f'<Key: None,{self.name}{ver_str}>'
 
     def endElement(self, name, value, connection):
         if name == 'Key':
@@ -162,7 +162,7 @@ class Key(S3Key):
             if query_args:
                 query_args += '&'
             query_args += 'generation=%s' % self.generation
-        super(Key, self).open_read(headers=headers, query_args=query_args,
+        super().open_read(headers=headers, query_args=query_args,
                                    override_num_retries=override_num_retries,
                                    response_headers=response_headers)
 
@@ -776,7 +776,7 @@ class Key(S3Key):
             headers = kwargs.get('headers', {})
             headers['x-goog-if-generation-match'] = str(if_generation)
             kwargs['headers'] = headers
-        super(Key, self).set_contents_from_stream(*args, **kwargs)
+        super().set_contents_from_stream(*args, **kwargs)
 
     def set_acl(self, acl_or_str, headers=None, generation=None,
                  if_generation=None, if_metageneration=None):

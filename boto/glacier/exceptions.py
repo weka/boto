@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2012 Thomas Parslow http://almostobsolete.net/
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -39,7 +38,7 @@ class UnexpectedHTTPResponseError(Exception):
             msg = 'Expected %s, got (%d, %s)' % (expected_responses,
                                                  response.status,
                                                  self.body)
-        super(UnexpectedHTTPResponseError, self).__init__(msg)
+        super().__init__(msg)
 
 
 class ArchiveError(Exception):

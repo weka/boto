@@ -70,7 +70,7 @@ def assert_case_insensitive(f):
     return wrapper
 
 
-class _CallingFormat(object):
+class _CallingFormat:
 
     def get_bucket_server(self, server, bucket):
         return ''
@@ -103,7 +103,7 @@ class SubdomainCallingFormat(_CallingFormat):
 
     @assert_case_insensitive
     def get_bucket_server(self, server, bucket):
-        return '%s.%s' % (bucket, server)
+        return f'{bucket}.{server}'
 
 
 class VHostCallingFormat(_CallingFormat):
@@ -135,7 +135,7 @@ class ProtocolIndependentOrdinaryCallingFormat(OrdinaryCallingFormat):
         return url_base
 
 
-class Location(object):
+class Location:
 
     DEFAULT = ''  # US Classic Region
     EU = 'EU'  # Ireland
@@ -149,7 +149,7 @@ class Location(object):
     CNNorth1 = 'cn-north-1'
 
 
-class NoHostProvided(object):
+class NoHostProvided:
     # An identifying object to help determine whether the user provided a
     # ``host`` or not. Never instantiated.
     pass
@@ -180,12 +180,12 @@ class S3Connection(AWSAuthConnection):
             if host is None:
                 host = self.DefaultHost
                 no_host_provided = True
-        if isinstance(calling_format, six.string_types):
+        if isinstance(calling_format, str):
             calling_format=boto.utils.find_class(calling_format)()
         self.calling_format = calling_format
         self.bucket_class = bucket_class
         self.anon = anon
-        super(S3Connection, self).__init__(host,
+        super().__init__(host,
                 aws_access_key_id, aws_secret_access_key,
                 is_secure, port, proxy, proxy_port, proxy_user, proxy_pass,
                 debug=debug, https_connection_factory=https_connection_factory,
@@ -208,8 +208,7 @@ class S3Connection(AWSAuthConnection):
             return ['s3']
 
     def __iter__(self):
-        for bucket in self.get_all_buckets():
-            yield bucket
+        yield from self.get_all_buckets()
 
     def __contains__(self, bucket_name):
         return not (self.lookup(bucket_name) is None)
@@ -348,7 +347,7 @@ class S3Connection(AWSAuthConnection):
         fields.append({"name": "key", "value": key})
 
         # HTTPS protocol will be used if the secure HTTP option is enabled.
-        url = '%s://%s/' % (http_method,
+        url = '{}://{}/'.format(http_method,
                             self.calling_format.build_host(self.server_name(),
                                                            bucket_name))
 
@@ -403,7 +402,7 @@ class S3Connection(AWSAuthConnection):
             extra_qp.append("versionId=%s" % version_id)
         if response_headers:
             for k, v in response_headers.items():
-                extra_qp.append("%s=%s" % (k, urllib.parse.quote(v)))
+                extra_qp.append(f"{k}={urllib.parse.quote(v)}")
         if self.provider.security_token:
             headers['x-amz-security-token'] = self.provider.security_token
         if extra_qp:
@@ -425,7 +424,7 @@ class S3Connection(AWSAuthConnection):
                 if k.startswith(hdr_prefix):
                     # headers used for sig generation must be
                     # included in the url also.
-                    extra_qp.append("%s=%s" % (k, urllib.parse.quote(v)))
+                    extra_qp.append(f"{k}={urllib.parse.quote(v)}")
         if extra_qp:
             delimiter = '?' if not query_part else '&'
             query_part += delimiter + '&'.join(extra_qp)
@@ -664,7 +663,7 @@ class S3Connection(AWSAuthConnection):
             boto.log.debug('path=%s' % path)
             auth_path += '?' + query_args
             boto.log.debug('auth_path=%s' % auth_path)
-        return super(S3Connection, self).make_request(
+        return super().make_request(
             method, path, headers,
             data, host, auth_path, sender,
             override_num_retries=override_num_retries,

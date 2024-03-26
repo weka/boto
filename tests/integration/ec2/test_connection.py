@@ -134,7 +134,7 @@ class EC2ConnectionTest(unittest.TestCase):
         t = telnetlib.Telnet()
         try:
             t.open(instance.dns_name, 80)
-        except socket.error:
+        except OSError:
             pass
         # now open up port 80 and try again, it should work
         group.authorize('tcp', 80, 80, '0.0.0.0/0')
@@ -144,7 +144,7 @@ class EC2ConnectionTest(unittest.TestCase):
         group.revoke('tcp', 80, 80, '0.0.0.0/0')
         try:
             t.open(instance.dns_name, 80)
-        except socket.error:
+        except OSError:
             pass
         # now kill the instance and delete the security group
         instance.terminate()

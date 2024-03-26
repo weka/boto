@@ -3,12 +3,12 @@ from datetime import datetime
 from boto.compat import six
 
 
-class BaseObject(object):
+class BaseObject:
 
     def __repr__(self):
         result = self.__class__.__name__ + '{ '
         counter = 0
-        for key, value in six.iteritems(self.__dict__):
+        for key, value in self.__dict__.items():
             # first iteration no comma
             counter += 1
             if counter > 1:
@@ -42,7 +42,7 @@ class BaseObject(object):
 
 class Response(BaseObject):
     def __init__(self, response):
-        super(Response, self).__init__()
+        super().__init__()
 
         if response['ResponseMetadata']:
             self.response_metadata = ResponseMetadata(response['ResponseMetadata'])
@@ -52,14 +52,14 @@ class Response(BaseObject):
 
 class ResponseMetadata(BaseObject):
     def __init__(self, response):
-        super(ResponseMetadata, self).__init__()
+        super().__init__()
 
         self.request_id = str(response['RequestId'])
 
 
 class ApplicationDescription(BaseObject):
     def __init__(self, response):
-        super(ApplicationDescription, self).__init__()
+        super().__init__()
 
         self.application_name = str(response['ApplicationName'])
         self.configuration_templates = []
@@ -79,7 +79,7 @@ class ApplicationDescription(BaseObject):
 
 class ApplicationVersionDescription(BaseObject):
     def __init__(self, response):
-        super(ApplicationVersionDescription, self).__init__()
+        super().__init__()
 
         self.application_name = str(response['ApplicationName'])
         self.date_created = datetime.fromtimestamp(response['DateCreated'])
@@ -94,14 +94,14 @@ class ApplicationVersionDescription(BaseObject):
 
 class AutoScalingGroup(BaseObject):
     def __init__(self, response):
-        super(AutoScalingGroup, self).__init__()
+        super().__init__()
 
         self.name = str(response['Name'])
 
 
 class ConfigurationOptionDescription(BaseObject):
     def __init__(self, response):
-        super(ConfigurationOptionDescription, self).__init__()
+        super().__init__()
 
         self.change_severity = str(response['ChangeSeverity'])
         self.default_value = str(response['DefaultValue'])
@@ -125,7 +125,7 @@ class ConfigurationOptionDescription(BaseObject):
 
 class ConfigurationOptionSetting(BaseObject):
     def __init__(self, response):
-        super(ConfigurationOptionSetting, self).__init__()
+        super().__init__()
 
         self.namespace = str(response['Namespace'])
         self.option_name = str(response['OptionName'])
@@ -134,7 +134,7 @@ class ConfigurationOptionSetting(BaseObject):
 
 class ConfigurationSettingsDescription(BaseObject):
     def __init__(self, response):
-        super(ConfigurationSettingsDescription, self).__init__()
+        super().__init__()
 
         self.application_name = str(response['ApplicationName'])
         self.date_created = datetime.fromtimestamp(response['DateCreated'])
@@ -153,7 +153,7 @@ class ConfigurationSettingsDescription(BaseObject):
 
 class EnvironmentDescription(BaseObject):
     def __init__(self, response):
-        super(EnvironmentDescription, self).__init__()
+        super().__init__()
 
         self.application_name = str(response['ApplicationName'])
         self.cname = str(response['CNAME'])
@@ -176,7 +176,7 @@ class EnvironmentDescription(BaseObject):
 
 class EnvironmentInfoDescription(BaseObject):
     def __init__(self, response):
-        super(EnvironmentInfoDescription, self).__init__()
+        super().__init__()
 
         self.ec2_instance_id = str(response['Ec2InstanceId'])
         self.info_type = str(response['InfoType'])
@@ -186,7 +186,7 @@ class EnvironmentInfoDescription(BaseObject):
 
 class EnvironmentResourceDescription(BaseObject):
     def __init__(self, response):
-        super(EnvironmentResourceDescription, self).__init__()
+        super().__init__()
 
         self.auto_scaling_groups = []
         if response['AutoScalingGroups']:
@@ -218,7 +218,7 @@ class EnvironmentResourceDescription(BaseObject):
 
 class EnvironmentResourcesDescription(BaseObject):
     def __init__(self, response):
-        super(EnvironmentResourcesDescription, self).__init__()
+        super().__init__()
 
         if response['LoadBalancer']:
             self.load_balancer = LoadBalancerDescription(response['LoadBalancer'])
@@ -228,7 +228,7 @@ class EnvironmentResourcesDescription(BaseObject):
 
 class EventDescription(BaseObject):
     def __init__(self, response):
-        super(EventDescription, self).__init__()
+        super().__init__()
 
         self.application_name = str(response['ApplicationName'])
         self.environment_name = str(response['EnvironmentName'])
@@ -242,21 +242,21 @@ class EventDescription(BaseObject):
 
 class Instance(BaseObject):
     def __init__(self, response):
-        super(Instance, self).__init__()
+        super().__init__()
 
         self.id = str(response['Id'])
 
 
 class LaunchConfiguration(BaseObject):
     def __init__(self, response):
-        super(LaunchConfiguration, self).__init__()
+        super().__init__()
 
         self.name = str(response['Name'])
 
 
 class Listener(BaseObject):
     def __init__(self, response):
-        super(Listener, self).__init__()
+        super().__init__()
 
         self.port = int(response['Port']) if response['Port'] else None
         self.protocol = str(response['Protocol'])
@@ -264,14 +264,14 @@ class Listener(BaseObject):
 
 class LoadBalancer(BaseObject):
     def __init__(self, response):
-        super(LoadBalancer, self).__init__()
+        super().__init__()
 
         self.name = str(response['Name'])
 
 
 class LoadBalancerDescription(BaseObject):
     def __init__(self, response):
-        super(LoadBalancerDescription, self).__init__()
+        super().__init__()
 
         self.domain = str(response['Domain'])
         self.listeners = []
@@ -284,7 +284,7 @@ class LoadBalancerDescription(BaseObject):
 
 class OptionRestrictionRegex(BaseObject):
     def __init__(self, response):
-        super(OptionRestrictionRegex, self).__init__()
+        super().__init__()
 
         self.label = response['Label']
         self.pattern = response['Pattern']
@@ -292,7 +292,7 @@ class OptionRestrictionRegex(BaseObject):
 
 class SolutionStackDescription(BaseObject):
     def __init__(self, response):
-        super(SolutionStackDescription, self).__init__()
+        super().__init__()
 
         self.permitted_file_types = []
         if response['PermittedFileTypes']:
@@ -304,7 +304,7 @@ class SolutionStackDescription(BaseObject):
 
 class S3Location(BaseObject):
     def __init__(self, response):
-        super(S3Location, self).__init__()
+        super().__init__()
 
         self.s3_bucket = str(response['S3Bucket'])
         self.s3_key = str(response['S3Key'])
@@ -312,14 +312,14 @@ class S3Location(BaseObject):
 
 class Trigger(BaseObject):
     def __init__(self, response):
-        super(Trigger, self).__init__()
+        super().__init__()
 
         self.name = str(response['Name'])
 
 
 class ValidationMessage(BaseObject):
     def __init__(self, response):
-        super(ValidationMessage, self).__init__()
+        super().__init__()
 
         self.message = str(response['Message'])
         self.namespace = str(response['Namespace'])
@@ -331,7 +331,7 @@ class ValidationMessage(BaseObject):
 class CheckDNSAvailabilityResponse(Response):
     def __init__(self, response):
         response = response['CheckDNSAvailabilityResponse']
-        super(CheckDNSAvailabilityResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['CheckDNSAvailabilityResult']
         self.fully_qualified_cname = str(response['FullyQualifiedCNAME'])
@@ -346,7 +346,7 @@ class CheckDnsAvailabilityResponse(CheckDNSAvailabilityResponse): pass
 class CreateApplicationResponse(Response):
     def __init__(self, response):
         response = response['CreateApplicationResponse']
-        super(CreateApplicationResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['CreateApplicationResult']
         if response['Application']:
@@ -358,7 +358,7 @@ class CreateApplicationResponse(Response):
 class CreateApplicationVersionResponse(Response):
     def __init__(self, response):
         response = response['CreateApplicationVersionResponse']
-        super(CreateApplicationVersionResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['CreateApplicationVersionResult']
         if response['ApplicationVersion']:
@@ -370,7 +370,7 @@ class CreateApplicationVersionResponse(Response):
 class CreateConfigurationTemplateResponse(Response):
     def __init__(self, response):
         response = response['CreateConfigurationTemplateResponse']
-        super(CreateConfigurationTemplateResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['CreateConfigurationTemplateResult']
         self.application_name = str(response['ApplicationName'])
@@ -391,7 +391,7 @@ class CreateConfigurationTemplateResponse(Response):
 class CreateEnvironmentResponse(Response):
     def __init__(self, response):
         response = response['CreateEnvironmentResponse']
-        super(CreateEnvironmentResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['CreateEnvironmentResult']
         self.application_name = str(response['ApplicationName'])
@@ -416,7 +416,7 @@ class CreateEnvironmentResponse(Response):
 class CreateStorageLocationResponse(Response):
     def __init__(self, response):
         response = response['CreateStorageLocationResponse']
-        super(CreateStorageLocationResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['CreateStorageLocationResult']
         self.s3_bucket = str(response['S3Bucket'])
@@ -425,31 +425,31 @@ class CreateStorageLocationResponse(Response):
 class DeleteApplicationResponse(Response):
     def __init__(self, response):
         response = response['DeleteApplicationResponse']
-        super(DeleteApplicationResponse, self).__init__(response)
+        super().__init__(response)
 
 
 class DeleteApplicationVersionResponse(Response):
     def __init__(self, response):
         response = response['DeleteApplicationVersionResponse']
-        super(DeleteApplicationVersionResponse, self).__init__(response)
+        super().__init__(response)
 
 
 class DeleteConfigurationTemplateResponse(Response):
     def __init__(self, response):
         response = response['DeleteConfigurationTemplateResponse']
-        super(DeleteConfigurationTemplateResponse, self).__init__(response)
+        super().__init__(response)
 
 
 class DeleteEnvironmentConfigurationResponse(Response):
     def __init__(self, response):
         response = response['DeleteEnvironmentConfigurationResponse']
-        super(DeleteEnvironmentConfigurationResponse, self).__init__(response)
+        super().__init__(response)
 
 
 class DescribeApplicationVersionsResponse(Response):
     def __init__(self, response):
         response = response['DescribeApplicationVersionsResponse']
-        super(DescribeApplicationVersionsResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['DescribeApplicationVersionsResult']
         self.application_versions = []
@@ -462,7 +462,7 @@ class DescribeApplicationVersionsResponse(Response):
 class DescribeApplicationsResponse(Response):
     def __init__(self, response):
         response = response['DescribeApplicationsResponse']
-        super(DescribeApplicationsResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['DescribeApplicationsResult']
         self.applications = []
@@ -475,7 +475,7 @@ class DescribeApplicationsResponse(Response):
 class DescribeConfigurationOptionsResponse(Response):
     def __init__(self, response):
         response = response['DescribeConfigurationOptionsResponse']
-        super(DescribeConfigurationOptionsResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['DescribeConfigurationOptionsResult']
         self.options = []
@@ -489,7 +489,7 @@ class DescribeConfigurationOptionsResponse(Response):
 class DescribeConfigurationSettingsResponse(Response):
     def __init__(self, response):
         response = response['DescribeConfigurationSettingsResponse']
-        super(DescribeConfigurationSettingsResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['DescribeConfigurationSettingsResult']
         self.configuration_settings = []
@@ -502,7 +502,7 @@ class DescribeConfigurationSettingsResponse(Response):
 class DescribeEnvironmentResourcesResponse(Response):
     def __init__(self, response):
         response = response['DescribeEnvironmentResourcesResponse']
-        super(DescribeEnvironmentResourcesResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['DescribeEnvironmentResourcesResult']
         if response['EnvironmentResources']:
@@ -514,7 +514,7 @@ class DescribeEnvironmentResourcesResponse(Response):
 class DescribeEnvironmentsResponse(Response):
     def __init__(self, response):
         response = response['DescribeEnvironmentsResponse']
-        super(DescribeEnvironmentsResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['DescribeEnvironmentsResult']
         self.environments = []
@@ -527,7 +527,7 @@ class DescribeEnvironmentsResponse(Response):
 class DescribeEventsResponse(Response):
     def __init__(self, response):
         response = response['DescribeEventsResponse']
-        super(DescribeEventsResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['DescribeEventsResult']
         self.events = []
@@ -541,7 +541,7 @@ class DescribeEventsResponse(Response):
 class ListAvailableSolutionStacksResponse(Response):
     def __init__(self, response):
         response = response['ListAvailableSolutionStacksResponse']
-        super(ListAvailableSolutionStacksResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['ListAvailableSolutionStacksResult']
         self.solution_stack_details = []
@@ -559,25 +559,25 @@ class ListAvailableSolutionStacksResponse(Response):
 class RebuildEnvironmentResponse(Response):
     def __init__(self, response):
         response = response['RebuildEnvironmentResponse']
-        super(RebuildEnvironmentResponse, self).__init__(response)
+        super().__init__(response)
 
 
 class RequestEnvironmentInfoResponse(Response):
     def __init__(self, response):
         response = response['RequestEnvironmentInfoResponse']
-        super(RequestEnvironmentInfoResponse, self).__init__(response)
+        super().__init__(response)
 
 
 class RestartAppServerResponse(Response):
     def __init__(self, response):
         response = response['RestartAppServerResponse']
-        super(RestartAppServerResponse, self).__init__(response)
+        super().__init__(response)
 
 
 class RetrieveEnvironmentInfoResponse(Response):
     def __init__(self, response):
         response = response['RetrieveEnvironmentInfoResponse']
-        super(RetrieveEnvironmentInfoResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['RetrieveEnvironmentInfoResult']
         self.environment_info = []
@@ -590,7 +590,7 @@ class RetrieveEnvironmentInfoResponse(Response):
 class SwapEnvironmentCNAMEsResponse(Response):
     def __init__(self, response):
         response = response['SwapEnvironmentCNAMEsResponse']
-        super(SwapEnvironmentCNAMEsResponse, self).__init__(response)
+        super().__init__(response)
 
 
 class SwapEnvironmentCnamesResponse(SwapEnvironmentCNAMEsResponse): pass
@@ -599,7 +599,7 @@ class SwapEnvironmentCnamesResponse(SwapEnvironmentCNAMEsResponse): pass
 class TerminateEnvironmentResponse(Response):
     def __init__(self, response):
         response = response['TerminateEnvironmentResponse']
-        super(TerminateEnvironmentResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['TerminateEnvironmentResult']
         self.application_name = str(response['ApplicationName'])
@@ -624,7 +624,7 @@ class TerminateEnvironmentResponse(Response):
 class UpdateApplicationResponse(Response):
     def __init__(self, response):
         response = response['UpdateApplicationResponse']
-        super(UpdateApplicationResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['UpdateApplicationResult']
         if response['Application']:
@@ -636,7 +636,7 @@ class UpdateApplicationResponse(Response):
 class UpdateApplicationVersionResponse(Response):
     def __init__(self, response):
         response = response['UpdateApplicationVersionResponse']
-        super(UpdateApplicationVersionResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['UpdateApplicationVersionResult']
         if response['ApplicationVersion']:
@@ -648,7 +648,7 @@ class UpdateApplicationVersionResponse(Response):
 class UpdateConfigurationTemplateResponse(Response):
     def __init__(self, response):
         response = response['UpdateConfigurationTemplateResponse']
-        super(UpdateConfigurationTemplateResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['UpdateConfigurationTemplateResult']
         self.application_name = str(response['ApplicationName'])
@@ -669,7 +669,7 @@ class UpdateConfigurationTemplateResponse(Response):
 class UpdateEnvironmentResponse(Response):
     def __init__(self, response):
         response = response['UpdateEnvironmentResponse']
-        super(UpdateEnvironmentResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['UpdateEnvironmentResult']
         self.application_name = str(response['ApplicationName'])
@@ -694,7 +694,7 @@ class UpdateEnvironmentResponse(Response):
 class ValidateConfigurationSettingsResponse(Response):
     def __init__(self, response):
         response = response['ValidateConfigurationSettingsResponse']
-        super(ValidateConfigurationSettingsResponse, self).__init__(response)
+        super().__init__(response)
 
         response = response['ValidateConfigurationSettingsResult']
         self.messages = []

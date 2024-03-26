@@ -79,7 +79,7 @@ class Layer1(AWSAuthConnection):
                     break
 
         self.region = region
-        super(Layer1, self).__init__(self.region.endpoint,
+        super().__init__(self.region.endpoint,
                                    aws_access_key_id, aws_secret_access_key,
                                    is_secure, port, proxy, proxy_port,
                                    debug, session_token, profile_name=profile_name)
@@ -121,7 +121,7 @@ class Layer1(AWSAuthConnection):
         """
         :raises: ``SWFResponseError`` if response status is not 200.
         """
-        headers = {'X-Amz-Target': '%s.%s' % (self.ServiceName, action),
+        headers = {'X-Amz-Target': f'{self.ServiceName}.{action}',
                    'Host': self.region.endpoint,
                    'Content-Type': 'application/json; charset=UTF-8',
                    'Content-Encoding': 'amz-1.0',

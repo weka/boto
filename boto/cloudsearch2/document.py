@@ -59,7 +59,7 @@ class ContentTooLongError(Exception):
     pass
 
 
-class DocumentServiceConnection(object):
+class DocumentServiceConnection:
     """
     A CloudSearch document service.
 
@@ -183,7 +183,7 @@ class DocumentServiceConnection(object):
         return self.domain_connection.upload_documents(sdf, 'application/json')
 
     def _commit_without_auth(self, sdf, api_version):
-        url = "http://%s/%s/documents/batch" % (self.endpoint, api_version)
+        url = f"http://{self.endpoint}/{api_version}/documents/batch"
 
         # Keep-alive is automatic in a post-1.0 requests world.
         session = requests.Session()
@@ -230,7 +230,7 @@ class DocumentServiceConnection(object):
         return CommitResponse(r, self, sdf, signed_request=self.sign_request)
 
 
-class CommitResponse(object):
+class CommitResponse:
     """Wrapper for response to Cloudsearch document batch commit.
 
     :type response: :class:`requests.models.Response`
@@ -259,8 +259,8 @@ class CommitResponse(object):
             try:
                 self.content = json.loads(_body)
             except:
-                boto.log.error('Error indexing documents.\nResponse Content:\n{0}'
-                               '\n\nSDF:\n{1}'.format(_body, self.sdf))
+                boto.log.error('Error indexing documents.\nResponse Content:\n{}'
+                               '\n\nSDF:\n{}'.format(_body, self.sdf))
                 raise boto.exception.BotoServerError(self.response.status_code, '',
                                                      body=_body)
 
@@ -308,7 +308,7 @@ class CommitResponse(object):
             # attach the self.errors to the exceptions if we already spent
             # time and effort collecting them out of the response.
             exc = CommitMismatchError(
-                'Incorrect number of {0}s returned. Commit: {1} Response: {2}'
+                'Incorrect number of {}s returned. Commit: {} Response: {}'
                 .format(type_, commit_num, response_num)
             )
             exc.errors = self.errors

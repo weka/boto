@@ -32,7 +32,7 @@ class TestRDS2Connection(AWSMockServiceTestCase):
     connection_class = RDSConnection
 
     def setUp(self):
-        super(TestRDS2Connection, self).setUp()
+        super().setUp()
 
     def default_body(self):
         return """{

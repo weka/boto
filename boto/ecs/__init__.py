@@ -44,7 +44,7 @@ class ECSConnection(AWSQueryConnection):
                  proxy_user=None, proxy_pass=None, host='ecs.amazonaws.com',
                  debug=0, https_connection_factory=None, path='/',
                  security_token=None, profile_name=None):
-        super(ECSConnection, self).__init__(aws_access_key_id, aws_secret_access_key,
+        super().__init__(aws_access_key_id, aws_secret_access_key,
                                     is_secure, port, proxy, proxy_port, proxy_user, proxy_pass,
                                     host, debug, https_connection_factory, path,
                                     security_token=security_token,
@@ -66,7 +66,7 @@ class ECSConnection(AWSQueryConnection):
         boto.log.debug(body)
 
         if response.status != 200:
-            boto.log.error('%s %s' % (response.status, response.reason))
+            boto.log.error(f'{response.status} {response.reason}')
             boto.log.error('%s' % body)
             raise BotoServerError(response.status, response.reason, body)
 

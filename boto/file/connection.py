@@ -23,7 +23,7 @@
 
 from boto.file.bucket import Bucket
 
-class FileConnection(object):
+class FileConnection:
 
     def __init__(self, file_storage_uri):
         # FileConnections are per-file storage URI.

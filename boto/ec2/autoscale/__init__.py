@@ -103,7 +103,7 @@ class AutoScaleConnection(AWSQueryConnection):
                                 AutoScaleConnection)
         self.region = region
         self.use_block_device_types = use_block_device_types
-        super(AutoScaleConnection, self).__init__(aws_access_key_id,
+        super().__init__(aws_access_key_id,
                                                   aws_secret_access_key,
                                                   is_secure, port, proxy, proxy_port,
                                                   proxy_user, proxy_pass,
@@ -136,13 +136,13 @@ class AutoScaleConnection(AWSQueryConnection):
         # different from EC2 list params
         for i in range(1, len(items) + 1):
             if isinstance(items[i - 1], dict):
-                for k, v in six.iteritems(items[i - 1]):
+                for k, v in items[i - 1].items():
                     if isinstance(v, dict):
-                        for kk, vv in six.iteritems(v):
+                        for kk, vv in v.items():
                             params['%s.member.%d.%s.%s' % (label, i, k, kk)] = vv
                     else:
                         params['%s.member.%d.%s' % (label, i, k)] = v
-            elif isinstance(items[i - 1], six.string_types):
+            elif isinstance(items[i - 1], str):
                 params['%s.member.%d' % (label, i)] = items[i - 1]
 
     def _update_group(self, op, as_group):
@@ -243,7 +243,7 @@ class AutoScaleConnection(AWSQueryConnection):
             params['KeyName'] = launch_config.key_name
         if launch_config.user_data:
             user_data = launch_config.user_data
-            if isinstance(user_data, six.text_type):
+            if isinstance(user_data, str):
                 user_data = user_data.encode('utf-8')
             params['UserData'] = base64.b64encode(user_data).decode('utf-8')
         if launch_config.kernel_id:

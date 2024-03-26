@@ -75,7 +75,7 @@ class ProfileNotFoundError(ValueError):
     pass
 
 
-class Provider(object):
+class Provider:
 
     CredentialMap = {
         'aws':    ('aws_access_key_id', 'aws_secret_access_key',
@@ -434,7 +434,7 @@ class Provider(object):
         return access_key, secret_key, security_token, expires_at
 
     def _convert_key_to_str(self, key):
-        if isinstance(key, six.text_type):
+        if isinstance(key, str):
             # the secret key must be bytes and not unicode to work
             #  properly with hmac.new (see http://bugs.python.org/issue5285)
             return str(key)

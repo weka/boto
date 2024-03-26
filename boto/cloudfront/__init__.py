@@ -44,7 +44,7 @@ class CloudFrontConnection(AWSAuthConnection):
                  port=None, proxy=None, proxy_port=None,
                  host=DefaultHost, debug=0, security_token=None,
                  validate_certs=True, profile_name=None, https_connection_factory=None):
-        super(CloudFrontConnection, self).__init__(host,
+        super().__init__(host,
                                    aws_access_key_id, aws_secret_access_key,
                                    True, port, proxy, proxy_port, debug=debug,
                                    security_token=security_token,
@@ -68,7 +68,7 @@ class CloudFrontConnection(AWSAuthConnection):
                          result_set_kwargs=None):
         if not tags:
             tags = [('DistributionSummary', DistributionSummary)]
-        response = self.make_request('GET', '/%s/%s' % (self.Version,
+        response = self.make_request('GET', '/{}/{}'.format(self.Version,
                                                         resource))
         body = response.read()
         boto.log.debug(body)
@@ -82,7 +82,7 @@ class CloudFrontConnection(AWSAuthConnection):
         return rs
 
     def _get_info(self, id, resource, dist_class):
-        uri = '/%s/%s/%s' % (self.Version, resource, id)
+        uri = f'/{self.Version}/{resource}/{id}'
         response = self.make_request('GET', uri)
         body = response.read()
         boto.log.debug(body)
@@ -98,7 +98,7 @@ class CloudFrontConnection(AWSAuthConnection):
         return d
 
     def _get_config(self, id, resource, config_class):
-        uri = '/%s/%s/%s/config' % (self.Version, resource, id)
+        uri = f'/{self.Version}/{resource}/{id}/config'
         response = self.make_request('GET', uri)
         body = response.read()
         boto.log.debug(body)
@@ -115,7 +115,7 @@ class CloudFrontConnection(AWSAuthConnection):
             resource = 'streaming-distribution'
         else:
             resource = 'distribution'
-        uri = '/%s/%s/%s/config' % (self.Version, resource, distribution_id)
+        uri = f'/{self.Version}/{resource}/{distribution_id}/config'
         headers = {'If-Match': etag, 'Content-Type': 'text/xml'}
         response = self.make_request('PUT', uri, headers, config.to_xml())
         body = response.read()
@@ -125,7 +125,7 @@ class CloudFrontConnection(AWSAuthConnection):
         return self.get_etag(response)
 
     def _create_object(self, config, resource, dist_class):
-        response = self.make_request('POST', '/%s/%s' % (self.Version,
+        response = self.make_request('POST', '/{}/{}'.format(self.Version,
                                                          resource),
                                      {'Content-Type': 'text/xml'},
                                      data=config.to_xml())
@@ -141,7 +141,7 @@ class CloudFrontConnection(AWSAuthConnection):
             raise CloudFrontServerError(response.status, response.reason, body)
 
     def _delete_object(self, id, etag, resource):
-        uri = '/%s/%s/%s' % (self.Version, resource, id)
+        uri = f'/{self.Version}/{resource}/{id}'
         response = self.make_request('DELETE', uri, {'If-Match': etag})
         body = response.read()
         boto.log.debug(body)
@@ -249,7 +249,7 @@ class CloudFrontConnection(AWSAuthConnection):
         if not isinstance(paths, InvalidationBatch):
             paths = InvalidationBatch(paths)
         paths.connection = self
-        uri = '/%s/distribution/%s/invalidation' % (self.Version,
+        uri = '/{}/distribution/{}/invalidation'.format(self.Version,
                                                     distribution_id)
         response = self.make_request('POST', uri,
                                      {'Content-Type': 'text/xml'},
@@ -264,7 +264,7 @@ class CloudFrontConnection(AWSAuthConnection):
 
     def invalidation_request_status(self, distribution_id,
                                      request_id, caller_reference=None):
-        uri = '/%s/distribution/%s/invalidation/%s' % (self.Version,
+        uri = '/{}/distribution/{}/invalidation/{}'.format(self.Version,
                                                        distribution_id,
                                                        request_id)
         response = self.make_request('GET', uri, {'Content-Type': 'text/xml'})
@@ -317,7 +317,7 @@ class CloudFrontConnection(AWSAuthConnection):
         if params:
             uri += '?%s=%s' % params.popitem()
             for k, v in params.items():
-                uri += '&%s=%s' % (k, v)
+                uri += f'&{k}={v}'
         tags=[('InvalidationSummary', InvalidationSummary)]
         rs_class = InvalidationListResultSet
         rs_kwargs = dict(connection=self, distribution_id=distribution_id,

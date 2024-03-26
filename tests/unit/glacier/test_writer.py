@@ -24,7 +24,7 @@ import itertools
 from boto.compat import StringIO
 
 from tests.unit import unittest
-from mock import (
+from unittest.mock import (
     call,
     Mock,
     sentinel,
@@ -90,7 +90,7 @@ def check_mock_vault_calls(vault, upload_part_calls, data_tree_hashes,
 
 class TestWriter(unittest.TestCase):
     def setUp(self):
-        super(TestWriter, self).setUp()
+        super().setUp()
         self.vault = create_mock_vault()
         self.chunk_size = 2 # power of 2
         self.part_size = 4 # power of 2
@@ -130,7 +130,7 @@ class TestWriter(unittest.TestCase):
     def test_returns_archive_id(self):
         self.writer.write(b'1')
         self.writer.close()
-        self.assertEquals(sentinel.archive_id, self.writer.get_archive_id())
+        self.assertEqual(sentinel.archive_id, self.writer.get_archive_id())
 
     def test_current_tree_hash(self):
         self.writer.write(b'1234')
@@ -178,12 +178,12 @@ class TestWriter(unittest.TestCase):
         self.assertEqual(final_size, self.writer.current_uploaded_size)
 
     def test_upload_id(self):
-        self.assertEquals(sentinel.upload_id, self.writer.upload_id)
+        self.assertEqual(sentinel.upload_id, self.writer.upload_id)
 
 
 class TestResume(unittest.TestCase):
     def setUp(self):
-        super(TestResume, self).setUp()
+        super().setUp()
         self.vault = create_mock_vault()
         self.chunk_size = 2 # power of 2
         self.part_size = 4 # power of 2
@@ -217,13 +217,13 @@ class TestResume(unittest.TestCase):
         self.check_no_resume(b'12345678')
 
     def test_one_part_resume(self):
-        self.check_no_resume(b'1234', resume_set=set([0]))
+        self.check_no_resume(b'1234', resume_set={0})
 
     def test_two_parts_one_resume(self):
-        self.check_no_resume(b'12345678', resume_set=set([1]))
+        self.check_no_resume(b'12345678', resume_set={1})
 
     def test_returns_archive_id(self):
         archive_id = resume_file_upload(
             self.vault, sentinel.upload_id, self.part_size, StringIO('1'), {},
             self.chunk_size)
-        self.assertEquals(sentinel.archive_id, archive_id)
+        self.assertEqual(sentinel.archive_id, archive_id)

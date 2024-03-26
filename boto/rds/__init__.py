@@ -20,20 +20,21 @@
 # IN THE SOFTWARE.
 #
 
-import urllib
+import urllib.parse
+
 from boto.connection import AWSQueryConnection
 from boto.rds.dbinstance import DBInstance
 from boto.rds.dbsecuritygroup import DBSecurityGroup
-from boto.rds.optiongroup  import OptionGroup, OptionGroupOption
-from boto.rds.parametergroup import ParameterGroup
 from boto.rds.dbsnapshot import DBSnapshot
-from boto.rds.event import Event
-from boto.rds.regioninfo import RDSRegionInfo
 from boto.rds.dbsubnetgroup import DBSubnetGroup
-from boto.rds.vpcsecuritygroupmembership import VPCSecurityGroupMembership
-from boto.regioninfo import get_regions
-from boto.regioninfo import connect
+from boto.rds.event import Event
 from boto.rds.logfile import LogFile, LogFileObject
+from boto.rds.optiongroup import OptionGroup, OptionGroupOption
+from boto.rds.parametergroup import ParameterGroup
+from boto.rds.regioninfo import RDSRegionInfo
+from boto.rds.vpcsecuritygroupmembership import VPCSecurityGroupMembership
+from boto.regioninfo import connect
+from boto.regioninfo import get_regions
 
 
 def regions():
@@ -86,7 +87,7 @@ class RDSConnection(AWSQueryConnection):
             region = RDSRegionInfo(self, self.DefaultRegionName,
                                    self.DefaultRegionEndpoint)
         self.region = region
-        super(RDSConnection, self).__init__(aws_access_key_id,
+        super().__init__(aws_access_key_id,
                                     aws_secret_access_key,
                                     is_secure, port, proxy, proxy_port,
                                     proxy_user, proxy_pass,
@@ -989,7 +990,7 @@ class RDSConnection(AWSQueryConnection):
         if ec2_security_group_owner_id:
             params['EC2SecurityGroupOwnerId'] = ec2_security_group_owner_id
         if cidr_ip:
-            params['CIDRIP'] = urllib.quote(cidr_ip)
+            params['CIDRIP'] = urllib.parse.quote(cidr_ip)
         return self.get_object('AuthorizeDBSecurityGroupIngress', params,
                                DBSecurityGroup)
 

@@ -29,7 +29,7 @@ from boto.ec2.ec2object import EC2Object
 class SpotPriceHistory(EC2Object):
 
     def __init__(self, connection=None):
-        super(SpotPriceHistory, self).__init__(connection)
+        super().__init__(connection)
         self.price = 0.0
         self.instance_type = None
         self.product_description = None
@@ -37,7 +37,7 @@ class SpotPriceHistory(EC2Object):
         self.availability_zone = None
 
     def __repr__(self):
-        return 'SpotPriceHistory(%s):%2f' % (self.instance_type, self.price)
+        return f'SpotPriceHistory({self.instance_type}):{self.price:2f}'
 
     def endElement(self, name, value, connection):
         if name == 'instanceType':

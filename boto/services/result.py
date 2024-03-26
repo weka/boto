@@ -24,7 +24,7 @@ from datetime import datetime, timedelta
 from boto.utils import parse_ts
 import boto
 
-class ResultProcessor(object):
+class ResultProcessor:
 
     LogFileName = 'log.csv'
 
@@ -83,7 +83,7 @@ class ResultProcessor(object):
                 key_name = output.split(';')[0]
                 key = bucket.lookup(key_name)
                 file_name = os.path.join(path, key_name)
-                print('retrieving file: %s to %s' % (key_name, file_name))
+                print(f'retrieving file: {key_name} to {file_name}')
                 key.get_contents_to_filename(file_name)
             self.num_files += 1
 
@@ -107,7 +107,7 @@ class ResultProcessor(object):
             print('No output queue or domain, just retrieving files from output_bucket')
             for key in bucket:
                 file_name = os.path.join(path, key)
-                print('retrieving file: %s to %s' % (key, file_name))
+                print(f'retrieving file: {key} to {file_name}')
                 key.get_contents_to_filename(file_name)
                 self.num_files + 1
 

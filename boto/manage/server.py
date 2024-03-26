@@ -40,7 +40,7 @@ InstanceTypes = ['m1.small', 'm1.large', 'm1.xlarge',
                  'c1.medium', 'c1.xlarge',
                  'm2.2xlarge', 'm2.4xlarge']
 
-class Bundler(object):
+class Bundler:
 
     def __init__(self, server, uname='root'):
         from boto.manage.cmdshell import SSHClient
@@ -64,7 +64,7 @@ class Bundler(object):
         if self.uname != 'root':
             command = "sudo "
         command += 'ec2-bundle-vol '
-        command += '-c %s -k %s ' % (self.remote_cert_file, self.remote_key_file)
+        command += f'-c {self.remote_cert_file} -k {self.remote_key_file} '
         command += '-u %s ' % self.server._reservation.owner_id
         command += '-p %s ' % prefix
         command += '-s %d ' % size
@@ -122,10 +122,10 @@ class Bundler(object):
         print('\t%s' % t[1])
         print('...complete!')
         print('registering image...')
-        self.image_id = self.server.ec2.register_image(name=prefix, image_location='%s/%s.manifest.xml' % (bucket, prefix))
+        self.image_id = self.server.ec2.register_image(name=prefix, image_location=f'{bucket}/{prefix}.manifest.xml')
         return self.image_id
 
-class CommandLineGetter(object):
+class CommandLineGetter:
 
     def get_ami_list(self):
         my_amis = []
@@ -395,7 +395,7 @@ class Server(Model):
         return servers
 
     def __init__(self, id=None, **kw):
-        super(Server, self).__init__(id, **kw)
+        super().__init__(id, **kw)
         self.ssh_key_file = None
         self.ec2 = None
         self._cmdshell = None
@@ -484,14 +484,14 @@ class Server(Model):
         return kn
 
     def put(self):
-        super(Server, self).put()
+        super().put()
         self._setup_ec2()
 
     def delete(self):
         if self.production:
             raise ValueError("Can't delete a production server")
         #self.stop()
-        super(Server, self).delete()
+        super().delete()
 
     def stop(self):
         if self.production:

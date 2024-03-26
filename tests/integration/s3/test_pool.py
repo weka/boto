@@ -23,7 +23,6 @@
 """
 Some multi-threading tests of boto in a greenlet environment.
 """
-from __future__ import print_function
 
 import boto
 import time
@@ -97,7 +96,7 @@ def test_close_connections():
 # one read() call on the socket won't read the whole thing.  
 BIG_SIZE = 10000
 
-class WriteAndCount(object):
+class WriteAndCount:
 
     """
     A file-like object that counts the number of characters written.
@@ -120,7 +119,7 @@ def read_big_object(s3, bucket, name, count):
         assert out.size == BIG_SIZE
         print("    pool size:", s3._pool.size())
 
-class LittleQuerier(object):
+class LittleQuerier:
 
     """
     An object that manages a thread that keeps pulling down small

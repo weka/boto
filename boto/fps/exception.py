@@ -17,7 +17,7 @@ class ResponseError(BotoServerError):
     retry = False
 
     def __repr__(self):
-        return '{0}({1}, {2},\n\t{3})'.format(self.__class__.__name__,
+        return '{}({}, {},\n\t{})'.format(self.__class__.__name__,
                                               self.status, self.reason,
                                               self.error_message)
 

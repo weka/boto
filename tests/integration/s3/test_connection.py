@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2006-2011 Mitch Garnaat http://garnaat.org/
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -136,7 +135,7 @@ class S3ConnectionTest (unittest.TestCase):
         mdval2 = 'This is the second metadata value'
         k.set_metadata(mdkey2, mdval2)
         # try a unicode metadata value
-        mdval3 = u'föö'
+        mdval3 = 'föö'
         mdkey3 = 'meta3'
         k.set_metadata(mdkey3, mdval3)
         k.set_contents_from_string(s1)

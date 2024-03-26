@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2012 Thomas Parslow http://almostobsolete.net/
 # Copyright (c) 2012 Robie Basak <robie@justgohome.co.uk>
 #
@@ -38,7 +37,7 @@ MAXIMUM_ARCHIVE_SIZE = 10000 * 4 * _GIGABYTE
 MAXIMUM_NUMBER_OF_PARTS = 10000
 
 
-class Vault(object):
+class Vault:
 
     DefaultPartSize = DEFAULT_PART_SIZE
     SingleOperationThreshold = 100 * _MEGABYTE
@@ -180,7 +179,7 @@ class Vault(object):
 
     @staticmethod
     def _range_string_to_part_index(range_string, part_size):
-        start, inside_end = [int(value) for value in range_string.split('-')]
+        start, inside_end = (int(value) for value in range_string.split('-'))
         end = inside_end + 1
         length = end - start
         if length == part_size + 1:

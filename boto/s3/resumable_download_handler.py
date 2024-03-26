@@ -19,18 +19,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 import errno
-import httplib
 import os
-import re
 import socket
 import time
-import boto
+from http.client import HTTPException, IncompleteRead
+
 from boto import config, storage_uri_for_key
-from boto.connection import AWSAuthConnection
 from boto.exception import ResumableDownloadException
 from boto.exception import ResumableTransferDisposition
-from boto.s3.keyfile import KeyFile
 from boto.gs.key import Key as GSKey
+from boto.s3.keyfile import KeyFile
 
 """
 Resumable download handler.
@@ -54,7 +52,7 @@ package where all these provider-independent files go.
 """
 
 
-class ByteTranslatingCallbackHandler(object):
+class ByteTranslatingCallbackHandler:
     """
     Proxy class that translates progress callbacks made by
     boto.s3.Key.get_file(), taking into account that we're resuming
@@ -85,14 +83,14 @@ def get_cur_file_size(fp, position_to_eof=False):
     return cur_file_size
 
 
-class ResumableDownloadHandler(object):
+class ResumableDownloadHandler:
     """
     Handler for resumable downloads.
     """
 
     MIN_ETAG_LEN = 5
 
-    RETRYABLE_EXCEPTIONS = (httplib.HTTPException, IOError, socket.error,
+    RETRYABLE_EXCEPTIONS = (HTTPException, IOError, socket.error,
                             socket.gaierror)
 
     def __init__(self, tracker_file_name=None, num_retries=None):
@@ -126,7 +124,7 @@ class ResumableDownloadHandler(object):
     def _load_tracker_file_etag(self):
         f = None
         try:
-            f = open(self.tracker_file_name, 'r')
+            f = open(self.tracker_file_name)
             self.etag_value_for_current_download = f.readline().rstrip('\n')
             # We used to match an MD5-based regex to ensure that the etag was
             # read correctly. Since ETags need not be MD5s, we now do a simple
@@ -134,7 +132,7 @@ class ResumableDownloadHandler(object):
             if len(self.etag_value_for_current_download) < self.MIN_ETAG_LEN:
                 print('Couldn\'t read etag in tracker file (%s). Restarting '
                       'download from scratch.' % self.tracker_file_name)
-        except IOError as e:
+        except OSError as e:
             # Ignore non-existent file (happens first time a download
             # is attempted on an object), but warn user for other errors.
             if e.errno != errno.ENOENT:
@@ -155,7 +153,7 @@ class ResumableDownloadHandler(object):
         try:
             f = open(self.tracker_file_name, 'w')
             f.write('%s\n' % self.etag_value_for_current_download)
-        except IOError as e:
+        except OSError as e:
             raise ResumableDownloadException(
                 'Couldn\'t write tracker file (%s): %s.\nThis can happen'
                 'if you\'re using an incorrectly configured download tool\n'
@@ -341,7 +339,7 @@ class ResumableDownloadHandler(object):
             # which we can safely ignore.
             try:
                 key.close()
-            except httplib.IncompleteRead:
+            except IncompleteRead:
                 pass
 
             sleep_time_secs = 2**progress_less_iterations

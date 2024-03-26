@@ -26,7 +26,7 @@ from boto.compat import urllib
 from boto.sqs.message import Message
 
 
-class Queue(object):
+class Queue:
 
     def __init__(self, connection=None, url=None, message_class=Message):
         self.connection = connection
@@ -59,7 +59,7 @@ class Queue(object):
             partition = 'aws-cn'
         else:
             partition = 'aws'
-        return 'arn:%s:sqs:%s:%s:%s' % (
+        return 'arn:{}:sqs:{}:{}:{}'.format(
             partition, self.connection.region.name, parts[1], parts[2])
     arn = property(_arn)
 
@@ -490,7 +490,7 @@ class Queue(object):
         m = self.read()
         while m:
             n += 1
-            key = bucket.new_key('%s/%s' % (self.id, m.id))
+            key = bucket.new_key(f'{self.id}/{m.id}')
             key.set_contents_from_string(m.get_body())
             self.delete_message(m)
             m = self.read()

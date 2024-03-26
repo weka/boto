@@ -3,7 +3,7 @@ Helper class for creating decision responses.
 """
 
 
-class Layer1Decisions(object):
+class Layer1Decisions:
     """
     Use this object to build a list of decisions for a decision response.
     Each method call will add append a new decision.  Retrieve the list

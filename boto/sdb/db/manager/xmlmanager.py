@@ -18,17 +18,18 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
-import boto
-from boto.utils import find_class, Password
-from boto.sdb.db.key import Key
-from boto.sdb.db.model import Model
-from boto.compat import six, encodebytes
 from datetime import datetime
 from xml.dom.minidom import getDOMImplementation, parse, parseString, Node
 
+import boto
+from boto.compat import six, encodebytes
+from boto.sdb.db.key import Key
+from boto.sdb.db.model import Model
+from boto.utils import find_class, Password
+
 ISO8601 = '%Y-%m-%dT%H:%M:%SZ'
 
-class XMLConverter(object):
+class XMLConverter:
     """
     Responsible for converting base Python types to format compatible with underlying
     database.  For SimpleDB, that means everything needs to be converted to a string
@@ -147,14 +148,14 @@ class XMLConverter(object):
             return None
 
     def encode_reference(self, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return value
         if value is None:
             return ''
         else:
             val_node = self.manager.doc.createElement("object")
             val_node.setAttribute('id', value.id)
-            val_node.setAttribute('class', '%s.%s' % (value.__class__.__module__, value.__class__.__name__))
+            val_node.setAttribute('class', f'{value.__class__.__module__}.{value.__class__.__name__}')
             return val_node
 
     def decode_reference(self, value):
@@ -180,7 +181,7 @@ class XMLConverter(object):
         return Password(value)
 
 
-class XMLManager(object):
+class XMLManager:
 
     def __init__(self, cls, db_name, db_user, db_passwd,
                  db_host, db_port, db_table, ddl_dir, enable_ssl):
@@ -203,16 +204,16 @@ class XMLManager(object):
         self.enable_ssl = enable_ssl
         self.auth_header = None
         if self.db_user:
-            base64string = encodebytes('%s:%s' % (self.db_user, self.db_passwd))[:-1]
+            base64string = encodebytes(f'{self.db_user}:{self.db_passwd}')[:-1]
             authheader = "Basic %s" % base64string
             self.auth_header = authheader
 
     def _connect(self):
         if self.db_host:
             if self.enable_ssl:
-                from httplib import HTTPSConnection as Connection
+                from http.client import HTTPSConnection as Connection
             else:
-                from httplib import HTTPConnection as Connection
+                from http.client import HTTPConnection as Connection
 
             self.connection = Connection(self.db_host, self.db_port)
 
@@ -333,7 +334,7 @@ class XMLManager(object):
 
         if not self.connection:
             raise NotImplementedError("Can't query without a database connection")
-        url = "/%s/%s" % (self.db_name, id)
+        url = f"/{self.db_name}/{id}"
         resp = self._make_request('GET', url)
         if resp.status == 200:
             doc = parse(resp)
@@ -348,11 +349,11 @@ class XMLManager(object):
         if not self.connection:
             raise NotImplementedError("Can't query without a database connection")
 
-        from urllib import urlencode
+        from urllib.parse import urlencode
 
         query = str(self._build_query(cls, filters, limit, order_by))
         if query:
-            url = "/%s?%s" % (self.db_name, urlencode({"query": query}))
+            url = "/{}?{}".format(self.db_name, urlencode({"query": query}))
         else:
             url = "/%s" % self.db_name
         resp = self._make_request('GET', url)
@@ -378,11 +379,11 @@ class XMLManager(object):
                         filter_parts = []
                         for val in value:
                             val = self.encode_value(property, val)
-                            filter_parts.append("'%s' %s '%s'" % (name, op, val))
+                            filter_parts.append(f"'{name}' {op} '{val}'")
                         parts.append("[%s]" % " OR ".join(filter_parts))
                     else:
                         value = self.encode_value(property, value)
-                        parts.append("['%s' %s '%s']" % (name, op, value))
+                        parts.append(f"['{name}' {op} '{value}']")
             if not found:
                 raise Exception('%s is not a valid field' % name)
         if order_by:
@@ -392,7 +393,7 @@ class XMLManager(object):
             else:
                 key = order_by
                 type = "asc"
-            parts.append("['%s' starts-with ''] sort '%s' %s" % (key, key, type))
+            parts.append(f"['{key}' starts-with ''] sort '{key}' {type}")
         return ' intersection '.join(parts)
 
     def query_gql(self, query_string, *args, **kwds):
@@ -416,7 +417,7 @@ class XMLManager(object):
         """
         doc = self.marshal_object(obj)
         if obj.id:
-            url = "/%s/%s" % (self.db_name, obj.id)
+            url = f"/{self.db_name}/{obj.id}"
         else:
             url = "/%s" % (self.db_name)
         resp = self._make_request("PUT", url, body=doc.toxml())
@@ -444,7 +445,7 @@ class XMLManager(object):
         if obj.id:
             obj_node.setAttribute('id', obj.id)
 
-        obj_node.setAttribute('class', '%s.%s' % (obj.__class__.__module__,
+        obj_node.setAttribute('class', '{}.{}'.format(obj.__class__.__module__,
                                                   obj.__class__.__name__))
         root = doc.documentElement
         root.appendChild(obj_node)
@@ -460,14 +461,14 @@ class XMLManager(object):
                 elif isinstance(value, Node):
                     prop_node.appendChild(value)
                 else:
-                    text_node = doc.createTextNode(six.text_type(value).encode("ascii", "ignore"))
+                    text_node = doc.createTextNode(str(value).encode("ascii", "ignore"))
                     prop_node.appendChild(text_node)
             obj_node.appendChild(prop_node)
 
         return doc
 
     def unmarshal_object(self, fp, cls=None, id=None):
-        if isinstance(fp, six.string_types):
+        if isinstance(fp, str):
             doc = parseString(fp)
         else:
             doc = parse(fp)
@@ -478,14 +479,14 @@ class XMLManager(object):
         Same as unmarshalling an object, except it returns
         from "get_props_from_doc"
         """
-        if isinstance(fp, six.string_types):
+        if isinstance(fp, str):
             doc = parseString(fp)
         else:
             doc = parse(fp)
         return self.get_props_from_doc(cls, id, doc)
 
     def delete_object(self, obj):
-        url = "/%s/%s" % (self.db_name, obj.id)
+        url = f"/{self.db_name}/{obj.id}"
         return self._make_request("DELETE", url)
 
     def set_key_value(self, obj, name, value):

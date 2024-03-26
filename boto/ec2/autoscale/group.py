@@ -27,7 +27,7 @@ from boto.ec2.autoscale.instance import Instance
 from boto.ec2.autoscale.tag import Tag
 
 
-class ProcessType(object):
+class ProcessType:
     def __init__(self, connection=None):
         self.connection = connection
         self.process_name = None
@@ -43,14 +43,14 @@ class ProcessType(object):
             self.process_name = value
 
 
-class SuspendedProcess(object):
+class SuspendedProcess:
     def __init__(self, connection=None):
         self.connection = connection
         self.process_name = None
         self.reason = None
 
     def __repr__(self):
-        return 'SuspendedProcess(%s, %s)' % (self.process_name, self.reason)
+        return f'SuspendedProcess({self.process_name}, {self.reason})'
 
     def startElement(self, name, attrs, connection):
         pass
@@ -62,14 +62,14 @@ class SuspendedProcess(object):
             self.reason = value
 
 
-class EnabledMetric(object):
+class EnabledMetric:
     def __init__(self, connection=None, metric=None, granularity=None):
         self.connection = connection
         self.metric = metric
         self.granularity = granularity
 
     def __repr__(self):
-        return 'EnabledMetric(%s, %s)' % (self.metric, self.granularity)
+        return f'EnabledMetric({self.metric}, {self.granularity})'
 
     def startElement(self, name, attrs, connection):
         pass
@@ -91,7 +91,7 @@ class TerminationPolicies(list):
             self.append(value)
 
 
-class AutoScalingGroup(object):
+class AutoScalingGroup:
     def __init__(self, connection=None, name=None,
                  launch_config=None, availability_zones=None,
                  load_balancers=None, default_cooldown=None,
@@ -339,7 +339,7 @@ class AutoScalingGroup(object):
         return self.connection.resume_processes(self.name, scaling_processes)
 
 
-class AutoScalingGroupMetric(object):
+class AutoScalingGroupMetric:
     def __init__(self, connection=None):
 
         self.connection = connection

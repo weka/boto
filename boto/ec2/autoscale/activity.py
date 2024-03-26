@@ -22,7 +22,7 @@
 from datetime import datetime
 
 
-class Activity(object):
+class Activity:
     def __init__(self, connection=None):
         self.connection = connection
         self.start_time = None
@@ -36,7 +36,7 @@ class Activity(object):
         self.group_name = None
 
     def __repr__(self):
-        return 'Activity<%s>: For group:%s, progress:%s, cause:%s' % (self.activity_id,
+        return 'Activity<{}>: For group:{}, progress:{}, cause:{}'.format(self.activity_id,
                                                                       self.group_name,
                                                                       self.status_message,
                                                                       self.cause)

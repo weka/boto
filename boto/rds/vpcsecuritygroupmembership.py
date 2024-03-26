@@ -24,7 +24,7 @@ Represents a VPCSecurityGroupMembership
 """
 
 
-class VPCSecurityGroupMembership(object):
+class VPCSecurityGroupMembership:
     """
     Represents VPC Security Group that this RDS database is a member of
 

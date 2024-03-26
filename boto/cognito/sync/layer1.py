@@ -70,7 +70,7 @@ class CognitoSyncConnection(AWSAuthConnection):
         else:
             del kwargs['region']
         kwargs['host'] = region.endpoint
-        super(CognitoSyncConnection, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.region = region
 
     def _required_auth_capability(self):
@@ -101,7 +101,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}/identities/{1}/datasets/{2}'.format(
+        uri = '/identitypools/{}/identities/{}/datasets/{}'.format(
             identity_pool_id, identity_id, dataset_name)
         return self.make_request('DELETE', uri, expected_status=200)
 
@@ -131,7 +131,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}/identities/{1}/datasets/{2}'.format(
+        uri = '/identitypools/{}/identities/{}/datasets/{}'.format(
             identity_pool_id, identity_id, dataset_name)
         return self.make_request('GET', uri, expected_status=200)
 
@@ -147,7 +147,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}'.format(identity_pool_id)
+        uri = f'/identitypools/{identity_pool_id}'
         return self.make_request('GET', uri, expected_status=200)
 
     def describe_identity_usage(self, identity_pool_id, identity_id):
@@ -167,7 +167,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}/identities/{1}'.format(
+        uri = '/identitypools/{}/identities/{}'.format(
             identity_pool_id, identity_id)
         return self.make_request('GET', uri, expected_status=200)
 
@@ -183,7 +183,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}/configuration'.format(identity_pool_id)
+        uri = f'/identitypools/{identity_pool_id}/configuration'
         return self.make_request('GET', uri, expected_status=200)
 
     def list_datasets(self, identity_pool_id, identity_id, next_token=None,
@@ -214,7 +214,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}/identities/{1}/datasets'.format(
+        uri = '/identitypools/{}/identities/{}/datasets'.format(
             identity_pool_id, identity_id)
         params = {}
         headers = {}
@@ -294,7 +294,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}/identities/{1}/datasets/{2}/records'.format(
+        uri = '/identitypools/{}/identities/{}/datasets/{}/records'.format(
             identity_pool_id, identity_id, dataset_name)
         params = {}
         headers = {}
@@ -332,7 +332,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}/identity/{1}/device'.format(
+        uri = '/identitypools/{}/identity/{}/device'.format(
             identity_pool_id, identity_id)
         params = {'Platform': platform, 'Token': token, }
         headers = {}
@@ -357,7 +357,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}/configuration'.format(identity_pool_id)
+        uri = f'/identitypools/{identity_pool_id}/configuration'
         params = {}
         headers = {}
         query_params = {}
@@ -389,7 +389,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}/identities/{1}/datasets/{2}/subscriptions/{3}'.format(
+        uri = '/identitypools/{}/identities/{}/datasets/{}/subscriptions/{}'.format(
             identity_pool_id, identity_id, dataset_name, device_id)
         return self.make_request('POST', uri, expected_status=200)
 
@@ -415,7 +415,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}/identities/{1}/datasets/{2}/subscriptions/{3}'.format(
+        uri = '/identitypools/{}/identities/{}/datasets/{}/subscriptions/{}'.format(
             identity_pool_id, identity_id, dataset_name, device_id)
         return self.make_request('DELETE', uri, expected_status=200)
 
@@ -462,7 +462,7 @@ class CognitoSyncConnection(AWSAuthConnection):
 
         """
 
-        uri = '/identitypools/{0}/identities/{1}/datasets/{2}'.format(
+        uri = '/identitypools/{}/identities/{}/datasets/{}'.format(
             identity_pool_id, identity_id, dataset_name)
         params = {'SyncSessionToken': sync_session_token, }
         headers = {}

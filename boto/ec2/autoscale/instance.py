@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
 
 
-class Instance(object):
+class Instance:
     def __init__(self, connection=None):
         self.connection = connection
         self.instance_id = None
@@ -31,7 +31,7 @@ class Instance(object):
         self.group_name = None
 
     def __repr__(self):
-        r = 'Instance<id:%s, state:%s, health:%s' % (self.instance_id,
+        r = 'Instance<id:{}, state:{}, health:{}'.format(self.instance_id,
                                                      self.lifecycle_state,
                                                      self.health_status)
         if self.group_name:

@@ -95,7 +95,7 @@ class STSConnection(AWSQueryConnection):
             provider = Provider('aws', NO_CREDENTIALS_PROVIDED,
                                 NO_CREDENTIALS_PROVIDED,
                                 NO_CREDENTIALS_PROVIDED)
-        super(STSConnection, self).__init__(aws_access_key_id,
+        super().__init__(aws_access_key_id,
                                     aws_secret_access_key,
                                     is_secure, port, proxy, proxy_port,
                                     proxy_user, proxy_pass,
@@ -170,7 +170,7 @@ class STSConnection(AWSQueryConnection):
         :param mfa_token: The 6 digit token associated with the
             MFA device.
         """
-        token_key = '%s:%s' % (self.region.name, self.provider.access_key)
+        token_key = f'{self.region.name}:{self.provider.access_key}'
         token = self._check_token_cache(token_key, duration)
         if force_new or not token:
             boto.log.debug('fetching a new token for %s' % token_key)

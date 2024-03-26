@@ -34,7 +34,7 @@ class CommitMismatchError(Exception):
     pass
 
 
-class SearchResults(object):
+class SearchResults:
     def __init__(self, **attrs):
         self.rid = attrs['info']['rid']
         # self.doc_coverage_pct = attrs['info']['doc-coverage-pct']
@@ -52,7 +52,7 @@ class SearchResults(object):
         if 'facets' in attrs:
             for (facet, values) in attrs['facets'].items():
                 if 'constraints' in values:
-                    self.facets[facet] = dict((k, v) for (k, v) in map(lambda x: (x['value'], x['count']), values['constraints']))
+                    self.facets[facet] = {k: v for (k, v) in map(lambda x: (x['value'], x['count']), values['constraints'])}
 
         self.num_pages_needed = ceil(self.hits / self.query.real_size)
 
@@ -76,7 +76,7 @@ class SearchResults(object):
             raise StopIteration
 
 
-class Query(object):
+class Query:
 
     RESULTS_PER_PAGE = 500
 
@@ -127,24 +127,24 @@ class Query(object):
             params['facet'] = ','.join(self.facet)
 
         if self.facet_constraints:
-            for k, v in six.iteritems(self.facet_constraints):
+            for k, v in self.facet_constraints.items():
                 params['facet-%s-constraints' % k] = v
 
         if self.facet_sort:
-            for k, v in six.iteritems(self.facet_sort):
+            for k, v in self.facet_sort.items():
                 params['facet-%s-sort' % k] = v
 
         if self.facet_top_n:
-            for k, v in six.iteritems(self.facet_top_n):
+            for k, v in self.facet_top_n.items():
                 params['facet-%s-top-n' % k] = v
 
         if self.t:
-            for k, v in six.iteritems(self.t):
+            for k, v in self.t.items():
                 params['t-%s' % k] = v
         return params
 
 
-class SearchConnection(object):
+class SearchConnection:
 
     def __init__(self, domain=None, endpoint=None):
         self.domain = domain
@@ -356,8 +356,7 @@ class SearchConnection(object):
         while page <= num_pages_needed:
             results = self(query)
             num_pages_needed = results.num_pages_needed
-            for doc in results:
-                yield doc
+            yield from results
             query.start += query.real_size
             page += 1
 

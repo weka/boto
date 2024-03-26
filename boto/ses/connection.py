@@ -47,7 +47,7 @@ class SESConnection(AWSAuthConnection):
             region = RegionInfo(self, self.DefaultRegionName,
                                 self.DefaultRegionEndpoint)
         self.region = region
-        super(SESConnection, self).__init__(self.region.endpoint,
+        super().__init__(self.region.endpoint,
                                             aws_access_key_id, aws_secret_access_key,
                                             is_secure, port, proxy, proxy_port,
                                             proxy_user, proxy_pass, debug,
@@ -71,7 +71,7 @@ class SESConnection(AWSAuthConnection):
         :type label: string
         :param label: The parameter list's name
         """
-        if isinstance(items, six.string_types):
+        if isinstance(items, str):
             items = [items]
         for i in range(1, len(items) + 1):
             params['%s.%d' % (label, i)] = items[i - 1]
@@ -92,10 +92,10 @@ class SESConnection(AWSAuthConnection):
         params['Action'] = action
 
         for k, v in params.items():
-            if isinstance(v, six.text_type):  # UTF-8 encode only if it's Unicode
+            if isinstance(v, str):  # UTF-8 encode only if it's Unicode
                 params[k] = v.encode('utf-8')
 
-        response = super(SESConnection, self).make_request(
+        response = super().make_request(
             'POST',
             '/',
             headers=headers,
@@ -124,7 +124,7 @@ class SESConnection(AWSAuthConnection):
         errors share the same HTTP response code, meaning we have to get really
         kludgey and do string searches to figure out what went wrong.
         """
-        boto.log.error('%s %s' % (response.status, response.reason))
+        boto.log.error(f'{response.status} {response.reason}')
         boto.log.error('%s' % body)
 
         if "Address blacklisted." in body:
@@ -306,7 +306,7 @@ class SESConnection(AWSAuthConnection):
 
         """
 
-        if isinstance(raw_message, six.text_type):
+        if isinstance(raw_message, str):
             raw_message = raw_message.encode('utf-8')
 
         params = {

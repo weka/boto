@@ -21,7 +21,7 @@ def simple(e):
 
 class SimpleException(BotoServerError):
     def __init__(self, e):
-        super(SimpleException, self).__init__(e.status, e.reason, e.body)
+        super().__init__(e.status, e.reason, e.body)
         self.error_message = self.message
 
     def __repr__(self):
